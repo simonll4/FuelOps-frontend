@@ -14,12 +14,13 @@ import router from './router'
 
 const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
-
 const vuetify = createVuetify({
   components,
   directives,
 })
 
-createApp(App).use(vuetify).mount('#app')
+app.use(vuetify)
+app.use(router)
+app.use(createPinia())
+
+app.mount('#app')
