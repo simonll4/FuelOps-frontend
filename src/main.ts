@@ -1,4 +1,4 @@
-import './assets/main.css'
+import '@/styles/global.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -12,11 +12,16 @@ import * as directives from 'vuetify/directives'
 import App from './App.vue'
 import router from './router'
 
+import '@mdi/font/css/materialdesignicons.css'; // Importa los iconos de MDI
+
 const app = createApp(App)
 
 const vuetify = createVuetify({
   components,
   directives,
+  icons: {
+    defaultSet: 'mdi',
+  },
 })
 
 app.use(vuetify)
