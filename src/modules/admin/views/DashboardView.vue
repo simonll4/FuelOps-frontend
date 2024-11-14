@@ -1,11 +1,10 @@
-<template>
-    <div>
-        <h1 class="bg bg-white">Dashboard Hola</h1>
-        <h2>Vieja que onda esot</h2>
-        <h3>aishfodaishfaofs</h3>
-        <h1>alsfdlkasdklas</h1>
-    </div>
-</template>
-
 <script setup lang="ts">
+import AdminLayout from "../layouts/AdminLayout.vue";
 </script>
+
+<template>
+  <AdminLayout>
+    <h6 class="ma-5 pages-title">Admin / Dashboard</h6>
+    <h1 class="ma-5">Bienvenid@</h1>
+  </AdminLayout>
+</template>
