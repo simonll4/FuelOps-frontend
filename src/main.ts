@@ -11,16 +11,27 @@ import * as directives from 'vuetify/directives'
 
 import App from './App.vue'
 import router from './router'
+import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 
 const app = createApp(App)
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60, // 1 minuto
+    }
+  }
+});
 
 const vuetify = createVuetify({
   components,
   directives,
 })
 
-app.use(vuetify)
-app.use(router)
-app.use(createPinia())
+app.use(VueQueryPlugin, {
+  queryClient,
+});
 
-app.mount('#app')
+app.use(createPinia())
+app.use(router)
+app.use(vuetify).mount('#app')
