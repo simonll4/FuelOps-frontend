@@ -1,15 +1,18 @@
 @use "settings.scss" as *;
 
-#app, #app .navbar {
+#app {
   background-color: $background-color;
   color: $text-color;
 }
 
-#app .sidebar {
+.sidebar {
   background-color: $container-color;
   color: $text-color;
 }
-
+.router-link {
+  text-decoration: none;
+  color: inherit;
+}
 // Utility classes for text sizes
 .text-xs {
   font-size: $text-xs;

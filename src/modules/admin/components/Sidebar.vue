@@ -8,31 +8,33 @@
     <v-divider></v-divider>
 
     <v-list density="compact" nav>
-      <v-list-item
-        prepend-icon="mdi-home"
-        title="Inicio"
-        value="home"
-      ></v-list-item>
-      <v-list-item
-        prepend-icon="mdi-tanker-truck"
-        title="Órdenes"
-        value="orders"
-      ></v-list-item>
-      <v-list-item
-        prepend-icon="mdi-account-multiple"
-        title="Usuarios"
-        value="users"
-      ></v-list-item>
-      <v-list-item
-        prepend-icon="mdi-barrel"
-        title="Productos"
-        value="products"
-      ></v-list-item>
-      <v-list-item
-        prepend-icon="mdi-logout"
-        title="Cerrar sesión"
-        value="logout"
-      ></v-list-item>
+      <router-link to="/admin" class="router-link">
+        <v-list-item prepend-icon="mdi-home" title="Inicio"></v-list-item>
+      </router-link>
+      <router-link to="/admin/orders" class="router-link">
+        <v-list-item
+          prepend-icon="mdi-tanker-truck"
+          title="Órdenes"
+        ></v-list-item>
+      </router-link>
+      <router-link to="/admin/users" class="router-link">
+        <v-list-item
+          prepend-icon="mdi-account-multiple"
+          title="Usuarios"
+        ></v-list-item>
+      </router-link>
+      <router-link to="/admin/products" class="router-link">
+        <v-list-item prepend-icon="mdi-barrel" title="Productos"></v-list-item>
+      </router-link>
+      <!-- TODO: Implementar el logout -->
+      <router-link to="/admin" class="router-link">
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Cerrar sesión"
+        ></v-list-item>
+      </router-link>
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<style lang="scss" src="/src/styles/global.scss"></style>

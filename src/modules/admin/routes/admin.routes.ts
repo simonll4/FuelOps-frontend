@@ -23,7 +23,7 @@ export default {
       component: () => import("@/modules/admin/views/ProductDetailView.vue"),
     },
     {
-      path: 'user',
+      path: 'users',
       name: 'UserManager',
       component: () => import("@/modules/admin/views/UsersView.vue"),
     },
