@@ -1,4 +1,10 @@
-export interface User {
+export interface AuthUser {
   username: string;
-  password: string;
+  email: string;
+  roles: string[];
+}
+
+export interface LoggedUser {
+  user: AuthUser;
+  token: string;
 }

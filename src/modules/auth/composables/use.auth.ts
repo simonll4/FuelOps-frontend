@@ -1,89 +1,49 @@
 import { computed } from 'vue';
-import router from '@/router';
 import { useMutation } from '@tanstack/vue-query';
 
 import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { login as loginService } from '@/modules/auth/services/auth.service';
-import type { User } from '../interfaces/user.interface';
+import type { LoginCredentials } from '../interfaces/auth.interface';
+import { useRouter } from 'vue-router';
+import type { LoggedUser } from '../interfaces/user.interface';
 
-const login = async (user: User) => {
-    const token = await loginService(user);
-    return token;
+const login = async (user: LoginCredentials) => {
+    const response = await loginService(user);
+    return response;
 };
 
 export const useAuth = () => {
     const authStore = useAuthStore();
+    const router = useRouter();
 
-    const authMutation = useMutation<{ token: string }, Error, User>({
+    const isAuthenticated = computed(() => authStore.getAuthStatus() === "Authenticated");
+
+    const authMutation = useMutation<LoggedUser, Error, LoginCredentials>({
         mutationFn: login,
-        onSuccess: (data) => {
-            if (data) {
-                authStore.login(String(data));
+        onSuccess: (response) => {
+            if (response) {
+                authStore.login(response);
             }
         }
     });
 
     const logout = () => {
         authStore.logout();
-        router.push({ name: 'login' });
+        router.push({ name: 'Login' });
     };
 
+    const checkAuthStatus = async () => {
+        await authStore.checkAuthStatus();
+    };
 
     return {
-        authMutation,
+        //authMutation,
         login: authMutation.mutateAsync,  // Usamos mutateAsync para esperar la mutación
         logout,
+        checkAuthStatus,    
         isLoading: computed(() => authMutation.isPending),
         isSuccess: computed(() => authMutation.isSuccess),
         isError: computed(() => authMutation.isError),
+        isAuthenticated,
     };
 };
-
-
-
-
-// import { useMutation } from '@tanstack/vue-query';
-// import { useAuthStore } from '@/auth/stores/auth.store';
-// import { login as loginService } from '@/auth/services/auth.service';
-// import type { User } from '../interfaces/user.interface';
-// import { computed, watch } from 'vue';
-
-
-// const login = async (user: User) => {
-//     const token = await loginService(user);
-//     return token;  // Retorna el token
-// };
-
-// export const useAuth = () => {
-//     const authStore = useAuthStore();
-
-//     const authMutation = useMutation<{ token: string }, Error, User>({
-//         mutationFn: login
-//     });
-
-
-//     // Usamos un watch para detectar cuando la mutación se ha completado con éxito
-//     watch(() => authMutation.isSuccess, (newVal) => {
-//         if (newVal) {
-//             console.log('Mutation success', authMutation.data);
-//             const token = authMutation.data;
-//             if (token) {
-//                 authStore.login(String(token));
-//             }
-//         }
-//     });
-
-//     // Función para realizar logout
-//     const logout = () => {
-//         authStore.logout();  // Llama a la acción del store para eliminar el token
-//     };
-
-//     return {
-//         authMutation,
-//         login: authMutation.mutate,
-//         logout,
-//         isLoading: computed(() => authMutation.isPending),
-//         isSuccess: computed(() => authMutation.isSuccess),
-//         isError: computed(() => authMutation.isError),
-//     };
-// };
