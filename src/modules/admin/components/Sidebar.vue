@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer class="sidebar">
+  <v-navigation-drawer class="sidebar" app>
     <div class="d-flex align-center mr-5 pa-7">
       <v-img src="/src/assets/logo.png"></v-img>
       <span class="text-xl"><b>FUEL</b>OPS</span>
