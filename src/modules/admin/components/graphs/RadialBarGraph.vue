@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
+
+// Parámetros en kilogramos
+const preset = ref(5000); // Masa total requerida (kg)
+const accumulatedMass = ref(4200); // Masa acumulada actual (kg), siempre creciente
+
+// Series para el gráfico
+const series = computed(() => {
+  const accumulatedPercentage = Math.min(
+    (accumulatedMass.value / preset.value) * 100,
+    100
+  ); // Limita al 100%
+  return [100, accumulatedPercentage]; // 100% para el preset y progreso actual para la carga
+});
 
 // Opciones del gráfico
 const chartOptions = ref({
@@ -21,7 +34,7 @@ const chartOptions = ref({
           show: true,
           fontSize: "16px",
           color: "#fff",
-          formatter: (val: number) => `${val}%`,
+          formatter: (val: number) => `${val.toFixed(1)}%`, // Redondea a un decimal
         },
       },
       track: {
@@ -39,8 +52,8 @@ const chartOptions = ref({
       stops: [0, 100],
     },
   },
-  colors: ["#FF5733", "#1AB7EA"],
-  labels: ["Preset", "Carga actual"],
+  colors: ["#1AB7EA", "#FF5733"], // Preset y Carga
+  labels: ["Preset (100%)", "Carga actual"], // Etiquetas del gráfico
   legend: {
     show: true,
     position: "bottom",
@@ -48,28 +61,25 @@ const chartOptions = ref({
       colors: "#FFFFFF",
     },
   },
-});
-
-// Datos de ejemplo
-const series = ref([92, 68]);
-
-// Método para actualizar datos dinámicamente (opcional)
-const updateChart = () => {
-  series.value = [
-    Math.floor(Math.random() * 100),
-    Math.floor(Math.random() * 100),
-  ];
-};
-
-// Invocado al montar el componente
-onMounted(() => {
-  console.log("RadialBar mounted with data:", series.value);
+  tooltip: {
+    enabled: true,
+    y: {
+      formatter: (val: number, { seriesIndex }: { seriesIndex: number }) => {
+        if (seriesIndex === 0) {
+          return `${preset.value} kg - Preset total`;
+        } else if (seriesIndex === 1) {
+          return `${accumulatedMass.value.toFixed(1)} kg - Masa acumulada`;
+        }
+        return `${val}%`;
+      },
+    },
+  },
 });
 </script>
 
 <template>
-  <v-card class="mb-4 data-container" color="container-color" outlined="">
-    <v-card-title>Load Progress</v-card-title>
+  <v-card class="mb-4 data-container" color="container-color" outlined>
+    <v-card-title>Progreso de Carga</v-card-title>
     <v-card-text class="radialbar">
       <apexchart
         type="radialBar"

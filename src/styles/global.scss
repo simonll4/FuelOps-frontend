@@ -35,8 +35,20 @@ html {
   color: #fff;
 }
 
-// Utility classes for text sizes
+// Utility classes for text sizes and colors
 // TODO: La verdad que nunca use ninguno de estos, ver si los borro o si quedan
+.text-success {
+  color: #4caf50;
+  font-weight: bold;
+}
+.text-warning {
+  color: #ffc107;
+  font-weight: bold;
+}
+.text-danger {
+  color: #f44336;
+  font-weight: bold;
+}
 .text-xs {
   font-size: $text-xs;
 }

@@ -55,13 +55,16 @@ const getTemperatureClass = (temperature: number): string => {
 };
 </script>
 
+
 <template>
+  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla -->
   <v-data-table-server
     :headers="headers"
     :items="items"
     :items-length="items.length"
     item-value="id"
     class="elevation-1"
+    height="315"
   >
     <!-- Formateo del timestamp -->
     <template #item.timestamp="{ item }">

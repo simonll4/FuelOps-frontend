@@ -4,11 +4,14 @@ import { useRouter } from "vue-router";
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
 
-import ETA from "../components/graphs/ETA.vue";
+import ETA from "../components/graphs/ETAGraph.vue";
 import OrderData from "../components/order/OrderData.vue";
+import AlarmTable from "../components/alarms/AlarmTable.vue";
 
-import radialBar from "../components/graphs/radialBar.vue";
-import temperatureChart from "../components/graphs/temperatureChart.vue";
+import RadialBar from "../components/graphs/RadialBarGraph.vue";
+import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
+import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
+import DensityGraph from "../components/graphs/DensityGraph.vue";
 
 const orderNumber = ref("12345");
 
@@ -40,20 +43,36 @@ function goBack() {
           <v-row>
             <!-- Circular graph -->
             <v-col cols="6">
-              <radialBar />
+              <RadialBar />
             </v-col>
             <v-col cols="6">
               <ETA />
             </v-col>
           </v-row>
         </v-col>
-        <!-- Temperatura -->
+        <!-- Tabla de alarmas -->
         <v-col cols="6">
-          <temperatureChart />
+          <AlarmTable class="tabla" />
         </v-col>
       </v-row>
       <h2>Detalles de carga</h2>
-      <OrderDetailTable class="tabla" />
+      <v-row>
+        <v-col cols="6">
+          <OrderDetailTable class="tabla" />
+        </v-col>
+        <v-col cols="6">
+          <TemperatureChart />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+        <!-- TODO: Cambiar color -->
+          <FlowRateGraph />
+        </v-col>
+        <v-col cols="6">
+          <DensityGraph />
+        </v-col>
+      </v-row>
     </v-container>
   </AdminLayout>
 </template>
