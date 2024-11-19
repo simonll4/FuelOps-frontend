@@ -1,45 +1,79 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import ApexCharts from "apexcharts";
 
-// Parámetros en kilogramos
-const preset = ref(5000); // Masa total requerida (kg)
-const accumulatedMass = ref(4200); // Masa acumulada actual (kg), siempre creciente
+// Variables principales
+const totalCapacityLiters = ref(10000); // Capacidad total (en litros)
+const density = ref(0.58); // Densidad del gas (kg/L) (butano como ejemplo)
+const presetKg = ref(5000); // Preset en kilogramos
+const currentLoadKg = ref(1000); // Masa acumulada (kg)
 
-// Series para el gráfico
-const series = computed(() => {
-  const accumulatedPercentage = Math.min(
-    (accumulatedMass.value / preset.value) * 100,
-    100
-  ); // Limita al 100%
-  return [100, accumulatedPercentage]; // 100% para el preset y progreso actual para la carga
-});
+// Cálculos derivados
+const totalCapacityKg = computed(
+  () => totalCapacityLiters.value * density.value
+);
+const presetPercentage = computed(
+  () => (presetKg.value / totalCapacityKg.value) * 100
+);
+const loadPercentage = computed(
+  () => (currentLoadKg.value / presetKg.value) * 100
+);
 
+// Series del gráfico
+const series = ref([presetPercentage.value, loadPercentage.value]);
+
+// Actualización dinámica
+const updateSeries = () => {
+  series.value = [presetPercentage.value, loadPercentage.value];
+};
+
+// Observa los cambios en los cálculos para actualizar dinámicamente
+watch([presetPercentage, loadPercentage], updateSeries);
+
+//TODO: Ver bien el tema de las animaciones, capaz cambiar los colores del gradiente
 // Opciones del gráfico
 const chartOptions = ref({
   chart: {
     type: "radialBar",
     background: "#111c44",
     foreColor: "#FFFFFF",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 300,
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 1000,
+      },
+    },
   },
   plotOptions: {
     radialBar: {
+      hollow: {
+        margin: 10,
+        size: "60%",
+      },
       dataLabels: {
         show: true,
         name: {
           show: true,
-          fontSize: "18px",
+          fontSize: "16px",
           color: "#fff",
         },
         value: {
           show: true,
-          fontSize: "16px",
+          fontSize: "14px",
           color: "#fff",
-          formatter: (val: number) => `${val.toFixed(1)}%`, // Redondea a un decimal
+          formatter: (val: any) => `${Number(val).toFixed(1)}%`,
         },
       },
       track: {
         background: "#2B3448",
-        strokeWidth: "99%",
+        strokeWidth: "100%",
       },
     },
   },
@@ -47,13 +81,42 @@ const chartOptions = ref({
     type: "gradient",
     gradient: {
       shade: "dark",
-      type: "horizontal",
+      shadeIntensity: 0.5,
       gradientToColors: ["#FF9900", "#1AB7EA"],
       stops: [0, 100],
+      inverseColors: true,
+      opacityFrom: 1,
+      opacityTo: 0.8,
     },
   },
-  colors: ["#1AB7EA", "#FF5733"], // Preset y Carga
-  labels: ["Preset (100%)", "Carga actual"], // Etiquetas del gráfico
+  colors: ["#FF5733", "#1AB7EA"],
+  labels: ["Cap. Total y Preset", "Carga Actual"],
+  tooltip: {
+    enabled: true,
+    theme: "dark",
+    followCursor: true, // Seguir al cursor
+    fixed: {
+      enabled: true, // Permitir persistencia
+      position: "topRight",
+    },
+    style: {
+      fontSize: "12px",
+      colors: ["#FFFFFF"],
+    },
+    y: {
+      formatter: (val: number, opts: any) => {
+        // Diferenciar según el índice de la serie
+        if (opts.seriesIndex === 0) {
+          return `Capacidad Total: ${totalCapacityKg.value.toFixed(
+            2
+          )} kg (Preset: ${presetKg.value.toFixed(2)} kg)`;
+        } else if (opts.seriesIndex === 1) {
+          return `Carga Actual: ${currentLoadKg.value.toFixed(2)} kg`;
+        }
+        return "";
+      },
+    },
+  },
   legend: {
     show: true,
     position: "bottom",
@@ -61,42 +124,54 @@ const chartOptions = ref({
       colors: "#FFFFFF",
     },
   },
-  tooltip: {
-    enabled: true,
-    y: {
-      formatter: (val: number, { seriesIndex }: { seriesIndex: number }) => {
-        if (seriesIndex === 0) {
-          return `${preset.value} kg - Preset total`;
-        } else if (seriesIndex === 1) {
-          return `${accumulatedMass.value.toFixed(1)} kg - Masa acumulada`;
-        }
-        return `${val}%`;
-      },
-    },
-  },
 });
+
+// Función para actualizar series sin redibujar
+const chartRef = ref(null);
+
+const updateChart = () => {
+  if (chartRef.value) {
+    ApexCharts.exec("radialBarChart", "updateSeries", series.value);
+  }
+};
+
+//TODO: Eliminar esto, es una prueba nomas para ver las animaciones
+// Simulación temporal de actualizaciones de carga
+const simulateLoadUpdates = () => {
+  const intervalId = setInterval(() => {
+    const increment = Math.random() * 200; // Incremento aleatorio
+    const newLoad = currentLoadKg.value + increment;
+
+    if (newLoad >= presetKg.value) {
+      clearInterval(intervalId); // Detener cuando se alcanza o excede el preset
+    } else {
+      currentLoadKg.value = newLoad; // Actualizar la carga actual
+      updateChart();
+    }
+  }, 1000); // Cada 1 segundo
+};
+
+// Iniciar simulación
+simulateLoadUpdates();
 </script>
 
 <template>
   <v-card class="mb-4 data-container" color="container-color" outlined>
     <v-card-title>Progreso de Carga</v-card-title>
-    <v-card-text class="radialbar">
+    <v-card-text class="d-flex justify-center align-center">
       <apexchart
         type="radialBar"
         :options="chartOptions"
         :series="series"
         width="380"
-        height="310"
+        height="300"
       ></apexchart>
     </v-card-text>
   </v-card>
 </template>
 
 <style scoped>
-.radialbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.data-container {
   background-color: #111c44;
   border-radius: 12px;
 }

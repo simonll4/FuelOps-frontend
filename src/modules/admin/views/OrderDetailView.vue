@@ -38,14 +38,15 @@ function goBack() {
       </v-row>
       <!-- Datos de la orden -->
       <OrderData />
-      <v-row>
+      <v-row class="align-center d-flex">
         <v-col cols="6">
           <v-row>
             <!-- Circular graph -->
-            <v-col cols="6">
+            <v-col cols="7">
               <RadialBar />
             </v-col>
-            <v-col cols="6">
+            <!-- ETA -->
+            <v-col cols="5">
               <ETA />
             </v-col>
           </v-row>
@@ -66,7 +67,7 @@ function goBack() {
       </v-row>
       <v-row>
         <v-col cols="6">
-        <!-- TODO: Cambiar color -->
+          <!-- TODO: Cambiar color -->
           <FlowRateGraph />
         </v-col>
         <v-col cols="6">
