@@ -1,16 +1,54 @@
 @use "settings.scss" as *;
 
-#app, #app .navbar {
+// TODO: Acomodar esto también que es un desastre
+
+html {
   background-color: $background-color;
   color: $text-color;
 }
 
-#app .sidebar {
+.sidebar {
   background-color: $container-color;
   color: $text-color;
 }
+.router-link {
+  text-decoration: none;
+  color: inherit;
+}
+.data-container {
+  background-color: $container-color;
+  color: $text-color;
+  border-radius: 1rem;
+}
+.btn-color-4 {
+  background-color: $accent-color-4;
+  color: $text-color;
+}
+.btn-color-4:hover {
+  background-color: $accent-color-3;
+  color: $text-color;
+}
+.tabla {
+  margin: 0 auto;
+  border-radius: 1rem;
+  background-color: #111c44;
+  color: #fff;
+}
 
-// Utility classes for text sizes
+// Utility classes for text sizes and colors
+// TODO: La verdad que nunca use ninguno de estos, ver si los borro o si quedan
+.text-success {
+  color: #4caf50;
+  font-weight: bold;
+}
+.text-warning {
+  color: #ffc107;
+  font-weight: bold;
+}
+.text-danger {
+  color: #f44336;
+  font-weight: bold;
+}
 .text-xs {
   font-size: $text-xs;
 }
