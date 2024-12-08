@@ -7,7 +7,7 @@ export default () => {
 
     api.interceptors.request.use(
         async config => {
-            let token = localStorage.getItem('token');
+            let token = localStorage.getItem('auth_token');
             config.headers['Authorization'] = 'Bearer ' + token;
             return config;
         },

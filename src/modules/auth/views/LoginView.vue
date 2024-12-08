@@ -1,45 +1,139 @@
-<script setup>
-import { ref } from 'vue';
-import { useAuth } from '@/modules/auth/composables/use.auth';  
+<script setup lang="ts">
+import { ref } from "vue";
+import { useAuth } from "@/modules/auth/composables/use.auth";
 
-const { login, isLoading, isError, authMutation, logout } = useAuth();
+const { login, isLoading, isError, isSuccess } = useAuth();
 
-// Estados locales para el formulario
-const username = ref('');
-const password = ref('');
-const errorMessage = ref('');
+const loginForm = ref({
+  username: "",
+  password: "",
+});
 
-// Función para manejar el login
+const errorMessage = ref("");
+const showPassword = ref(false); // Para alternar visibilidad de contraseña
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
 const handleLogin = async () => {
-  console.log('Iniciando sesión...');
   try {
-    const user = { username: username.value, password: password.value };
-    await login(user);  // Llamamos a la función login del composable
-    errorMessage.value = ''; // Limpiar mensaje de error en caso de éxito
-  } catch (error) {
-    console.error('Error en el login:', error);
-    errorMessage.value = error.message || 'Error en el login';  // Mensaje de error
+    await login({
+      username: loginForm.value.username,
+      password: loginForm.value.password,
+    });
+    errorMessage.value = "";
+  } catch (error: any) {
+    errorMessage.value = error.message || "Error en el login";
   }
 };
 </script>
 
 <template>
-  <div>
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <input v-model="username" type="text" placeholder="Username" />
-      <input v-model="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
-    </form>
+  <v-container fluid class="pa-0">
+    <v-row no-gutters class="fill-height">
+      <!-- Columna de Imagen -->
+      <v-col cols="8" class="image-column"> </v-col>
 
-    <div v-if="isError" class="error-message">
-      Error: {{ errorMessage }}
-    </div>
-  </div>
+      <!-- Columna del Formulario -->
+      <v-col cols="4" class="form-column d-flex justify-center">
+        <v-container class="pa-10">
+          <h4 class="login-title my-1 text-h4">¡Bienvenido de vuelta! 👋🏻</h4>
+          <span>Inicia sesión en tu cuenta para continuar</span>
+          <v-form @submit.prevent="handleLogin" class="login-form">
+            <!-- Campo de usuario -->
+            <span>Usuario</span>
+            <v-text-field
+              v-model="loginForm.username"
+              placeholder="Ingresa tu usuario"
+              required
+              :disabled="isLoading.value"
+              hide-details
+              bg-color="white"
+              density="compact"
+              autofocus
+              class="form-input"
+              variant="outlined"
+            ></v-text-field>
+            <!-- Campo de contraseña -->
+            <span>Contraseña</span>
+            <v-text-field
+              v-model="loginForm.password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="Ingresa tu contraseña"
+              required
+              :disabled="isLoading.value"
+              hide-details
+              bg-color="white"
+              density="compact"
+              class="form-input"
+              variant="outlined"
+              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              @click:append-inner="togglePasswordVisibility"
+            ></v-text-field>
+            <!-- Botón de login -->
+            <v-btn
+              class="login-button mt-8"
+              :loading="isLoading.value"
+              :disabled="isLoading.value"
+              color="#00B0FF"
+              type="submit"
+              block
+            >
+              <span v-if="!isLoading.value">Ingresar</span>
+            </v-btn>
+            <!-- Mensaje de éxito -->
+            <v-alert
+              v-if="isSuccess.value"
+              type="success"
+              class="mt-4"
+              transition="scale-transition"
+              border="start"
+              prominent
+            >
+              ¡Inicio de sesión exitoso!
+            </v-alert>
+            <!-- Mensaje de error -->
+            <v-alert
+              v-if="isError.value"
+              type="error"
+              class="mt-4"
+              transition="scale-transition"
+              border="start"
+              prominent
+            >
+              {{ errorMessage }}
+            </v-alert>
+          </v-form>
+        </v-container>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
-.error-message {
-  color: red;
+.image-column {
+  background-image: url("/src/assets/logo_login.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+.form-column {
+  background-color: #ffffff;
+}
+
+.login-title {
+  color: #333333;
+}
+
+.form-input {
+  margin-top: 0.5rem;
+}
+
+.login-button {
+  background-color: #00b0ff !important;
+  color: white !important;
 }
 </style>
