@@ -15,6 +15,9 @@ import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 
 import '@mdi/font/css/materialdesignicons.css'; // Importa los iconos de MDI
 
+// Apexcharts
+import VueApexCharts from "vue3-apexcharts";
+
 const app = createApp(App)
 
 const queryClient = new QueryClient({
@@ -40,3 +43,4 @@ app.use(VueQueryPlugin, {
 app.use(createPinia())
 app.use(router)
 app.use(vuetify).mount('#app')
+app.use(VueApexCharts)

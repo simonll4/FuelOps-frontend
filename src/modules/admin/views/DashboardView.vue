@@ -5,6 +5,6 @@ import AdminLayout from "../layouts/AdminLayout.vue";
 <template>
   <AdminLayout>
     <h6 class="ma-5 pages-title">Admin / Dashboard</h6>
-    <h1 class="ma-5">Bienvenid@</h1>
+    <h1 class="ma-5">Bienvenido</h1>
   </AdminLayout>
 </template>
