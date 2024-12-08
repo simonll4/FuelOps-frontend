@@ -24,7 +24,7 @@ export default {
       path: 'orders/:id',
       name: 'OrderDetailManager',
       meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
-      component: () => import("@/modules/admin/views/ProductDetailView.vue"),
+      component: () => import("@/modules/admin/views/OrderDetailView.vue"),
     },
     {
       path: 'users',
