@@ -100,9 +100,9 @@ const updateChart = () => {
   series.value[0].data = newData;
 };
 
-onMounted(() => {
-  console.log("Temperature chart mounted with data:", series.value);
-});
+// onMounted(() => {
+//   console.log("Temperature chart mounted with data:", series.value);
+// });
 </script>
 
 <template>

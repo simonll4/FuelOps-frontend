@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
@@ -12,13 +12,27 @@ import RadialBar from "../components/graphs/RadialBarGraph.vue";
 import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
 import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
 import DensityGraph from "../components/graphs/DensityGraph.vue";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { useWebSocketService } from "@/services/websocket.service";
 
 const orderNumber = ref("12345");
-
 const router = useRouter();
 function goBack() {
   router.push("/admin/orders");
 }
+
+const authStore = useAuthStore();
+const token = authStore.getToken();
+const { connect, subscribe } = useWebSocketService();
+
+onMounted(() => {
+  connect(token || '');
+
+  subscribe('/topic/alarms/data', (data: any) => {
+    console.log("alarmas topico: ", JSON.stringify(data, null, 2));
+  });
+});
+
 </script>
 <template>
   <AdminLayout>

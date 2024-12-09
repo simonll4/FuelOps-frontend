@@ -55,16 +55,8 @@ const getStateClass = (state: string): string => {
 <template>
   <v-card class="mb-4" outlined>
     <v-card-title>Alarmas de Temperatura</v-card-title>
-    <v-data-table-server
-      :headers="headers"
-      :items="alarms"
-      :items-length="alarms.length"
-      item-value="id"
-      class="elevation-1 tabla"
-      show-expand
-      single-expand
-      height="260"
-    >
+    <v-data-table-server :headers="headers" :items="alarms" :items-length="alarms.length" item-value="id"
+      class="elevation-1 tabla" show-expand single-expand height="260">
       <!-- Columna Estado con color -->
       <template #item.state="{ item }">
         <span :class="getStateClass(item.state)">
@@ -74,9 +66,7 @@ const getStateClass = (state: string): string => {
 
       <!-- Columna Temperatura con advertencia si excede el umbral -->
       <template #item.temperature="{ item }">
-        <span
-          :class="{ 'text-danger': item.temperature > thresholdTemperature }"
-        >
+        <span :class="{ 'text-danger': item.temperature > thresholdTemperature }">
           {{ item.temperature }}°C
         </span>
       </template>
