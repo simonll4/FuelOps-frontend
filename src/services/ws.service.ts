@@ -5,7 +5,7 @@ let stompClient: StompClient | null = null;
 const isConnected = ref(false);
 const subscriptions: Record<string, (message: any) => void> = {};
 
-export const useWebSocketService = () => {
+export const webSocketService = () => {
   
   const connect = (token: string) => {
     if (isConnected.value) return;
@@ -13,13 +13,12 @@ export const useWebSocketService = () => {
     console.log('Connecting to WebSocket...');
 
     stompClient = new StompClient({
-      brokerURL: 'ws://localhost:8080/alarms',
+      brokerURL: 'ws://localhost:8080/notifier',
       connectHeaders: { Authorization: `Bearer ${token}` },
 
       onConnect: () => {
         isConnected.value = true;
         console.log('WebSocket connected');
-        // Re-suscribir a los tópicos registrados
         Object.keys(subscriptions).forEach(topic => {
           subscribe(topic, subscriptions[topic]);
         });
@@ -56,17 +55,19 @@ export const useWebSocketService = () => {
       callback(parsedMessage);
     });
   };
+  
+  const disconnect = () => {
+    if (stompClient) {
+      stompClient.deactivate();
+      console.log('WebSocket disconnected');
+      stompClient = null;
+    }
 
-  // const disconnect = () => {
-  //   if (stompClient && isConnected.value) {
-  //     stompClient.deactivate();
-  //     console.log('WebSocket disconnected');
-  //     isConnected.value = false;
-  //   }
-  // };
+  };
 
   return {
     connect,
     subscribe,
+    disconnect
   };
 };

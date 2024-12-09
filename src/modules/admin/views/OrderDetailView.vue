@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
@@ -13,7 +13,7 @@ import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
 import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
 import DensityGraph from "../components/graphs/DensityGraph.vue";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import { useWebSocketService } from "@/services/websocket.service";
+import { useWsAlarms } from '@/composables/use.ws.notifications.alarms';
 
 const orderNumber = ref("12345");
 const router = useRouter();
@@ -21,16 +21,12 @@ function goBack() {
   router.push("/admin/orders");
 }
 
+//TODO: mover a componente global de notificaciones
 const authStore = useAuthStore();
-const token = authStore.getToken();
-const { connect, subscribe } = useWebSocketService();
+const { notificationsAlarms } = useWsAlarms(authStore.getToken() || '');
 
-onMounted(() => {
-  connect(token || '');
-
-  subscribe('/topic/alarms/data', (data: any) => {
-    console.log("alarmas topico: ", JSON.stringify(data, null, 2));
-  });
+watchEffect(() => {
+  console.log("alarmas topico: ", JSON.stringify(notificationsAlarms, null, 2));
 });
 
 </script>
