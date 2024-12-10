@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Alarm } from "@/modules/admin/interfaces/alarm.interface.ts";
+import type { Alarm } from "@/interfaces/alarm.interface";
 
 // Umbral de temperatura (puedes configurarlo dinámicamente si lo necesitas)
 const thresholdTemperature = ref(50); // °C
@@ -10,6 +10,7 @@ const thresholdTemperature = ref(50); // °C
 const alarms = ref<Alarm[]>([
   {
     id: 1,
+    orderId: 1,
     state: "Pendiente",
     timestamp: "2024-11-17 08:30:00",
     temperature: 55,
@@ -18,6 +19,7 @@ const alarms = ref<Alarm[]>([
   },
   {
     id: 2,
+    orderId: 1,
     state: "Aceptada",
     timestamp: "2024-11-17 09:00:00",
     temperature: 48,
@@ -26,6 +28,7 @@ const alarms = ref<Alarm[]>([
   },
   {
     id: 3,
+    orderId: 1,
     state: "Pendiente",
     timestamp: "2024-11-17 10:15:00",
     temperature: 52,

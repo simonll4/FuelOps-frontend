@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Detail } from "@/interfaces/detail.interface";
 import { ref } from "vue";
 
 // Definición de encabezados de la tabla
@@ -11,14 +12,7 @@ const headers = ref<Array<{ title: string; value: string; align?: "start" | "cen
 ]);
 
 // Datos simulados de ejemplo
-const items = ref<Array<{
-  id: number;
-  timestamp: string;
-  mass: number;
-  density: number;
-  temperature: number;
-  flowRate: number;
-}>>([
+const items = ref<Detail[]>([
   {
     id: 1,
     timestamp: "2024-11-17 10:30:00",
@@ -58,14 +52,8 @@ const getTemperatureClass = (temperature: number): string => {
 
 <template>
   <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla -->
-  <v-data-table-server
-    :headers="headers"
-    :items="items"
-    :items-length="items.length"
-    item-value="id"
-    class="elevation-1"
-    height="315"
-  >
+  <v-data-table-server :headers="headers" :items="items" :items-length="items.length" item-value="id"
+    class="elevation-1" height="315">
     <!-- Formateo del timestamp -->
     <template #item.timestamp="{ item }">
       <span>{{ item.timestamp }}</span>
@@ -101,10 +89,12 @@ const getTemperatureClass = (temperature: number): string => {
   color: #00aaff;
   font-weight: bold;
 }
+
 .text-normal {
   color: #00ffaa;
   font-weight: bold;
 }
+
 .text-warm {
   color: #ff5500;
   font-weight: bold;

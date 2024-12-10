@@ -1,32 +1,39 @@
 <script lang="ts" setup="">
-import { onMounted, ref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+
+import { useWsNewAlarmsByOrden } from "@/composables/use.ws.new.alarms";
+import { useWsAlarmsReminders } from "@/composables/use.ws.reminders.alarms";
+
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
-
 import ETA from "../components/graphs/ETAGraph.vue";
 import OrderData from "../components/order/OrderData.vue";
 import AlarmTable from "../components/alarms/AlarmTable.vue";
-
 import RadialBar from "../components/graphs/RadialBarGraph.vue";
 import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
 import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
 import DensityGraph from "../components/graphs/DensityGraph.vue";
-import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import { useWsAlarms } from '@/composables/use.ws.notifications.alarms';
+import { useWsOrderDetail } from "@/composables/use.ws.order.details";
 
-const orderNumber = ref("12345");
+// TODO: Cambiar por el id de la orden
+const orderNumber = ref("2");
+
 const router = useRouter();
 function goBack() {
   router.push("/admin/orders");
 }
 
 //TODO: mover a componente global de notificaciones
-const authStore = useAuthStore();
-const { notificationsAlarms } = useWsAlarms(authStore.getToken() || '');
+const { remindersAlarms } = useWsAlarmsReminders();
+const { alarmForOrder } = useWsNewAlarmsByOrden(orderNumber.value);
+const { detail } = useWsOrderDetail(orderNumber.value);
 
+//prueba para ver llegada de alarma
 watchEffect(() => {
-  console.log("alarmas topico: ", JSON.stringify(notificationsAlarms, null, 2));
+  console.log("reminders: ", remindersAlarms.value);
+  console.log("alarmas por orden: ", alarmForOrder.value);
+  console.log("detalle de orden: ", detail.value);
 });
 
 </script>
@@ -34,8 +41,9 @@ watchEffect(() => {
   <AdminLayout>
     <v-container>
       <h6 class="pages-title">Admin / Detalle de Orden</h6>
-      <h1>Detalle de Orden</h1>
+      <h1>Detalle de Orden </h1>
     </v-container>
+
     <v-container>
       <v-row align="center" class="mb-2" justify="space-between">
         <v-col>
@@ -46,10 +54,13 @@ watchEffect(() => {
           <v-btn @click="goBack" class="btn-color-4">Back</v-btn>
         </v-col>
       </v-row>
+
       <!-- Datos de la orden -->
       <OrderData />
+
       <v-row class="align-center d-flex">
         <v-col cols="6">
+
           <v-row>
             <!-- Circular graph -->
             <v-col cols="7">
@@ -60,26 +71,35 @@ watchEffect(() => {
               <ETA />
             </v-col>
           </v-row>
+
         </v-col>
+
         <!-- Tabla de alarmas -->
         <v-col cols="6">
           <AlarmTable class="tabla" />
         </v-col>
+
       </v-row>
       <h2>Detalles de carga</h2>
       <v-row>
+
+        <!-- Tabla de detalles -->
         <v-col cols="6">
           <OrderDetailTable class="tabla" />
         </v-col>
+
         <v-col cols="6">
           <TemperatureChart />
         </v-col>
+
       </v-row>
+
       <v-row>
         <v-col cols="6">
           <!-- TODO: Cambiar color -->
           <FlowRateGraph />
         </v-col>
+
         <v-col cols="6">
           <DensityGraph />
         </v-col>

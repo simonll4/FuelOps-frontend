@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { TableItem } from '@/modules/admin/interfaces/table-item.interface';
-import type { OrderStates } from '@/modules/admin/interfaces/order-states.interface';
+import type { TableItem } from '@/interfaces/table-item.interface';
+import type { OrderStates } from '@/interfaces/order-states.interface';
 
 const orderStates: OrderStates = {
   ORDER_CANCELLED: 'ORDER_CANCELLED',

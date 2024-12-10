@@ -1,11 +1,13 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+
 import type { AuthUser, LoggedUser } from '@/modules/auth/interfaces/user.interface';
 import { AuthStatus } from '@/modules/auth/interfaces/auth.interface';
 import { validateToken } from '@/modules/auth/services/auth.service';
 
 // Store de autenticación
 export const useAuthStore = defineStore('auth', () => {
+
   // States
   const authUser = ref<AuthUser | undefined>();
   const authToken = ref<string | null>(localStorage.getItem('auth_token'));
