@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Alarm } from "@/interfaces/alarm.interface";
+import type { Alarm } from "@/interfaces/alarm-interface";
 
 // Umbral de temperatura (puedes configurarlo dinámicamente si lo necesitas)
 const thresholdTemperature = ref(50); // °C
 
+
+
 //TODO: Configurar el items per page para que no muestre un scroll
+
 // Datos simulados de las alarmas
 const alarms = ref<Alarm[]>([
   {
@@ -53,6 +56,7 @@ const getStateClass = (state: string): string => {
   if (state === "Aceptada") return "text-success";
   return "";
 };
+
 </script>
 
 <template>
@@ -60,6 +64,7 @@ const getStateClass = (state: string): string => {
     <v-card-title>Alarmas de Temperatura</v-card-title>
     <v-data-table-server :headers="headers" :items="alarms" :items-length="alarms.length" item-value="id"
       class="elevation-1 tabla" show-expand single-expand height="260">
+
       <!-- Columna Estado con color -->
       <template #item.state="{ item }">
         <span :class="getStateClass(item.state)">
@@ -89,6 +94,7 @@ const getStateClass = (state: string): string => {
           </td>
         </tr>
       </template>
+
     </v-data-table-server>
   </v-card>
 </template>

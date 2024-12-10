@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { Alarm } from '@/interfaces/alarm.interface';
+import type { Alarm } from '@/interfaces/alarm-interface';
 
 export const useAlarmsWsStore = defineStore('AlarmsWs', () => {
 

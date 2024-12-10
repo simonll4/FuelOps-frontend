@@ -1,7 +1,23 @@
 <script setup lang="ts">
-import type { Detail } from "@/interfaces/detail.interface";
-import { ref } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 
+import type { OrderDetail } from "@/interfaces/order-details.interface";
+
+defineProps({
+  items: {
+    type: Array as () => OrderDetail[],
+    default: () => [],
+  },
+  totalElements: {
+    type: Number,
+    default: 0,
+  },
+  isLoading: Boolean,
+});
+
+const emit = defineEmits(["update:page"]);
+
+//TABLA
 // Definición de encabezados de la tabla
 const headers = ref<Array<{ title: string; value: string; align?: "start" | "center" | "end" }>>([
   { title: "Timestamp", value: "timestamp" },
@@ -11,65 +27,41 @@ const headers = ref<Array<{ title: string; value: string; align?: "start" | "cen
   { title: "Caudal (kg/h)", value: "flowRate" },
 ]);
 
-// Datos simulados de ejemplo
-const items = ref<Detail[]>([
-  {
-    id: 1,
-    timestamp: "2024-11-17 10:30:00",
-    mass: 5000,
-    density: 800,
-    temperature: 25,
-    flowRate: 1500,
-  },
-  {
-    id: 2,
-    timestamp: "2024-11-17 10:31:00",
-    mass: 6000,
-    density: 795,
-    temperature: 26,
-    flowRate: 1450,
-  },
-  {
-    id: 3,
-    timestamp: "2024-11-17 10:32:00",
-    mass: 7000,
-    density: 790,
-    temperature: 27,
-    flowRate: 1400,
-  },
-]);
-
-//TODO: Hacer algo para que esto se aplique con la temperatura que viene del back
+//TODO: la temperatura es de acuerdo a la del producto 
 // Función para aplicar estilos condicionales a la temperatura
 const getTemperatureClass = (temperature: number): string => {
-  if (temperature <= 20) return "text-cool";
-  if (temperature > 20 && temperature <= 30) return "text-normal";
-  if (temperature > 30) return "text-warm";
+  if (temperature <= -5) return "text-cool";
+  if (temperature > -1 && temperature <= 0.5) return "text-normal";
+  if (temperature > 0.5) return "text-warm";
   return "";
 };
 </script>
 
-
 <template>
-  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla -->
-  <v-data-table-server :headers="headers" :items="items" :items-length="items.length" item-value="id"
-    class="elevation-1" height="315">
+
+  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla
+   TODO: fijarse si se puede poner cantidad de paginas y no cantidad de items-->
+  <v-data-table-server :headers="headers" :items="items" :items-length="totalElements" item-value="id"
+    class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]" :loading="isLoading"
+    @update:page="emit('update:page', $event)">
+
+
     <!-- Formateo del timestamp -->
     <template #item.timestamp="{ item }">
       <span>{{ item.timestamp }}</span>
     </template>
 
-    <!-- Columna de masa acumulada -->
+    <!-- Columna de masa acumulada-->
     <template #item.mass="{ item }">
-      <span>{{ item.mass }} kg</span>
+      <span>{{ item.acummulatedMass }} kg</span>
     </template>
 
-    <!-- Columna de densidad -->
+    <!-- Columna de densidad-->
     <template #item.density="{ item }">
       <span>{{ item.density }} kg/m³</span>
     </template>
 
-    <!-- Columna de temperatura con colores condicionales -->
+    <!-- Columna de temperatura con colores condicionales-->
     <template #item.temperature="{ item }">
       <span :class="getTemperatureClass(item.temperature)">
         {{ item.temperature }} °C
@@ -78,9 +70,11 @@ const getTemperatureClass = (temperature: number): string => {
 
     <!-- Columna de caudal -->
     <template #item.flowRate="{ item }">
-      <span class="ml-2">{{ item.flowRate }} kg/h</span>
+      <span class="ml-2">{{ item.flow }} kg/h</span>
     </template>
   </v-data-table-server>
+
+
 </template>
 
 <style scoped>

@@ -6,7 +6,7 @@ import { webSocketService } from '@/services/ws.service';
 import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { useAlarmsWsStore } from '@/stores/alarms.ws.store';
 
-import type { Detail } from '@/interfaces/detail.interface';
+import type { OrderDetail } from '@/interfaces/order-details.interface';
 
 export const useWsOrderDetail = (orderId: string) => {
 
@@ -18,7 +18,7 @@ export const useWsOrderDetail = (orderId: string) => {
   const topic = `/topic/details/order/${orderId}`;
 
   // Variable reactiva para almacenar el mensaje recibido
-  const detail = ref<Detail | null>(null);
+  const detail = ref<OrderDetail | null>(null);
 
   // Store de autenticación
   //const authStore = useAuthStore();
@@ -34,7 +34,7 @@ export const useWsOrderDetail = (orderId: string) => {
   //const alarmForOrder = computed(() => alarmsByOrden.value[orderId] || null);
 
   // Manejo de la llegada de nuevos mensajes
-  const handleMessage = (message: Detail) => {
+  const handleMessage = (message: OrderDetail) => {
     console.log('Nuevo mensaje recibido:', message);
     //wsStore.setOrderAlarm(message); // Actualiza el store
     detail.value = message; // Actualiza la variable reactiva

@@ -6,7 +6,7 @@ import { webSocketService } from '@/services/ws.service';
 import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { useAlarmsWsStore } from '@/stores/alarms.ws.store';
 
-import type { Alarm } from '@/interfaces/alarm.interface';
+import type { Alarm } from '@/interfaces/alarm-interface';
 
 export const useWsAlarmsReminders = () => {
   // Cliente de Vue Query
