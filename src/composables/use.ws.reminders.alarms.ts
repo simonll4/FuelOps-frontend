@@ -50,4 +50,5 @@ export const useWsAlarmsReminders = () => {
     remindersAlarms,
     invalidate,
   };
+  
 };

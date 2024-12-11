@@ -29,6 +29,10 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
     setOrderDetails(details: OrderDetail[]) {
       orderDetails.value = details;
     },
+    addNewOrderDetail(detail: OrderDetail) {
+      orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];
+      totalElements.value += 1;
+    },
     setPaginationData(page: number, totalElement: number, totalPage: number) {
       currentPage.value = page;
       totalElements.value = totalElement;

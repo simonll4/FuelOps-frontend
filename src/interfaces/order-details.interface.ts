@@ -1,17 +1,17 @@
 export interface OrderDetail {
   id: number;
-  timestamp: string;
-  acummulatedMass: number;
+  timeStamp: string;
+  accumulatedMass: number;
   density: number;
   temperature: number;
-  flow: number;
+  flowRate: number;
 }
 
 export interface OrderDetailsResponse {
   details: OrderDetail[];
   pagination: {
-      currentPage: number;
-      totalElements: number;
-      totalPages: number;
+    currentPage: number;
+    totalElements: number;
+    totalPages: number;
   };
 }

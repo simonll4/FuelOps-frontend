@@ -8,10 +8,9 @@ import { getOrderDetails } from '@/services/order.details.service';
 export const useOrderDetails = (idOrder: number) => {
 
     const store = useOrderDetailsStore();
-    const { currentPage, pageSize, sortBy, orderDetails,totalElements, totalPages } = storeToRefs(store);
+    const { currentPage, pageSize, sortBy, orderDetails, totalElements, totalPages } = storeToRefs(store);
 
     const fetchOrderDetails = async () => {
-
         if (!idOrder) throw new Error('idOrder is required');
 
         const { details, pagination } = await getOrderDetails(
@@ -24,10 +23,11 @@ export const useOrderDetails = (idOrder: number) => {
         return { details, pagination };
     };
 
+    // TODO ver que onda lo del cache si hay que hacer que se venza cuando llega el ws
     const { isLoading, data, error } = useQuery({
         queryKey: ['orderDetails', idOrder, currentPage, pageSize, sortBy],
         queryFn: fetchOrderDetails,
-        staleTime: Infinity // cache no se vence nunca, los detalles de la orden no cambian
+        staleTime: Infinity,
     });
 
     watch(data, (result) => {
@@ -41,6 +41,7 @@ export const useOrderDetails = (idOrder: number) => {
     });
 
     return {
+
         // Properties
         orderDetails,
         currentPage,
@@ -50,9 +51,11 @@ export const useOrderDetails = (idOrder: number) => {
         totalPages,
         isLoading,
         error,
+
         // Methods
         setPage: store.setPage,
         setPageSize: store.setPageSize,
         setSortBy: store.setSortBy,
+        
     };
 };

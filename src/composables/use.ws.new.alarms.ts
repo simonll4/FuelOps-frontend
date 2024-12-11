@@ -3,7 +3,6 @@ import { storeToRefs } from 'pinia';
 import { useQueryClient } from '@tanstack/vue-query';
 
 import { webSocketService } from '@/services/ws.service';
-import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { useAlarmsWsStore } from '@/stores/alarms.ws.store';
 
 import type { Alarm } from '@/interfaces/alarm-interface';
@@ -13,19 +12,17 @@ export const useWsNewAlarmsByOrden = (orderId: string) => {
   const queryClient = useQueryClient(); // Cliente de Vue Query
 
   // Servicio WebSocket
-  const { connect, subscribe, disconnect } = webSocketService();
+  const { subscribe, disconnect } = webSocketService();
   // Tópico de las alarmas recordatorios
   const topic = `/topic/alarms/order/${orderId}`;
 
-  // Store de autenticación
-  //const authStore = useAuthStore();
-  //const token = String(authStore.getToken());
-
-  // TODO: por el momento lo dejo con store ver si se necesita
+  // TODO: conectar con el store de las alrmas que vienen paginadas como en los detalles de la orden
   // Store de alarmas
   const wsStore = useAlarmsWsStore();
+
   // Referencia reactiva al store
   const { alarmsByOrden } = storeToRefs(wsStore);
+  
   // Computed: retorna la alarma específica para el orderId
   const alarmForOrder = computed(() => alarmsByOrden.value[orderId] || null);
 

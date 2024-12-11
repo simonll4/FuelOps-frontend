@@ -1,10 +1,9 @@
 <script lang="ts" setup="">
-import { onMounted, ref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
-import { useWsNewAlarmsByOrden } from "@/composables/use.ws.new.alarms";
-import { useWsAlarmsReminders } from "@/composables/use.ws.reminders.alarms";
 import { useOrderDetails } from '@/composables/use.order.details';
+import { useWsOrderDetail } from "@/composables/use.ws.order.details";
 
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
@@ -15,13 +14,14 @@ import RadialBar from "../components/graphs/RadialBarGraph.vue";
 import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
 import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
 import DensityGraph from "../components/graphs/DensityGraph.vue";
-import { useWsOrderDetail } from "@/composables/use.ws.order.details";
 
 
 // TODO: Cambiar por el id de la orden (getOrdenById)
 const orderNumber = ref(2);
 
 const { orderDetails, totalElements, isLoading, setPage } = useOrderDetails(orderNumber.value);
+
+const { detail } = useWsOrderDetail(orderNumber.value);
 
 const handlePageChange = (page: number) => {
   setPage(page - 1);
@@ -35,14 +35,14 @@ function goBack() {
 //TODO: mover a componente global de reminders
 //const { remindersAlarms } = useWsAlarmsReminders();
 
-//const { alarmForOrder } = useWsNewAlarmsByOrden(orderNumber.value);
-//const { detail } = useWsOrderDetail(orderNumber.value);
+// TODO para cuando este la tabla de alarmas por orden
+//const { alarmForOrder } = useWsNewAlarmsByOrden(orderNumber.value);s
 
 //prueba para ver llegada de alarma
 watchEffect(() => {
   // console.log("reminders: ", remindersAlarms.value);
   // console.log("alarmas por orden: ", alarmForOrder.value);
-  // console.log("detalle de orden: ", detail.value);
+  console.log("detalle de orden ws: ", detail.value);
   console.log("orderDetails: ", orderDetails.value);
 });
 

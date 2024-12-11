@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 
 import type { OrderDetail } from "@/interfaces/order-details.interface";
 
-defineProps({
+const props = defineProps({
   items: {
     type: Array as () => OrderDetail[],
     default: () => [],
@@ -35,25 +35,34 @@ const getTemperatureClass = (temperature: number): string => {
   if (temperature > 0.5) return "text-warm";
   return "";
 };
+
+import { format } from "date-fns";
+
+const formatDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
+};
+
 </script>
 
 <template>
 
-  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla
-   TODO: fijarse si se puede poner cantidad de paginas y no cantidad de items-->
-  <v-data-table-server :headers="headers" :items="items" :items-length="totalElements" item-value="id"
-    class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]" :loading="isLoading"
-    @update:page="emit('update:page', $event)">
+  <!-- TODO si la cantidad de elementos no llena la pagina se rompe la navegacion
+   quizas traer otros props de la paginacion para mejorar el manejo de la tabla -->
 
+  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla-->
+
+  <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
+    item-value="id" class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]"
+    :loading="isLoading" @update:page="emit('update:page', $event)">
 
     <!-- Formateo del timestamp -->
     <template #item.timestamp="{ item }">
-      <span>{{ item.timestamp }}</span>
+      <span>{{ formatDate(item.timeStamp) }}</span>
     </template>
 
     <!-- Columna de masa acumulada-->
     <template #item.mass="{ item }">
-      <span>{{ item.acummulatedMass }} kg</span>
+      <span>{{ item.accumulatedMass }} kg</span>
     </template>
 
     <!-- Columna de densidad-->
@@ -70,7 +79,7 @@ const getTemperatureClass = (temperature: number): string => {
 
     <!-- Columna de caudal -->
     <template #item.flowRate="{ item }">
-      <span class="ml-2">{{ item.flow }} kg/h</span>
+      <span class="ml-2">{{ item.flowRate }} kg/h</span>
     </template>
   </v-data-table-server>
 

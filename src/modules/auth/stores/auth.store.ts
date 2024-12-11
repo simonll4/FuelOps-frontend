@@ -5,6 +5,11 @@ import type { AuthUser, LoggedUser } from '@/modules/auth/interfaces/user.interf
 import { AuthStatus } from '@/modules/auth/interfaces/auth.interface';
 import { validateToken } from '@/modules/auth/services/auth.service';
 
+import { webSocketService } from '@/services/ws.service';
+
+
+const wsService = webSocketService();
+
 // Store de autenticación
 export const useAuthStore = defineStore('auth', () => {
 
@@ -24,14 +29,20 @@ export const useAuthStore = defineStore('auth', () => {
     authUser.value = user;
     authToken.value = token;
     authStatus.value = AuthStatus.Authenticated;
-    localStorage.setItem('auth_token', token);  // Guardar token en localStorage
+
+    localStorage.setItem('auth_token', token);
+
+    wsService.connect(token);  // Conectar sesion WebSocket
   };
 
   const logout = () => {
     authUser.value = undefined;
     authToken.value = null;
     authStatus.value = AuthStatus.NotAuthenticated;
+
     localStorage.removeItem('auth_token');  // Limpiar token de localStorage
+
+    wsService.disconnect(); // Desconectar sesion WebSocket
   };
 
   const checkAuthStatus = async () => {
@@ -44,9 +55,12 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       const response = await validateToken();  // Validar token con el servicio correspondiente
+
       authUser.value = response;
       authToken.value = token;
       authStatus.value = AuthStatus.Authenticated;
+
+      wsService.connect(token); // Conectar sesion WebSocket
     } catch (error) {
       console.error('Token inválido', error);
       logout();  // Si el token es inválido, hacer logout
