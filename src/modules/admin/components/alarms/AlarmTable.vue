@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Alarm } from "@/modules/admin/interfaces/alarm.interface.ts";
+import type { Alarm } from "@/interfaces/alarm-interface";
 
 // Umbral de temperatura (puedes configurarlo dinámicamente si lo necesitas)
 const thresholdTemperature = ref(50); // °C
 
 //TODO: Configurar el items per page para que no muestre un scroll
+
 // Datos simulados de las alarmas
 const alarms = ref<Alarm[]>([
   {
     id: 1,
+    orderId: 1,
     state: "Pendiente",
     timestamp: "2024-11-17 08:30:00",
     temperature: 55,
@@ -18,6 +20,7 @@ const alarms = ref<Alarm[]>([
   },
   {
     id: 2,
+    orderId: 1,
     state: "Aceptada",
     timestamp: "2024-11-17 09:00:00",
     temperature: 48,
@@ -26,6 +29,7 @@ const alarms = ref<Alarm[]>([
   },
   {
     id: 3,
+    orderId: 1,
     state: "Pendiente",
     timestamp: "2024-11-17 10:15:00",
     temperature: 52,
@@ -50,21 +54,15 @@ const getStateClass = (state: string): string => {
   if (state === "Aceptada") return "text-success";
   return "";
 };
+
 </script>
 
 <template>
   <v-card class="mb-4" outlined>
     <v-card-title>Alarmas de Temperatura</v-card-title>
-    <v-data-table-server
-      :headers="headers"
-      :items="alarms"
-      :items-length="alarms.length"
-      item-value="id"
-      class="elevation-1 tabla"
-      show-expand
-      single-expand
-      height="260"
-    >
+    <v-data-table-server :headers="headers" :items="alarms" :items-length="alarms.length" item-value="id"
+      class="elevation-1 tabla" show-expand single-expand height="260">
+
       <!-- Columna Estado con color -->
       <template #item.state="{ item }">
         <span :class="getStateClass(item.state)">
@@ -74,9 +72,7 @@ const getStateClass = (state: string): string => {
 
       <!-- Columna Temperatura con advertencia si excede el umbral -->
       <template #item.temperature="{ item }">
-        <span
-          :class="{ 'text-danger': item.temperature > thresholdTemperature }"
-        >
+        <span :class="{ 'text-danger': item.temperature > thresholdTemperature }">
           {{ item.temperature }}°C
         </span>
       </template>
@@ -96,6 +92,7 @@ const getStateClass = (state: string): string => {
           </td>
         </tr>
       </template>
+
     </v-data-table-server>
   </v-card>
 </template>

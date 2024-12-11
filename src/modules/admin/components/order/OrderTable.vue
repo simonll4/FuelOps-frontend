@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { TableItem } from '@/modules/admin/interfaces/table-item.interface';
-import type { OrderStates } from '@/modules/admin/interfaces/order-states.interface';
+import type { TableItem } from '@/interfaces/table-item.interface';
+import type { OrderStates } from '@/interfaces/order-states.interface';
 
 const orderStates: OrderStates = {
   ORDER_CANCELLED: 'ORDER_CANCELLED',
@@ -114,7 +114,7 @@ const items = ref<TableItem[]>([
     alarms: "Sin alarmas",
     progress: 95,
   },
-  
+
 ]);
 // Función para aplicar estilos condicionales a las advertencias
 const getWarningClass = (warning: string): string => {
@@ -126,13 +126,8 @@ const getWarningClass = (warning: string): string => {
 </script>
 
 <template>
-  <v-data-table-server
-    :headers="headers"
-    :items="items"
-    :items-length="items.length"
-    item-value="id"
-    class="elevation-1"
-  >
+  <v-data-table-server :headers="headers" :items="items" :items-length="items.length" item-value="id"
+    class="elevation-1">
     <!-- Columna de ubicación con ícono -->
     <template #item.truck="{ item }">
       <router-link :to="`/admin/orders/${item.id}`" class="d-flex align-center truck-link">
@@ -151,14 +146,8 @@ const getWarningClass = (warning: string): string => {
     <!-- TODO: Que muestre la barra a partir de estado 2 -->
     <!-- Columna de progreso con barra -->
     <template #item.progress="{ item }">
-      <v-progress-linear
-        :value="item.progress"
-        bg-color="white"
-        color="#6D40E4"
-        rounded
-        height="10"
-        :model-value="item.progress"
-      ></v-progress-linear>
+      <v-progress-linear :value="item.progress" bg-color="white" color="#6D40E4" rounded height="10"
+        :model-value="item.progress"></v-progress-linear>
       <span class="ml-2">{{ item.progress }}%</span>
     </template>
   </v-data-table-server>
@@ -170,18 +159,22 @@ const getWarningClass = (warning: string): string => {
   color: rgb(0, 255, 0);
   font-weight: bold;
 }
+
 .text-danger {
   color: rgb(255, 0, 0);
   font-weight: bold;
 }
+
 .text-warning {
   color: rgb(255, 165, 0);
   font-weight: bold;
 }
+
 .truck-link {
   color: #fff;
   text-decoration: none;
 }
+
 .truck-link:hover {
   color: #6D40E4;
 }

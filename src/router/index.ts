@@ -5,6 +5,7 @@ import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import authRoutes from '@/modules/auth/routes/auth.routes';
 import adminRoutes from '@/modules/admin/routes/admin.routes';
 import operatorRoutes from '@/modules/operator/routes/operator.routes';
+import { AuthStatus } from '@/modules/auth/interfaces/auth.interface';
 
 const routes = [
   {
@@ -15,7 +16,12 @@ const routes = [
   },
   {
     ...adminRoutes
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/modules/common/views/NotFoundView.vue'),
+  },
 ];
 
 const router = createRouter({
@@ -27,9 +33,18 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
   await authStore.checkAuthStatus();
-  const isAuthenticated = authStore.getAuthStatus() === "Authenticated";
+  const isAuthenticated = authStore.getAuthStatus() === AuthStatus.Authenticated;
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.name === 'Login' && isAuthenticated) {
+    const userRoles = authStore.getUser()?.roles || [];
+    if (userRoles.includes('ROLE_ADMIN')) {
+      next({ name: 'AdminDashboard' });
+    } else if (userRoles.includes('ROLE_OPERATOR')) {
+      next({ name: 'OperatorDashboard' });
+    } else {
+      next(false); // Bloquea si el rol no coincide (esto podría depender del caso de uso)
+    }
+  } else if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login' });
   } else {
     const userRoles = authStore.getUser()?.roles || [];

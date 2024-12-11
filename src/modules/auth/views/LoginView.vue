@@ -43,65 +43,29 @@ const handleLogin = async () => {
           <v-form @submit.prevent="handleLogin" class="login-form">
             <!-- Campo de usuario -->
             <span>Usuario</span>
-            <v-text-field
-              v-model="loginForm.username"
-              placeholder="Ingresa tu usuario"
-              required
-              :disabled="isLoading.value"
-              hide-details
-              bg-color="white"
-              density="compact"
-              autofocus
-              class="form-input"
-              variant="outlined"
-            ></v-text-field>
+            <v-text-field v-model="loginForm.username" placeholder="Ingresa tu usuario" required
+              :disabled="isLoading.value" hide-details bg-color="white" density="compact" autofocus class="form-input"
+              variant="outlined"></v-text-field>
             <!-- Campo de contraseña -->
             <span>Contraseña</span>
-            <v-text-field
-              v-model="loginForm.password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Ingresa tu contraseña"
-              required
-              :disabled="isLoading.value"
-              hide-details
-              bg-color="white"
-              density="compact"
-              class="form-input"
-              variant="outlined"
+            <v-text-field v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
+              placeholder="Ingresa tu contraseña" required :disabled="isLoading.value" hide-details bg-color="white"
+              density="compact" class="form-input" variant="outlined"
               :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append-inner="togglePasswordVisibility"
-            ></v-text-field>
+              @click:append-inner="togglePasswordVisibility"></v-text-field>
             <!-- Botón de login -->
-            <v-btn
-              class="login-button mt-8"
-              :loading="isLoading.value"
-              :disabled="isLoading.value"
-              color="#00B0FF"
-              type="submit"
-              block
-            >
+            <v-btn class="login-button mt-8" :loading="isLoading.value" :disabled="isLoading.value" color="#00B0FF"
+              type="submit" block>
               <span v-if="!isLoading.value">Ingresar</span>
             </v-btn>
             <!-- Mensaje de éxito -->
-            <v-alert
-              v-if="isSuccess.value"
-              type="success"
-              class="mt-4"
-              transition="scale-transition"
-              border="start"
-              prominent
-            >
+            <v-alert v-if="isSuccess.value" type="success" class="mt-4" transition="scale-transition" border="start"
+              prominent>
               ¡Inicio de sesión exitoso!
             </v-alert>
             <!-- Mensaje de error -->
-            <v-alert
-              v-if="isError.value"
-              type="error"
-              class="mt-4"
-              transition="scale-transition"
-              border="start"
-              prominent
-            >
+            <v-alert v-if="isError.value" type="error" class="mt-4" transition="scale-transition" border="start"
+              prominent>
               {{ errorMessage }}
             </v-alert>
           </v-form>
