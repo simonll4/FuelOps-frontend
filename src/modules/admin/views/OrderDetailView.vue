@@ -1,6 +1,6 @@
 <script lang="ts" setup="">
 import { ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { useOrderDetails } from '@/composables/use.order.details';
 import { useWsOrderDetail } from "@/composables/ws/use.ws.order.details";
@@ -18,24 +18,25 @@ import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
 import DensityGraph from "../components/graphs/DensityGraph.vue";
 import { useAllOrderDetails } from "@/composables/use.all.order.details";
 import { useWsLatestOrderDetails } from "@/composables/ws/use.ws.latest.order.details";
+import { useOrder } from "@/composables/use.order";
+
+const route = useRoute();
 
 // DATOS DE LA ORDEN
-// TODO: Cambiar por el id de la orden (getOrdenById)
-const orderNumber = ref(2);
+const orderNumber = ref(Number(route.params.id));
+const { order } = useOrder(orderNumber.value);
 
 // TABLA DE DETALLES
 const { orderDetails, totalElements, isLoading, setPage } = useOrderDetails(orderNumber.value);
-const { detail } = useWsOrderDetail(orderNumber.value);
+useWsOrderDetail(orderNumber.value); // se suscribe al websocket para recibir los detalles en tiempo real
 
 const handlePageChange = (page: number) => {
   setPage(page - 1);
 };
 
 // GRAFICOS
-// Todos los detalles de la orden, para dibujar los graficos
-const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(orderNumber.value);
-// Ultimo detalle de la orden, para dibuar los graficos en tiempo real
-const { lastDetail } = useWsLatestOrderDetails(orderNumber.value);
+const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(orderNumber.value); // Todos los detalles de la orden, para dibujar los graficos
+const { lastDetail } = useWsLatestOrderDetails(orderNumber.value); // Ultimo detalle de la orden, para actualizar los graficos en tiempo real
 
 const router = useRouter();
 function goBack() {
@@ -56,6 +57,7 @@ watchEffect(() => {
   //console.log("orderDetails: ", orderDetails.value);
   //console.log("aca allOrderDetails: ", allOrderDetails.value);
   //console.log("aca lastDetail: ", lastDetail.value);
+  console.log("order: ", order.value);
 });
 
 </script>
@@ -82,8 +84,10 @@ watchEffect(() => {
       <v-row>
         <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
-          <OrderData />
+          <OrderData v-if="order" :order="order" />
         </v-col>
+
+        <!-- TODO conectar -->
         <v-col cols="6">
           <AcceptAlarm />
         </v-col>
@@ -91,6 +95,7 @@ watchEffect(() => {
 
       <v-row class="align-center d-flex">
 
+        <!-- TODO conectar -->
         <!-- Grafico circular y ETA -->
         <v-col cols="6">
           <v-row>
@@ -105,6 +110,7 @@ watchEffect(() => {
           </v-row>
         </v-col>
 
+        <!-- TODO conectar -->
         <!-- Tabla de alarmas -->
         <v-col cols="6">
           <AlarmTable class="tabla" />
@@ -133,11 +139,11 @@ watchEffect(() => {
 
         <v-col cols="6">
           <!-- TODO: Cambiar color -->
-          <FlowRateGraph />
+          <FlowRateGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
 
         <v-col cols="6">
-          <DensityGraph />
+          <DensityGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
 
       </v-row>

@@ -5,7 +5,7 @@ import { webSocketService } from '@/services/ws.service';
 import type { OrderDetail } from '@/interfaces/order-details.interface';
 
 export const useWsLatestOrderDetails = (orderId: number) => {
-  
+
   const store = useOrderDetailsStore();
   const { subscribe, disconnect } = webSocketService();
 
@@ -15,7 +15,7 @@ export const useWsLatestOrderDetails = (orderId: number) => {
 
   const handleMessage = (message: OrderDetail) => {
     lastDetail.value = message;
-    store.addNewOrderDetailToAll(message);
+    store.addLatestOrderDetailToAll(message);
   };
 
   onMounted(() => {

@@ -9,11 +9,9 @@ import type { Alarm } from '@/interfaces/alarm-interface';
 
 export const useWsNewAlarmsByOrden = (orderId: string) => {
 
-  const queryClient = useQueryClient(); // Cliente de Vue Query
+  const queryClient = useQueryClient();
 
-  // Servicio WebSocket
   const { subscribe, disconnect } = webSocketService();
-  // Tópico de las alarmas recordatorios
   const topic = `/topic/alarms/order/${orderId}`;
 
   // TODO: conectar con el store de las alrmas que vienen paginadas como en los detalles de la orden
@@ -22,7 +20,7 @@ export const useWsNewAlarmsByOrden = (orderId: string) => {
 
   // Referencia reactiva al store
   const { alarmsByOrden } = storeToRefs(wsStore);
-  
+
   // Computed: retorna la alarma específica para el orderId
   const alarmForOrder = computed(() => alarmsByOrden.value[orderId] || null);
 

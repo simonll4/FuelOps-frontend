@@ -12,13 +12,14 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
   const totalElements = ref<number>(0);
   const totalPages = ref<number>(0);
 
-  // Order details for the current order
+  // Order details for the current order (used for tables with pagination)
   const orderDetails = ref<OrderDetail[]>([]);
 
-  // All order details
+  // All order details (used for graphs)
   const allOrderDetails = ref<OrderDetail[]>([]);
 
   return {
+    
     // States
     currentPage,
     pageSize,
@@ -54,9 +55,8 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
     },
     setAllOrderDetails(details: OrderDetail[]) {
       allOrderDetails.value = details;
-      //allOrderDetails.value = [...details];
     },
-    addNewOrderDetailToAll(detail: OrderDetail) {
+    addLatestOrderDetailToAll(detail: OrderDetail) {
       allOrderDetails.value = [detail, ...allOrderDetails.value];
     },
   };

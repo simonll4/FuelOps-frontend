@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import router from '@/router';
 
 import type { AuthUser, LoggedUser } from '@/modules/auth/interfaces/user.interface';
 import { AuthStatus } from '@/modules/auth/interfaces/auth.interface';
@@ -33,6 +34,13 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('auth_token', token);
 
     wsService.connect(token);  // Conectar sesion WebSocket
+
+    // Redirigir basado en el rol
+    if (user.roles.includes('ROLE_ADMIN')) {
+      router.push({ name: 'AdminDashboard' });
+    } else if (user.roles.includes('ROLE_OPERATOR')) {
+      router.push({ name: 'OperatorDashboard' });
+    }
   };
 
   const logout = () => {
