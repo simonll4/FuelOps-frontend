@@ -12,7 +12,7 @@ const finalWeight = ref(17000);
 </script>
 
 <template>
-  <v-card class="mb-4 data-container" color="container-color" outlined="">
+  <v-card class="mb-4 data-container" color="container-color">
     <v-card-text>
       <v-row>
         <v-col cols="12" md="6">

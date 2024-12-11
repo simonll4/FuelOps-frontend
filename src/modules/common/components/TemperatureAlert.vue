@@ -56,6 +56,7 @@ const goToOrder = () => {
 </template>
 
 <style scoped>
+/* TODO: Meter los estilos al global.scss */
 .warning-icon {
   display: block;
   margin: 0 auto 12px;

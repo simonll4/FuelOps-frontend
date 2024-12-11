@@ -7,6 +7,7 @@ import OrderDetailTable from "../components/order/OrderDetailTable.vue";
 import ETA from "../components/graphs/ETAGraph.vue";
 import OrderData from "../components/order/OrderData.vue";
 import AlarmTable from "../components/alarms/AlarmTable.vue";
+import AcceptAlarm from "../components/alarms/AcceptAlarmCard.vue";
 
 import RadialBar from "../components/graphs/RadialBarGraph.vue";
 import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
@@ -36,8 +37,16 @@ function goBack() {
           <v-btn @click="goBack" class="btn-color-4">Back</v-btn>
         </v-col>
       </v-row>
-      <!-- Datos de la orden -->
-      <OrderData />
+      <!-- Datos de la orden y Notificacion de Alarmas -->
+      <v-row>
+      <!-- TODO: Hacer que estos dos coincidan en height -->
+        <v-col cols="6">
+          <OrderData />
+        </v-col>
+        <v-col cols="6">
+          <AcceptAlarm />
+        </v-col>
+      </v-row>
       <v-row class="align-center d-flex">
         <v-col cols="6">
           <v-row>
