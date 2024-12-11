@@ -28,7 +28,7 @@ export const useWsOrderDetail = (orderId: number) => {
     //console.log('Nuevo mensaje recibido:', message);
 
     detail.value = message;
-    queryClient.setQueryData(['lastOrderDetail'], message); // Actualiza cache de Vue Query
+    queryClient.setQueryData(['OrderDetail'], message); // Actualiza cache de Vue Query
 
     store.addNewOrderDetail(message);
   };

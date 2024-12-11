@@ -1,6 +1,6 @@
 import api from '@/services/api.service';
 
-import type { OrderDetailsResponse } from '@/interfaces/order-details.interface';
+import type { OrderDetail, OrderDetailsResponse } from '@/interfaces/order-details.interface';
 
 export const getOrderDetails = async (
     idOrder: number,
@@ -28,4 +28,12 @@ export const getOrderDetails = async (
             totalPages: data.pagination.totalPages
         }
     };
+};
+
+export const getAllOrderDetails = async (idOrder: number): Promise<OrderDetail[]> => {
+    if (!idOrder) throw new Error('idOrder is required');
+    const { data } = await api().get(`/details/all`, {
+        params: { idOrder },
+    });
+    return data;
 };

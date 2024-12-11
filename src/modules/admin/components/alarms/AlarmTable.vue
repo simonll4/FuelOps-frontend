@@ -5,8 +5,6 @@ import type { Alarm } from "@/interfaces/alarm-interface";
 // Umbral de temperatura (puedes configurarlo dinámicamente si lo necesitas)
 const thresholdTemperature = ref(50); // °C
 
-
-
 //TODO: Configurar el items per page para que no muestre un scroll
 
 // Datos simulados de las alarmas

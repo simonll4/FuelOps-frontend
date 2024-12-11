@@ -8,13 +8,15 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
   // Manage pagination data
   const pageSize = ref<number>(5);
   const sortBy = ref<string>('timeStamp');
-
   const currentPage = ref<number>(0);
   const totalElements = ref<number>(0);
   const totalPages = ref<number>(0);
 
   // Order details for the current order
   const orderDetails = ref<OrderDetail[]>([]);
+
+  // All order details
+  const allOrderDetails = ref<OrderDetail[]>([]);
 
   return {
     // States
@@ -24,6 +26,7 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
     totalElements,
     totalPages,
     orderDetails,
+    allOrderDetails,
 
     // Actions
     setOrderDetails(details: OrderDetail[]) {
@@ -48,7 +51,14 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
     },
     setSortBy(sort: string) {
       sortBy.value = sort;
-    }
+    },
+    setAllOrderDetails(details: OrderDetail[]) {
+      allOrderDetails.value = details;
+      //allOrderDetails.value = [...details];
+    },
+    addNewOrderDetailToAll(detail: OrderDetail) {
+      allOrderDetails.value = [detail, ...allOrderDetails.value];
+    },
   };
 
 });
