@@ -7,7 +7,7 @@ import type { OrderDetail } from '@/interfaces/order-details.interface';
 export const useWsLatestOrderDetails = (orderId: number) => {
 
   const store = useOrderDetailsStore();
-  const { subscribe, disconnect } = webSocketService();
+  const { subscribe, unsubscribe } = webSocketService();
 
   const topic = `/topic/details/graphs/order/${orderId}`;
 
@@ -23,7 +23,7 @@ export const useWsLatestOrderDetails = (orderId: number) => {
   });
 
   onUnmounted(() => {
-    disconnect();
+    unsubscribe(topic);
   });
 
   return {

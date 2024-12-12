@@ -3,25 +3,20 @@ import { storeToRefs } from 'pinia';
 import { useQueryClient } from '@tanstack/vue-query';
 
 import { webSocketService } from '@/services/ws.service';
-import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { useAlarmsWsStore } from '@/stores/alarms.ws.store';
 
 import type { Alarm } from '@/interfaces/alarm-interface';
 
 export const useWsAlarmsReminders = () => {
-  // Cliente de Vue Query
-  const queryClient = useQueryClient();
 
-  // Store de autenticación
-  const authStore = useAuthStore();
-  const token = String(authStore.getToken());
+  const queryClient = useQueryClient();
 
   // Store de alarmas
   const wsStore = useAlarmsWsStore();
   const { remindersAlarms } = storeToRefs(wsStore); // Referencia reactiva al store
 
   // Servicio WebSocket
-  const { connect, subscribe, disconnect } = webSocketService();
+  const { subscribe, unsubscribe } = webSocketService();
   // Tópico de las alarmas recordatorios
   const topic = '/topic/alarms/reminders';
 
@@ -33,14 +28,18 @@ export const useWsAlarmsReminders = () => {
 
   // Suscripción y conexión WebSocket
   onMounted(() => {
-    connect(token);
     subscribe(topic, handleMessage);
   });
 
   // Desconexión del WebSocket al desmontar el componente
   onUnmounted(() => {
-    disconnect();
+    //disconnect();
+    unsubscribe(topic);
   });
+
+  const clearRemindersAlarms = () => {
+    wsStore.setRemindersAlarms([]); // Limpia el store
+  };
 
   // Refrescar la consulta (invalidate) si es necesario
   //Este método puede ser utilizado para invalidar la caché de Vue Query si se desea forzar una actualización de las alarmas.
@@ -48,7 +47,8 @@ export const useWsAlarmsReminders = () => {
 
   return {
     remindersAlarms,
+    clearRemindersAlarms,
     invalidate,
   };
-  
+
 };

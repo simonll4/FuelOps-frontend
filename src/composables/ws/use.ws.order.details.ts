@@ -12,7 +12,7 @@ export const useWsOrderDetail = (orderId: number) => {
   const queryClient = useQueryClient();
 
   // Servicio WebSocket
-  const { subscribe, disconnect } = webSocketService();
+  const { subscribe, unsubscribe } = webSocketService();
 
   // Tópico de las alarmas recordatorios
   const topic = `/topic/details/order/${orderId}`;
@@ -39,7 +39,8 @@ export const useWsOrderDetail = (orderId: number) => {
 
   // Desconexión del WebSocket al desmontar el componente
   onUnmounted(() => {
-    disconnect();
+    //disconnect();
+    unsubscribe(topic);
   });
 
   // Método para invalidar la cache

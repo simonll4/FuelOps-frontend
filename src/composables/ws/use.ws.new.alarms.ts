@@ -11,7 +11,7 @@ export const useWsNewAlarmsByOrden = (orderId: string) => {
 
   const queryClient = useQueryClient();
 
-  const { subscribe, disconnect } = webSocketService();
+  const { subscribe, unsubscribe } = webSocketService();
   const topic = `/topic/alarms/order/${orderId}`;
 
   // TODO: conectar con el store de las alrmas que vienen paginadas como en los detalles de la orden
@@ -26,7 +26,6 @@ export const useWsNewAlarmsByOrden = (orderId: string) => {
 
   // Manejo de la llegada de nuevos mensajes
   const handleMessage = (message: Alarm) => {
-    console.log('Nuevo mensaje recibido:', message);
     wsStore.setOrderAlarm(message); // Actualiza el store
     queryClient.setQueryData(['newAlarm'], message); // Actualiza cache de Vue Query
   };
@@ -39,7 +38,8 @@ export const useWsNewAlarmsByOrden = (orderId: string) => {
 
   // Desconexión del WebSocket al desmontar el componente
   onUnmounted(() => {
-    disconnect();
+    //disconnect();
+    unsubscribe(topic);
   });
 
   // Método para invalidar la cache
