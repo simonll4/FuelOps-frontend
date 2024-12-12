@@ -23,7 +23,7 @@ const app = createApp(App)
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60, // 1 minuto
+      staleTime: 0 //1000 * 60, // 1 minuto
     }
   }
 });

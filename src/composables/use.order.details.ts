@@ -23,22 +23,26 @@ export const useOrderDetails = (idOrder: number) => {
         return { details, pagination };
     };
 
-    // TODO ver que onda lo del cache si hay que hacer que se venza cuando llega el ws
+
     const { isLoading, data, error } = useQuery({
         queryKey: ['orderDetails', idOrder, currentPage, pageSize, sortBy],
         queryFn: fetchOrderDetails,
-        staleTime: Infinity,
+        staleTime: 0//Infinity,
     });
 
     watch(data, (result) => {
         if (result) {
-            store.setOrderDetails(result.details);
-            store.setPaginationData(
-                result.pagination.currentPage,
-                result.pagination.totalElements,
-                result.pagination.totalPages);
+          store.setOrderDetails(result.details);
+          store.setPaginationData(
+            result.pagination.currentPage,
+            result.pagination.totalElements,
+            result.pagination.totalPages
+          );
+          // Forzar actualización reactiva
+          store.orderDetails = [...result.details];
         }
-    });
+      });
+
 
     return {
 
@@ -56,6 +60,6 @@ export const useOrderDetails = (idOrder: number) => {
         setPage: store.setPage,
         setPageSize: store.setPageSize,
         setSortBy: store.setSortBy,
-        
+
     };
 };

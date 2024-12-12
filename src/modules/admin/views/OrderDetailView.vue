@@ -57,7 +57,7 @@ watchEffect(() => {
   //console.log("orderDetails: ", orderDetails.value);
   //console.log("aca allOrderDetails: ", allOrderDetails.value);
   //console.log("aca lastDetail: ", lastDetail.value);
-  console.log("order: ", order.value);
+  //console.log("order: ", order.value);
 });
 
 </script>
