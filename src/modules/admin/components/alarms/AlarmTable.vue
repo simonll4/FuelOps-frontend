@@ -61,7 +61,7 @@ const getStateClass = (state: string): string => {
   <v-card class="mb-4" outlined>
     <v-card-title>Alarmas de Temperatura</v-card-title>
     <v-data-table-server :headers="headers" :items="alarms" :items-length="alarms.length" item-value="id"
-      class="elevation-1 tabla" show-expand single-expand height="260">
+      class="elevation-1 tabla" show-expand single-expand>
 
       <!-- Columna Estado con color -->
       <template #item.state="{ item }">
