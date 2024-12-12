@@ -34,8 +34,6 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
       orderDetails.value = details;
     },
     addNewOrderDetail(detail: OrderDetail) {
-      // orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];
-      // totalElements.value += 1;
       if (orderDetails.value.length === 5) {
         // Si hay 5 elementos, eliminamos el último y agregamos el nuevo
         orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];

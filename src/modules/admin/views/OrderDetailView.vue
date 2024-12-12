@@ -101,11 +101,13 @@ watchEffect(() => {
           <v-row>
             <!-- Circular graph -->
             <v-col cols="7">
-              <RadialBar />
+              <!-- <RadialBar /> -->
+              <RadialBar v-if="order" :order="order" :last-detail="lastDetail" />
             </v-col>
             <!-- ETA -->
+            <ETA v-if="order" :order="order" :last-detail="lastDetail" />
             <v-col cols="5">
-              <ETA />
+              <!-- <ETA /> -->
             </v-col>
           </v-row>
         </v-col>

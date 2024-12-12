@@ -1,9 +1,22 @@
-export interface Truck {
-  licensePlate: string;
+interface Product {
+  product: string;
+  density: string;
 }
-
-export interface Customer {
+interface Driver {
+  name: string;
+  lastName: string;
+  dni: string;
+}
+interface Customer {
   businessName: string;
+}
+interface Truck {
+  licensePlate: string;
+  tankers: Tanker[];
+}
+interface Tanker {
+  capacityLiters: number;
+  licensePlate: string;
 }
 
 export interface Order {
@@ -11,11 +24,14 @@ export interface Order {
   status: string;
   truck: Truck;
   customer: Customer;
+  driver: Driver;
+  product: Product;
   preset: number;
   receptionDate: string;
   estimatedDate: string;
-  initialWeighingDate: string | null;
-  fuelingStartDate: string | null;
-  fuelingEndDate: string | null;
-  finalWeighingDate: string | null;
+  initialWeighingDate: string;
+  fuelingStartDate: string;
+  fuelingEndDate: string;
+  finalWeighingDate: string;
+  lastAccumulatedMass: string;
 }
