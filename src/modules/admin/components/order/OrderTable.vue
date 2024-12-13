@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import type { TableItem } from '@/interfaces/table-item.interface';
 import type { OrderStates } from '@/interfaces/order-states.interface';
 
@@ -11,144 +11,105 @@ const orderStates: OrderStates = {
   REGISTERED_FINAL_WEIGHING: 'REGISTERED_FINAL_WEIGHING',
 };
 
+const props = defineProps({
+  items: {
+    type: Array as () => TableItem[],
+    default: () => [],
+  },
+  totalElements: {
+    type: Number,
+    default: 0,
+  },
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  pageSize: {
+    type: Number,
+    required: true,
+  },
+  totalPages: {
+    type: Number,
+    required: true,
+  },
+  isLoading: Boolean,
+});
+
+const emit = defineEmits(["update:page"]);
+const currentPage = ref(props.currentPage);
+
+const handlePageChange = (page: number) => {
+  currentPage.value = page;
+  emit("update:page", page);
+};
+
+watch(() => props.currentPage, (newPage: number) => {
+  currentPage.value = newPage;
+});
+
 // Definición de los encabezados de la tabla
 const headers = ref<Array<{ title: string; value: string; align?: "start" | "center" | "end" }>>([
   { title: "Camión", value: "truck" },
-  { title: "Cliente", value: "client" },
-  { title: "Recepción", value: "startingDate" },
-  { title: "Carga", value: "endingDate" },
-  { title: "Estado", value: "state" },
-  { title: "Alarmas", value: "alarms" },
-  { title: "Progreso", value: "progress", align: "center" },
+  { title: "Cliente", value: "customer" },
+  { title: "Recepción", value: "receptionDate" },
+  { title: "Carga", value: "estimatedDate" },
+  { title: "Estado", value: "status" },
+  { title: "Alarmas", value: "alarmStatus" },
 ]);
 
-// Datos simulados
-const items = ref<TableItem[]>([
-  {
-    id: 1,
-    truck: "KJK-678",
-    client: "YPF",
-    startingDate: "2024-01-01 08:00:00",
-    endingDate: "2024-01-01 18:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 49,
-  },
-  {
-    id: 2,
-    truck: "KJK-678",
-    client: "Shell",
-    startingDate: "2024-02-15 09:00:00",
-    endingDate: "2024-02-15 20:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Pendiente",
-    progress: 24,
-  },
-  {
-    id: 3,
-    truck: "KJK-678",
-    client: "ExxonMobil",
-    startingDate: "2024-03-10 07:30:00",
-    endingDate: "2024-03-10 17:30:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Problema",
-    progress: 75,
-  },
-  {
-    id: 4,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-  {
-    id: 5,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-  {
-    id: 6,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-  {
-    id: 7,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-  {
-    id: 8,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-  {
-    id: 9,
-    truck: "KJK-678",
-    client: "Repsol",
-    startingDate: "2024-04-05 06:00:00",
-    endingDate: "2024-04-05 16:00:00",
-    state: "REGISTERED_FINAL_WEIGHING",
-    alarms: "Sin alarmas",
-    progress: 95,
-  },
-
-]);
 // Función para aplicar estilos condicionales a las advertencias
 const getWarningClass = (warning: string): string => {
+  console.log(warning);
   if (warning === "Sin alarmas") return "text-success";
   if (warning === "Problema") return "text-danger";
   if (warning === "Pendiente") return "text-warning";
   return "";
 };
+
+import { format } from "date-fns";
+
+const formatDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
+};
 </script>
 
 <template>
-  <v-data-table-server :headers="headers" :items="items" :items-length="items.length" item-value="id"
-    class="elevation-1">
+  <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
+    item-value="id" class="elevation-1" :items-per-page="5" :items-per-page-options="[]" :loading="isLoading"
+    hide-default-footer @update:page="handlePageChange">
     <!-- Columna de ubicación con ícono -->
     <template #item.truck="{ item }">
       <router-link :to="`/admin/orders/${item.id}`" class="d-flex align-center truck-link">
         <v-icon class="mr-2">mdi-tanker-truck</v-icon>
-        <span>{{ item.truck }}</span>
+        <span>{{ item.truck.licensePlate }}</span>
       </router-link>
     </template>
 
+    <template #item.customer="{ item }">
+      <span>{{ item.customer.businessName }}</span>
+    </template>
+
+    <template #item.receptionDate="{ item }">
+      <span>{{ formatDate(item.receptionDate) }}</span>
+    </template>
+
+    <template #item.estimatedDate="{ item }">
+      <span>{{ formatDate(item.estimatedDate) }}</span>
+    </template>
+
     <!-- Columna de advertencias con estilos -->
-    <template #item.alarms="{ item }">
-      <span :class="getWarningClass(item.alarms)">
-        {{ item.alarms }}
+    <template #item.alarmStatus="{ item }">
+      <span :class="getWarningClass(item.alarmStatus.state)">
+        {{ item.alarmStatus.state }}
       </span>
     </template>
 
-    <!-- TODO: Que muestre la barra a partir de estado 2 -->
-    <!-- Columna de progreso con barra -->
-    <template #item.progress="{ item }">
-      <v-progress-linear :value="item.progress" bg-color="white" color="#6D40E4" rounded height="10"
-        :model-value="item.progress"></v-progress-linear>
-      <span class="ml-2">{{ item.progress }}%</span>
+    <!-- Footer personalizado -->
+    <template #bottom>
+      <v-container class="d-flex justify-center">
+        <v-pagination :model-value="currentPage" :length="totalPages" :total-visible="pageSize"
+          @update:modelValue="handlePageChange"></v-pagination>
+      </v-container>
     </template>
   </v-data-table-server>
 </template>

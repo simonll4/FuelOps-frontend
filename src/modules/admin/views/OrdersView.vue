@@ -2,6 +2,15 @@
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderTable from "../components/order/OrderTable.vue";
 import TempAlert from "../../common/components/TemperatureAlert.vue";
+
+import { useOrders } from "@/composables/use.orders";
+
+const { orders, totalElements, currentPage, pageSize, totalPages, isLoading, setPage } = useOrders();
+
+const handlePageChange = (page: number) => {
+  console.log("page ", page);
+  setPage(page - 1);
+};
 </script>
 
 <template>
@@ -10,7 +19,8 @@ import TempAlert from "../../common/components/TemperatureAlert.vue";
     <h1 class="ma-5">Órdenes</h1>
 
     <!-- TODO conectar  -->
-    <OrderTable class="tabla" />
+    <OrderTable class="tabla" :items="orders" :totalElements="totalElements" :current-page="currentPage"
+      :page-size="pageSize" :total-pages="totalPages" :isLoading="isLoading" @update:page="handlePageChange" />
 
     <TempAlert />
   </AdminLayout>
