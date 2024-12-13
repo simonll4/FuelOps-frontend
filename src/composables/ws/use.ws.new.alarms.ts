@@ -1,25 +1,26 @@
-// Composable para manejar WebSockets
 import { onMounted, onUnmounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useQueryClient } from '@tanstack/vue-query';
+
 import { webSocketService } from '@/services/ws.service';
 import { useAlarmsStore } from '@/stores/alarms.store';
+
 import type { Alarm } from '@/interfaces/alarm.interface';
-import { storeToRefs } from 'pinia';
 
 export const useWsAlarms = (idOrder: number) => {
+  
   const queryClient = useQueryClient();
+
   const { subscribe, unsubscribe } = webSocketService();
   const topic = `/topic/alarms/order/${idOrder}`;
 
-  const alarm = ref<Alarm | null>(null);
   const store = useAlarmsStore();
   const { newAlarmByOrden } = storeToRefs(store);
 
   const handleMessage = (message: Alarm) => {
-    alarm.value = message;
     queryClient.setQueryData(['alarm'], message);
     store.addNewAlarm(message);
-    store.setOrderAlarm(message);
+    store.updateAlarm(message)
   };
 
   onMounted(() => {
@@ -33,7 +34,6 @@ export const useWsAlarms = (idOrder: number) => {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['alarms'] });
 
   return {
-    //alarm,
     alarm: newAlarmByOrden,
     invalidate
   };

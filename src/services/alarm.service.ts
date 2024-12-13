@@ -1,5 +1,5 @@
-// Servicio para interactuar con el endpoint de alarmas
 import api from '@/services/api.service';
+
 import type { Alarm, AlarmResponse } from '@/interfaces/alarm.interface';
 
 export const getAlarms = async (
@@ -27,4 +27,17 @@ export const getAlarms = async (
       totalPages: data.pagination.totalPages
     }
   };
+};
+
+export const setAlarmStatus = async (
+  newStatus: string,
+  payload: { id: number; observation: string }
+): Promise<Alarm> => {
+  if (!payload.id || !newStatus) throw new Error('id and newStatus are required');
+
+  const { data } = await api().post(`/orders/set-alarm-status`, payload, {
+    params: { newStatus },
+  });
+
+  return data;
 };

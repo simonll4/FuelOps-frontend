@@ -29,7 +29,6 @@ const props = defineProps({
   isLoading: Boolean,
 });
 
-
 // watchEffect(() => {
 //   console.log("items", props.items);
 //   console.log("currentPage", props.currentPage);

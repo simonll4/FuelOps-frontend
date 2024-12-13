@@ -38,28 +38,16 @@ export const useAlarms = (idOrder: number) => {
       );
       store.alarms = [...result.alarms];
 
-
-    }
-  });
-
-
-  watch(data, (result) => {
-    if (result) {
-
       const alarmsArray = result.alarms;
       // Buscar la alarma con status PENDING_REVIEW
       const pendingReviewAlarm = alarmsArray.find(alarm => alarm?.status === 'PENDING_REVIEW');
-
-     // console.log('pendingReviewAlarm', pendingReviewAlarm);
-
+      // console.log('pendingReviewAlarm', pendingReviewAlarm);
       if (pendingReviewAlarm) {
         store.setOrderAlarm(pendingReviewAlarm);
-      }
 
+      }
     }
   });
-
-
 
   return {
     alarms,

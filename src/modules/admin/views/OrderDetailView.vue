@@ -10,7 +10,7 @@ import OrderDetailTable from "../components/order/OrderDetailTable.vue";
 import ETA from "../components/graphs/ETAGraph.vue";
 import OrderData from "../components/order/OrderData.vue";
 import AlarmTable from "../components/alarms/AlarmTable.vue";
-import AcceptAlarm from "../components/alarms/AcceptAlarmCard.vue";
+import AlarmHandler from "../components/alarms/AlarmHandler.vue";
 import RadialBar from "../components/graphs/RadialBarGraph.vue";
 import TemperatureChart from "../components/graphs/TemperatureGraph.vue";
 import FlowRateGraph from "../components/graphs/FlowRateGraph.vue";
@@ -21,6 +21,7 @@ import { useWsLatestOrderDetails } from "@/composables/ws/use.ws.latest.order.de
 import { useOrder } from "@/composables/use.order";
 import { useAlarms } from "@/composables/use.alarms";
 import { useWsAlarms } from "@/composables/ws/use.ws.new.alarms";
+import { useAlarmHandler } from "@/composables/use.alarm.handler";
 
 const route = useRoute();
 
@@ -49,6 +50,9 @@ const handlePageChangeA = (page: number) => {
 watch(alarm, () => {
   refetchA();
 });
+
+
+const { updateAlarmStatus, isUpdating, isError } = useAlarmHandler();
 
 // GRAFICOS
 const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(orderNumber.value); // Todos los detalles de la orden, para dibujar los graficos
@@ -103,7 +107,7 @@ watchEffect(() => {
 
         <!-- TODO conectar -->
         <v-col cols="6">
-          <AcceptAlarm :alarm="alarm" />
+          <AlarmHandler :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating" :isError="isError" />
         </v-col>
       </v-row>
 
