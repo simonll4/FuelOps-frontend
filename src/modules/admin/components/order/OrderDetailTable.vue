@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { format } from "date-fns";
 
 import type { OrderDetail } from "@/interfaces/order-details.interface";
 
@@ -10,12 +11,43 @@ const props = defineProps({
   },
   totalElements: {
     type: Number,
-    default: 0,
+    required: true,
+  },
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  pageSize: {
+    type: Number,
+    required: true,
+  },
+  totalPages: {
+    type: Number,
+    required: true,
   },
   isLoading: Boolean,
 });
 
+// watchEffect(() => {
+//   console.log("items", props.items);
+//   console.log("currentPage", props.currentPage);
+//   console.log("pageSize", props.pageSize);
+//   console.log("totalPages", props.totalPages);
+//   console.log("isLoading", props.isLoading);
+//   console.log("totalElements", props.totalElements);
+// });
+
 const emit = defineEmits(["update:page"]);
+const currentPage = ref(props.currentPage);
+
+const handlePageChange = (page: number) => {
+  currentPage.value = page;
+  emit("update:page", page);
+};
+
+watch(() => props.currentPage, (newPage) => {
+  currentPage.value = newPage;
+});
 
 //TABLA
 // Definición de encabezados de la tabla
@@ -36,30 +68,16 @@ const getTemperatureClass = (temperature: number): string => {
   return "";
 };
 
-import { format } from "date-fns";
-
 const formatDate = (timestamp: string) => {
   return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
 };
-
 </script>
 
 <template>
-
-  <!-- TODO si la cantidad de elementos no llena la pagina se rompe la navegacion
-   quizas traer otros props de la paginacion para mejorar el manejo de la tabla -->
-
-  <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla-->
-
-  <!-- <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
-    item-value="id" class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]"
-    :loading="isLoading" @update:page="emit('update:page', $event)"> -->
-
-    <v-data-table-server :headers="headers" :items="items" :items-length="Math.max(totalElements, items.length)"
-      item-value="id" class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]"
-      :loading="isLoading" @update:page="emit('update:page', $event)">
-
-
+  <v-card class="mb-4" outlined>
+    <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1" height="320"
+      :items-per-page="pageSize" :loading="isLoading" :page="currentPage" :items-length="totalElements"
+      hide-default-footer @update:page="handlePageChange">
       <!-- Formateo del timestamp -->
       <template #item.timestamp="{ item }">
         <span>{{ formatDate(item.timeStamp) }}</span>
@@ -86,13 +104,23 @@ const formatDate = (timestamp: string) => {
       <template #item.flowRate="{ item }">
         <span class="ml-2">{{ item.flowRate }} kg/h</span>
       </template>
-    </v-data-table-server>
 
+      <!-- Footer personalizado -->
+      <template #bottom>
+        <v-container class="d-flex justify-center">
+          <v-pagination :model-value="currentPage" :length="totalPages" :total-visible="5"
+            @update:modelValue="handlePageChange"></v-pagination>
+        </v-container>
+      </template>
+
+    </v-data-table-server>
+  </v-card>
 
 </template>
 
 <style scoped>
-/* Estilos para valores condicionales de temperatura */
+/*TODO llevar esto el scss global  
+Estilos para valores condicionales de temperatura */
 .text-cool {
   color: #00aaff;
   font-weight: bold;

@@ -25,7 +25,7 @@ watchEffect(() => {
     const newAlarm = alarmsArray[0];
 
     console.log('Nuevas alarmas recibidas:', alarmsArray);
-    
+
     const currentRoute = router.currentRoute.value;
     // Verificar si el usuario ya está en cualquier ruta bajo /admin/orders/
     if (currentRoute.path.startsWith('/admin/orders/')) {
@@ -38,7 +38,7 @@ watchEffect(() => {
     orderNumber.value = newAlarm.orderId.toString();
     currentTemperature.value = newAlarm.temperature;
     thresholdTemperature.value = newAlarm.temperature; // TODO: Reemplazar con el umbral real
-    alertDate.value = new Date(newAlarm.timestamp).toLocaleString();
+    alertDate.value = new Date(newAlarm.timeStamp).toLocaleString();
 
     // Mostrar el modal
     dialog.value = true;

@@ -9,7 +9,7 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
   const pageSize = ref<number>(5);
   const sortBy = ref<string>('timeStamp');
   const currentPage = ref<number>(0);
-  const totalElements = ref<number>(0);
+  const totalElements = ref<number>(0); 
   const totalPages = ref<number>(0);
 
   // Order details for the current order (used for tables with pagination)

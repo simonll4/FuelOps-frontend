@@ -3,16 +3,16 @@ import { storeToRefs } from 'pinia';
 import { useQueryClient } from '@tanstack/vue-query';
 
 import { webSocketService } from '@/services/ws.service';
-import { useAlarmsWsStore } from '@/stores/alarms.ws.store';
+import { useAlarmsStore } from '@/stores/alarms.store';
 
-import type { Alarm } from '@/interfaces/alarm-interface';
+import type { Alarm } from '@/interfaces/alarm.interface';
 
 export const useWsAlarmsReminders = () => {
 
   const queryClient = useQueryClient();
 
   // Store de alarmas
-  const wsStore = useAlarmsWsStore();
+  const wsStore = useAlarmsStore();
   const { remindersAlarms } = storeToRefs(wsStore); // Referencia reactiva al store
 
   // Servicio WebSocket
