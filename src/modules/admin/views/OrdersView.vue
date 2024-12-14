@@ -9,7 +9,6 @@ import { useOrders } from "@/composables/use.orders";
 const { orders, totalElements, currentPage, pageSize, totalPages, isLoading, filter, setPage, setFilter } = useOrders();
 
 const handlePageChange = (page: number) => {
-  console.log("page ", page);
   setPage(page - 1);
 };
 

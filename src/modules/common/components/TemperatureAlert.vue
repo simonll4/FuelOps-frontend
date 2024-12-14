@@ -15,7 +15,6 @@ const router = useRouter();
 
 // TODO cuando navegue poner un efecto de loading hasta que cargue la info
 const goToOrder = () => {
-  console.log(`Navegando a la orden #${orderNumber.value}`);
   router.push(`/admin/orders/${orderNumber.value}`);
   dialog.value = false;
 };

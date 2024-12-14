@@ -16,13 +16,14 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
   const orderDetails = ref<OrderDetail[]>([]);
 
   // Almacena nueva alarma ws de una orden
-  const newDetailByOrden = ref<OrderDetail>();
+  const newDetailByOrden = ref<OrderDetail | null | undefined>();
 
   // All order details (used for graphs)
   const allOrderDetails = ref<OrderDetail[]>([]);
 
   const setOrderDetails = (details: OrderDetail[]) => {
-    orderDetails.value = details;
+    //orderDetails.value = details;
+    orderDetails.value = [...details]; // Forzar reactividad
   }
 
   const addNewOrderDetail = (detail: OrderDetail) => {
@@ -59,7 +60,7 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
     sortByD.value = sort;
   }
 
-  const setNewDetailByOrden = (detail: OrderDetail) => {
+  const setNewDetailByOrden = (detail: OrderDetail | null) => {
     newDetailByOrden.value = detail;
   }
 

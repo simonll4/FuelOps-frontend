@@ -1,4 +1,4 @@
-import { watch } from 'vue';
+import { onUnmounted, watch } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 import { storeToRefs } from 'pinia';
 
@@ -24,9 +24,9 @@ export const useOrderDetails = (idOrder: number) => {
   };
 
   const { isLoading, data, error, refetch } = useQuery({
-    queryKey: ['orderDetails', idOrder, currentPageD, pageSizeD, sortByD],
+    queryKey: ['orderDetails', idOrder, currentPageD.value, pageSizeD.value, sortByD.value],
     queryFn: fetchOrderDetails,
-    staleTime: 0, // TODO ver como manejar cache en ordenes que nunca se van actualizar (de estado 3 en adelante)
+    staleTime: 0,
   });
 
   watch(data, (result) => {
@@ -43,6 +43,10 @@ export const useOrderDetails = (idOrder: number) => {
       // Forzar actualización reactiva
       store.orderDetails = [...result.details];
     }
+  }, { immediate: true });
+
+  onUnmounted(() => {
+    //store.setOrderDetails([]); // Limpiar los detalles al desmontar
   });
 
   return {

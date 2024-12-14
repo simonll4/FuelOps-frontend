@@ -1,4 +1,4 @@
-import { watch } from 'vue';
+import { onUnmounted, watch } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 import { useOrderDetailsStore } from '@/stores/order.details.store';
 import { getAllOrderDetails } from '@/services/order.details.service';
@@ -22,6 +22,7 @@ export const useAllOrderDetails = (idOrder: number) => {
   const { isLoading, data, error } = useQuery({
     queryKey: ['allOrderDetails', idOrder],
     queryFn: fetchAllDetails,
+    staleTime: 0,
   });
 
   // Observar cambios en los datos
@@ -37,9 +38,14 @@ export const useAllOrderDetails = (idOrder: number) => {
     { immediate: true }
   );
 
+  onUnmounted(() => {
+    store.setAllOrderDetails([]); // Limpiar los detalles al desmontar
+  });
+
   return {
     allOrderDetails,
     isLoadingAD: isLoading,
     error,
   };
+
 };

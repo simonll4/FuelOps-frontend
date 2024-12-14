@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onUnmounted } from "vue";
 import type { OrderDetail } from "@/interfaces/order-details.interface";
 
 // Props para recibir datos
@@ -130,6 +130,10 @@ watch(
   }
 );
 
+onUnmounted(() => {
+  series.value[0].data = [];
+});
+
 // Computed para obtener la fecha actual del gráfico
 const currentDate = computed(() => {
   if (props.allOrderDetails.length > 0) {
@@ -143,13 +147,8 @@ const currentDate = computed(() => {
   <v-card class="mb-4 data-container" color="container-color" outlined>
     <v-card-title>Densidad (kg/m³) - Fecha: {{ currentDate }}</v-card-title>
     <v-card-text>
-      <apexchart
-        type="line"
-        :options="chartOptions"
-        :series="series"
-        width="100%"
-        height="350"
-      ></apexchart>
+      <apexchart :key="currentDate" type="line" :options="chartOptions" :series="series" width="100%" height="350">
+      </apexchart>
     </v-card-text>
   </v-card>
 </template>

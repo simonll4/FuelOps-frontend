@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { ref, watch, watchEffect } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useOrderDetails } from '@/composables/use.order.details';
@@ -62,6 +62,7 @@ function goBack() {
 </script>
 <template>
   <AdminLayout>
+
     <v-container>
       <h6 class="pages-title">Admin / Detalle de Orden</h6>
       <h1>Detalle de Orden </h1>
@@ -84,7 +85,7 @@ function goBack() {
 
         <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
-          <OrderData v-if="order" :order="order" class="full-card"/>
+          <OrderData v-if="order" :order="order" class="full-card" />
         </v-col>
 
         <v-col cols="6">

@@ -13,6 +13,7 @@ export const useOrder = (orderId: number) => {
     queryKey: ['order', orderId],
     queryFn: () => getOrderById(orderId),
     enabled: !!orderId,
+    staleTime: 0,
   });
 
   // Sincroniza los datos obtenidos con el store
@@ -20,7 +21,7 @@ export const useOrder = (orderId: number) => {
     if (newData) {
       store.setOrder(newData);
     }
-  });
+  }, { immediate: true });
 
   return {
     // Estado reactivo

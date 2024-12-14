@@ -47,10 +47,10 @@ export const useAlarms = (idOrder: number) => {
 
       }
     }
-  });
+  }, { immediate: true });
 
   return {
-    
+
     alarms,
     currentPageA: currentPageA.value + 1,
     pageSizeA,
