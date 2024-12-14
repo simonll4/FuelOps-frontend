@@ -67,3 +67,24 @@ html {
 .text-xxl {
   font-size: $text-xxl;
 }
+.text-cool {
+  color: #00aaff;
+  font-weight: bold;
+}
+
+.text-normal {
+  color: #00ffaa;
+  font-weight: bold;
+}
+
+.text-warm {
+  color: #ff5500;
+  font-weight: bold;
+}
+
+// Esto es para que las tarjetas ocupen el maximo height posible de las row
+.full-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
