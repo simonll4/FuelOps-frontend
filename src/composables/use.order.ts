@@ -2,7 +2,7 @@ import { watch } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 import { storeToRefs } from 'pinia';
 
-import { useOrdersStore } from '@/stores/order.store';
+import { useOrdersStore } from '@/stores/orders.store';
 import { getOrderById } from '@/services/order.service';
 
 export const useOrder = (orderId: number) => {

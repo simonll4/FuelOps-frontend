@@ -8,6 +8,7 @@ export const useOrdersStore = defineStore('orders', () => {
   // Manage pagination data
   const pageSize = ref<number>(5);
   const sortBy = ref<string>('externalReceptionDate');
+  const filter = ref<Array<string>>([]);
   const currentPage = ref<number>(0);
   const totalElements = ref<number>(0);
   const totalPages = ref<number>(0);
@@ -46,11 +47,18 @@ export const useOrdersStore = defineStore('orders', () => {
     sortBy.value = sort;
   };
 
+  const setFilter = (newFilter: Array<string> | null) => {
+    if(newFilter){
+      filter.value = newFilter
+    }    
+  }
+
   return {
     // Estado
     currentPage,
     pageSize,
     sortBy,
+    filter,
     totalElements,
     totalPages,
     orders,
@@ -63,5 +71,6 @@ export const useOrdersStore = defineStore('orders', () => {
     setPage,
     setPageSize,
     setSortBy,
+    setFilter
   };
 });

@@ -51,37 +51,42 @@ const formatDate = (timestamp: string) => {
 
   <!-- TODO: Ver el sorteable y que agregue los datos al inicio de la tabla-->
 
-  <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
+  <!-- <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
     item-value="id" class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]"
-    :loading="isLoading" @update:page="emit('update:page', $event)">
+    :loading="isLoading" @update:page="emit('update:page', $event)"> -->
 
-    <!-- Formateo del timestamp -->
-    <template #item.timestamp="{ item }">
-      <span>{{ formatDate(item.timeStamp) }}</span>
-    </template>
+    <v-data-table-server :headers="headers" :items="items" :items-length="Math.max(totalElements, items.length)"
+      item-value="id" class="elevation-1" height="320" :items-per-page="5" :items-per-page-options="[]"
+      :loading="isLoading" @update:page="emit('update:page', $event)">
 
-    <!-- Columna de masa acumulada-->
-    <template #item.mass="{ item }">
-      <span>{{ item.accumulatedMass }} kg</span>
-    </template>
 
-    <!-- Columna de densidad-->
-    <template #item.density="{ item }">
-      <span>{{ item.density }} kg/m³</span>
-    </template>
+      <!-- Formateo del timestamp -->
+      <template #item.timestamp="{ item }">
+        <span>{{ formatDate(item.timeStamp) }}</span>
+      </template>
 
-    <!-- Columna de temperatura con colores condicionales-->
-    <template #item.temperature="{ item }">
-      <span :class="getTemperatureClass(item.temperature)">
-        {{ item.temperature }} °C
-      </span>
-    </template>
+      <!-- Columna de masa acumulada-->
+      <template #item.mass="{ item }">
+        <span>{{ item.accumulatedMass }} kg</span>
+      </template>
 
-    <!-- Columna de caudal -->
-    <template #item.flowRate="{ item }">
-      <span class="ml-2">{{ item.flowRate }} kg/h</span>
-    </template>
-  </v-data-table-server>
+      <!-- Columna de densidad-->
+      <template #item.density="{ item }">
+        <span>{{ item.density }} kg/m³</span>
+      </template>
+
+      <!-- Columna de temperatura con colores condicionales-->
+      <template #item.temperature="{ item }">
+        <span :class="getTemperatureClass(item.temperature)">
+          {{ item.temperature }} °C
+        </span>
+      </template>
+
+      <!-- Columna de caudal -->
+      <template #item.flowRate="{ item }">
+        <span class="ml-2">{{ item.flowRate }} kg/h</span>
+      </template>
+    </v-data-table-server>
 
 
 </template>

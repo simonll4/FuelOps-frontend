@@ -57,7 +57,7 @@ watchEffect(() => {
   //console.log("orderDetails: ", orderDetails.value);
   //console.log("aca allOrderDetails: ", allOrderDetails.value);
   //console.log("aca lastDetail: ", lastDetail.value);
-  console.log("order: ", order.value);
+  //console.log("order: ", order.value);
 });
 
 </script>
@@ -69,7 +69,6 @@ watchEffect(() => {
     </v-container>
 
     <v-container>
-
       <v-row align="center" class="mb-2" justify="space-between">
         <v-col>
           <h1 class="text-h4">Orden N° #{{ orderNumber }}</h1>
@@ -84,12 +83,12 @@ watchEffect(() => {
       <v-row>
         <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
-          <OrderData v-if="order" :order="order" />
+          <OrderData v-if="order" :order="order" class="full-card"/>
         </v-col>
 
         <!-- TODO conectar -->
         <v-col cols="6">
-          <AcceptAlarm />
+          <AcceptAlarm class="full-card"/>
         </v-col>
       </v-row>
 
@@ -101,11 +100,11 @@ watchEffect(() => {
           <v-row>
             <!-- Circular graph -->
             <v-col cols="7">
-              <RadialBar />
+              <RadialBar class="full-card"/>
             </v-col>
             <!-- ETA -->
             <v-col cols="5">
-              <ETA />
+              <ETA class="full-card"/>
             </v-col>
           </v-row>
         </v-col>
@@ -113,12 +112,12 @@ watchEffect(() => {
         <!-- TODO conectar -->
         <!-- Tabla de alarmas -->
         <v-col cols="6">
-          <AlarmTable class="tabla" />
+          <AlarmTable class="tabla full-card" />
         </v-col>
 
       </v-row>
 
-      <h2>Detalles de carga</h2>
+      <h2 class="mt-3 mb-2">Detalles de carga</h2>
 
       <v-row>
 

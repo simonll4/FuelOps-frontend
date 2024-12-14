@@ -12,13 +12,16 @@ export const getOrderById = async (orderId: number): Promise<Order> => {
 export const getOrders = async (
   page: number = 0,
   size: number = 5,
+  filter: Array<string> = [],
   sort: string = 'externalReceptionDate'
 ): Promise<ItemResponse> => {
-
+  
+  const filters = filter.join(",")
   const { data } = await api().get('/orders', {
     params: {
       page,
       size,
+      filter: filters,
       sort,
     },
   });

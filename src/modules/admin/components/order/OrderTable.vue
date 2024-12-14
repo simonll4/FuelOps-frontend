@@ -1,15 +1,6 @@
-<script setup lang="ts">
-import { ref, watch } from "vue";
+<script setup lang="ts">import { ref, watch } from "vue";
 import type { TableItem } from '@/interfaces/table-item.interface';
-import type { OrderStates } from '@/interfaces/order-states.interface';
 
-const orderStates: OrderStates = {
-  ORDER_CANCELLED: 'ORDER_CANCELLED',
-  ORDER_RECEIVED: 'ORDER_RECEIVED',
-  REGISTERED_INITIAL_WEIGHING: 'REGISTERED_INITIAL_WEIGHING',
-  ORDER_CLOSED: 'ORDER_CLOSED',
-  REGISTERED_FINAL_WEIGHING: 'REGISTERED_FINAL_WEIGHING',
-};
 
 const props = defineProps({
   items: {
@@ -39,16 +30,23 @@ const emit = defineEmits(["update:page"]);
 const currentPage = ref(props.currentPage);
 
 const handlePageChange = (page: number) => {
-  currentPage.value = page;
+  // Emitir el evento de cambio de página con el índice base 1
   emit("update:page", page);
 };
 
-watch(() => props.currentPage, (newPage: number) => {
-  currentPage.value = newPage;
-});
+watch(
+  () => props.currentPage,
+  (newPage: number) => {
+    // Sincronizar el valor de currentPage con el valor recibido por props
+    currentPage.value = newPage + 1; // La paginación del componente es base 1
+  },
+  { immediate: true }
+);
 
 // Definición de los encabezados de la tabla
-const headers = ref<Array<{ title: string; value: string; align?: "start" | "center" | "end" }>>([
+const headers = ref<
+  Array<{ title: string; value: string; align?: "start" | "center" | "end" }>
+>([
   { title: "Camión", value: "truck" },
   { title: "Cliente", value: "customer" },
   { title: "Recepción", value: "receptionDate" },
@@ -74,8 +72,10 @@ const formatDate = (timestamp: string) => {
 </script>
 
 <template>
-  <v-data-table-server :key="items.length" :headers="headers" :items="items" :items-length="totalElements"
-    item-value="id" class="elevation-1" :items-per-page="5" :items-per-page-options="[]" :loading="isLoading"
+
+  <!-- Tabla -->
+  <v-data-table-server :headers="headers" :items="items" :items-length="totalElements" item-value="id"
+    class="elevation-1 tabla" :items-per-page="pageSize" :items-per-page-options="[]" :loading="isLoading"
     hide-default-footer @update:page="handlePageChange">
     <!-- Columna de ubicación con ícono -->
     <template #item.truck="{ item }">
@@ -112,10 +112,17 @@ const formatDate = (timestamp: string) => {
       </v-container>
     </template>
   </v-data-table-server>
+
 </template>
 
 <style>
 /* TODO: Acomodar esto que está asqueroso */
+.tabla {
+  border-radius: 1rem;
+  background-color: #111c44;
+  color: #fff;
+}
+
 .text-success {
   color: rgb(0, 255, 0);
   font-weight: bold;
@@ -137,6 +144,6 @@ const formatDate = (timestamp: string) => {
 }
 
 .truck-link:hover {
-  color: #6D40E4;
+  color: #6d40e4;
 }
 </style>

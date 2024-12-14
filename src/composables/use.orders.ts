@@ -2,18 +2,19 @@ import { watch } from 'vue';
 import { useQuery } from '@tanstack/vue-query';
 import { storeToRefs } from 'pinia';
 
-import { useOrdersStore } from '@/stores/order.store';
+import { useOrdersStore } from '@/stores/orders.store';
 import { getOrders } from '@/services/order.service';
 
 export const useOrders = () => {
 
     const store = useOrdersStore();
-    const { currentPage, pageSize, sortBy, orders, totalElements, totalPages } = storeToRefs(store);
+    const { currentPage, pageSize, sortBy, filter, orders, totalElements, totalPages } = storeToRefs(store);
 
     const fetchOrders = async () => {
         const { items, pagination } = await getOrders(
             currentPage.value,
             pageSize.value,
+            filter.value,
             sortBy.value
         );
 
@@ -21,7 +22,7 @@ export const useOrders = () => {
     }
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ['items', currentPage, pageSize, sortBy],
+        queryKey: ['items', currentPage, pageSize, sortBy, filter],
         queryFn: fetchOrders,
         staleTime: Infinity,
     });
@@ -44,6 +45,7 @@ export const useOrders = () => {
         currentPage,
         pageSize,
         sortBy,
+        filter,
         totalElements,
         totalPages,
         isLoading,
@@ -53,6 +55,7 @@ export const useOrders = () => {
         setPage: store.setPage,
         setPageSize: store.setPageSize,
         setSortBy: store.setSortBy,
+        setFilter: store.setFilter
         
     };
 }

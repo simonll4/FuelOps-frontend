@@ -19,7 +19,7 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
   const allOrderDetails = ref<OrderDetail[]>([]);
 
   return {
-    
+
     // States
     currentPage,
     pageSize,
@@ -34,8 +34,17 @@ export const useOrderDetailsStore = defineStore('orderDetails', () => {
       orderDetails.value = details;
     },
     addNewOrderDetail(detail: OrderDetail) {
-      orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];
+      // orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];
+      // totalElements.value += 1;
+      if (orderDetails.value.length === 5) {
+        // Si hay 5 elementos, eliminamos el último y agregamos el nuevo
+        orderDetails.value = [...[detail], ...orderDetails.value.slice(0, orderDetails.value.length - 1)];
+      } else {
+        // Si no, simplemente agregamos el nuevo elemento
+        orderDetails.value = [detail, ...orderDetails.value];
+      }
       totalElements.value += 1;
+      totalPages.value = Math.ceil(totalElements.value / pageSize.value);
     },
     setPaginationData(page: number, totalElement: number, totalPage: number) {
       currentPage.value = page;
