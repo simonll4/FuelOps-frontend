@@ -41,6 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
     } else if (user.roles.includes('ROLE_OPERATOR')) {
       router.push({ name: 'OperatorDashboard' });
     }
+
   };
 
   const logout = () => {
@@ -70,7 +71,6 @@ export const useAuthStore = defineStore('auth', () => {
 
       wsService.connect(token); // Conectar sesion WebSocket
     } catch (error) {
-      console.error('Token inválido', error);
       logout();  // Si el token es inválido, hacer logout
     }
   };
@@ -85,5 +85,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     checkAuthStatus,
+
   };
 });

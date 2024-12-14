@@ -16,25 +16,25 @@ export default () => {
         }
     );
 
-    // Response interceptor for API calls
-    // api.interceptors.response.use(
-    //     (response) => {
-    //         return response;
-    //     },
-    //     async function (error) {
-    //         const originalRequest = error.config;
-    //         if (error.response.status === 401) {
-    //             window.location.href = '/auth/login';
-    //             return;
-    //         }
-    //         return {
-    //             status: error.response.status,
-    //             error: !error.response.data.error
-    //             ? error.response.data.msg
-    //             :  error.response.data.error,
-    //         };
-    //     }
-    // );
+    //Response interceptor for API calls
+    api.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        async function (error) {
+            const originalRequest = error.config;
+            if (error.response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            return {
+                status: error.response.status,
+                error: !error.response.data.error
+                    ? error.response.data.msg
+                    : error.response.data.error,
+            };
+        }
+    );
 
     return api;
 };

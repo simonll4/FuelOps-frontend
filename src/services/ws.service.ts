@@ -6,7 +6,8 @@ const isConnected = ref(false);
 const subscriptions: Record<string, (message: any) => void> = {};
 
 export const webSocketService = () => {
-  
+  const activeSubscriptions = ref(0);
+
   const connect = (token: string) => {
     if (isConnected.value) return;
 
@@ -19,12 +20,13 @@ export const webSocketService = () => {
       onConnect: () => {
         isConnected.value = true;
         console.log('WebSocket connected');
+        // Re-suscribir a todos los tópicos en caso de reconexión
         Object.keys(subscriptions).forEach(topic => {
           subscribe(topic, subscriptions[topic]);
         });
       },
 
-      onStompError: (error: any) => {
+      onStompError: (error) => {
         console.error('WebSocket connection error:', error);
         isConnected.value = false;
       },
@@ -34,10 +36,10 @@ export const webSocketService = () => {
         isConnected.value = false;
       },
 
-      onWebSocketError: (error: any) => {
+      onWebSocketError: (error) => {
         console.error('WebSocket error:', error);
         isConnected.value = false;
-      }
+      },
     });
 
     stompClient.activate();
@@ -45,29 +47,118 @@ export const webSocketService = () => {
 
   const subscribe = (topic: string, callback: (message: any) => void) => {
     if (!stompClient || !isConnected.value) {
-      console.warn('WebSocket not connected. Delaying subscription.');
-      subscriptions[topic] = callback;
+      subscriptions[topic] = callback; // Guardar para re-suscribir en reconexión
+      console.warn(`WebSocket not connected. Subscription to "${topic}" delayed.`);
       return;
     }
 
+    activeSubscriptions.value++;
     stompClient.subscribe(topic, (message: any) => {
       const parsedMessage = JSON.parse(message.body);
       callback(parsedMessage);
     });
   };
-  
-  const disconnect = () => {
-    if (stompClient) {
-      stompClient.deactivate();
-      console.log('WebSocket disconnected');
-      stompClient = null;
+
+  const unsubscribe = (topic: string) => {
+    if (subscriptions[topic]) {
+      delete subscriptions[topic];
+      activeSubscriptions.value--;
+      console.log(`Unsubscribed from "${topic}".`);
     }
 
+    // No desconectamos completamente a menos que no haya suscripciones activas
+    if (activeSubscriptions.value === 0) {
+      console.log('No active subscriptions. WebSocket will remain connected.');
+    }
+  };
+
+  const disconnect = () => {
+    if (stompClient && activeSubscriptions.value === 0) {
+      stompClient.deactivate();
+      console.log('WebSocket disconnected completely.');
+      stompClient = null;
+    }
   };
 
   return {
+    isConnected,
     connect,
     subscribe,
-    disconnect
+    unsubscribe,
+    disconnect,
   };
-};
+}
+
+// import { ref } from 'vue';
+// import { Client as StompClient } from '@stomp/stompjs';
+
+// let stompClient: StompClient | null = null;
+// const isConnected = ref(false);
+// const subscriptions: Record<string, (message: any) => void> = {};
+
+// export const webSocketService = () => {
+  
+//   const connect = (token: string) => {
+//     if (isConnected.value) return;
+
+//     console.log('Connecting to WebSocket...');
+
+//     stompClient = new StompClient({
+//       brokerURL: 'ws://localhost:8080/notifier',
+//       connectHeaders: { Authorization: `Bearer ${token}` },
+
+//       onConnect: () => {
+//         isConnected.value = true;
+//         console.log('WebSocket connected');
+//         Object.keys(subscriptions).forEach(topic => {
+//           subscribe(topic, subscriptions[topic]);
+//         });
+//       },
+
+//       onStompError: (error: any) => {
+//         console.error('WebSocket connection error:', error);
+//         isConnected.value = false;
+//       },
+
+//       onWebSocketClose: () => {
+//         console.log('WebSocket closed');
+//         isConnected.value = false;
+//       },
+
+//       onWebSocketError: (error: any) => {
+//         console.error('WebSocket error:', error);
+//         isConnected.value = false;
+//       }
+//     });
+
+//     stompClient.activate();
+//   };
+
+//   const subscribe = (topic: string, callback: (message: any) => void) => {
+//     if (!stompClient || !isConnected.value) {
+//       console.warn('WebSocket not connected. Delaying subscription.');
+//       subscriptions[topic] = callback;
+//       return;
+//     }
+
+//     stompClient.subscribe(topic, (message: any) => {
+//       const parsedMessage = JSON.parse(message.body);
+//       callback(parsedMessage);
+//     });
+//   };
+  
+//   const disconnect = () => {
+//     if (stompClient) {
+//       stompClient.deactivate();
+//       console.log('WebSocket disconnected');
+//       stompClient = null;
+//     }
+
+//   };
+
+//   return {
+//     connect,
+//     subscribe,
+//     disconnect
+//   };
+// };

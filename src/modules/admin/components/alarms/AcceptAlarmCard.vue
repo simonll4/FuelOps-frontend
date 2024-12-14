@@ -28,7 +28,7 @@ const handleReported = (data: {
 </script>
 
 <template>
-    <v-card color="#FF9100" variant="tonal" class="mx-auto">
+    <v-card color="#FF9100" variant="tonal" class="mx-auto justify-center rounded-card">
       <v-card-item>
         <div>
           <div class="text-overline mb-1">¡ATENCIÓN!</div>
@@ -67,3 +67,9 @@ const handleReported = (data: {
       </v-card-actions>
     </v-card>
 </template>
+
+<style scoped>
+.rounded-card{
+  border-radius: 1rem;
+}
+</style>
