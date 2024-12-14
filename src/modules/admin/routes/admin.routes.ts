@@ -15,12 +15,6 @@ export default {
       component: () => import("@/modules/admin/views/ProductsView.vue"),
     },
     {
-      path: 'products/:id',
-      name: 'ProductDetailManager',
-      meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
-      component: () => import("@/modules/admin/views/ProductDetailView.vue"),
-    },
-    {
       path: 'orders/:id',
       name: 'OrderDetailManager',
       meta: { requiresAuth: true, role: 'ROLE_ADMIN' },

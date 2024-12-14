@@ -68,7 +68,6 @@ function goBack() {
     </v-container>
 
     <v-container>
-
       <v-row align="center" class="mb-2" justify="space-between">
         <v-col>
           <h1 class="text-h4">Orden N° #{{ orderNumber }}</h1>
@@ -85,11 +84,11 @@ function goBack() {
 
         <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
-          <OrderData v-if="order" :order="order" />
+          <OrderData v-if="order" :order="order" class="full-card"/>
         </v-col>
 
         <v-col cols="6">
-          <AlarmHandler :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating"
+          <AlarmHandler class="full-card" :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating"
             :isError="isError" :isLoading="isLoadingA" />
         </v-col>
       </v-row>
@@ -102,10 +101,10 @@ function goBack() {
             <!-- Circular graph -->
             <v-col cols="7">
               <!-- <RadialBar /> -->
-              <RadialBar v-if="order" :order="order" :last-detail="lastDetail" />
+              <RadialBar class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
             </v-col>
             <!-- ETA -->
-            <ETA v-if="order" :order="order" :last-detail="lastDetail" />
+            <ETA class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
             <v-col cols="5">
               <!-- <ETA /> -->
             </v-col>
@@ -116,7 +115,7 @@ function goBack() {
         <v-col cols="6">
           <AlarmTable :items="alarms" :totalElements="totalElementsA" :current-page="currentPageA"
             :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" :set-page-a="setPageA"
-            class="tabla" />
+            class="tabla full-card" />
         </v-col>
 
       </v-row>
