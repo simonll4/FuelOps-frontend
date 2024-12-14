@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 const props = defineProps({
   order: {
@@ -93,6 +93,10 @@ watch(
     series.value = [progress.value];
   }
 );
+
+
+
+
 </script>
 
 <template>

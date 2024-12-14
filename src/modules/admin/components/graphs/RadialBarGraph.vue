@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, defineProps, watchEffect } from "vue";
+import { ref, computed, watch, defineProps, watchEffect, onMounted } from "vue";
 
 const props = defineProps({
   order: {
@@ -12,12 +12,6 @@ const props = defineProps({
     default: null,
   },
 });
-
-
-// watchEffect(() => {
-//   console.log("order: ", props.order);
-//   console.log("lastDetail: ", props.lastDetail);
-// });
 
 // Cálculo de la capacidad total en litros
 const totalCapacityLiters = computed(() => {
@@ -64,9 +58,6 @@ const series = ref([presetPercentage.value, loadPercentage.value]);
 // Actualización dinámica de las series
 watch([presetPercentage, loadPercentage], () => {
   series.value = [presetPercentage.value, loadPercentage.value];
-  // console.log('Series updated:', series.value);
-  // console.log('presetPercentage:', presetPercentage.value);
-  // console.log('loadPercentage:', loadPercentage.value);
 });
 
 // Opciones del gráfico
@@ -162,6 +153,7 @@ const chartOptions = ref({
     },
   },
 });
+
 </script>
 
 <template>

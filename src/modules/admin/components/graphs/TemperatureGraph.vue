@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import type { OrderDetail } from "@/interfaces/order-details.interface";
 
 // Props para recibir datos
@@ -53,15 +53,19 @@ const chartOptions = ref({
     colors: ["#39B8FF"],
   },
   fill: {
-    type: "gradient",
-    gradient: {
-      shade: "dark",
-      gradientToColors: ["#39B8FF"],
-      shadeIntensity: 1,
-      type: "vertical",
-      stops: [0, 100],
-    },
-  },
+  type: "solid",
+  opacity: 0,
+},
+  // fill: {
+  //   type: "gradient",
+  //   gradient: {
+  //     shade: "dark",
+  //     gradientToColors: ["#39B8FF"],
+  //     shadeIntensity: 1,
+  //     type: "vertical",
+  //     stops: [0, 100],
+  //   },
+  // },
   dataLabels: {
     enabled: false,
   },
@@ -134,6 +138,7 @@ const currentDate = computed(() => {
   }
   return new Date().toLocaleDateString();
 });
+
 </script>
 
 <template>

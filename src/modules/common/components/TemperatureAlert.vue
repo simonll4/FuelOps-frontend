@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import { useWsAlarmsReminders } from '@/composables/ws/use.ws.reminders.alarms';
 import { useRouter } from 'vue-router';
+import { useToast, POSITION } from "vue-toastification";
+
+const toast = useToast();
 
 const dialog = ref(false);
-const orderNumber = ref("0");
+const orderNumber = ref();
 const currentTemperature = ref(0);
 const thresholdTemperature = ref(0);
 const alertDate = ref("");
@@ -23,6 +26,7 @@ watchEffect(() => {
   const alarmsArray = Array.isArray(remindersAlarms.value) ? remindersAlarms.value : [remindersAlarms.value];
   if (alarmsArray.length > 0) {
     const newAlarm = alarmsArray[0];
+    orderNumber.value = newAlarm.orderId.toString();
 
     //console.log('Nuevas alarmas recibidas:', alarmsArray);
 
@@ -30,6 +34,14 @@ watchEffect(() => {
 
     if (currentRoute.path.startsWith('/admin/orders/')) {
       clearRemindersAlarms();
+      console.log(orderNumber.value);
+      // Mostrar notificación
+      toast.success(`Alerta de Temperatura para orden Nro: ${newAlarm.orderId}`, {
+        timeout: 5000,
+        position: POSITION.TOP_RIGHT,
+        onClick: goToOrder
+      });
+
       return;
     }
 
@@ -46,6 +58,7 @@ watchEffect(() => {
     clearRemindersAlarms();
   }
 });
+
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onUnmounted } from "vue";
+import { ref, watch, computed, onUnmounted, onMounted } from "vue";
 import type { OrderDetail } from "@/interfaces/order-details.interface";
 
 // Props para recibir datos
@@ -129,10 +129,6 @@ watch(
     }
   }
 );
-
-onUnmounted(() => {
-  series.value[0].data = [];
-});
 
 // Computed para obtener la fecha actual del gráfico
 const currentDate = computed(() => {

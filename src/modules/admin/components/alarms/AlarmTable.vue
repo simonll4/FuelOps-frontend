@@ -34,7 +34,7 @@ const props = defineProps({
 });
 
 // Emit
-const emit = defineEmits(["update:page"]);
+//const emit = defineEmits(["update:page"]);
 const currentPage = ref(props.currentPage);
 
 const handlePageChange = (page: number) => {

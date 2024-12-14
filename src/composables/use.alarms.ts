@@ -30,12 +30,15 @@ export const useAlarms = (idOrder: number) => {
 
   watch(data, (result) => {
     if (result) {
+
       store.setAlarms(result.alarms);
+
       store.setPaginationData(
         result.pagination.currentPage,
         result.pagination.totalElements,
         result.pagination.totalPages
       );
+      
       store.alarms = [...result.alarms];
 
       const alarmsArray = result.alarms;

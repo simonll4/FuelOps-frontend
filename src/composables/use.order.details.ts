@@ -12,7 +12,6 @@ export const useOrderDetails = (idOrder: number) => {
 
   const fetchOrderDetails = async () => {
     if (!idOrder) throw new Error('idOrder is required');
-
     const { details, pagination } = await getOrderDetails(
       idOrder,
       currentPageD.value,
@@ -24,7 +23,7 @@ export const useOrderDetails = (idOrder: number) => {
   };
 
   const { isLoading, data, error, refetch } = useQuery({
-    queryKey: ['orderDetails', idOrder, currentPageD.value, pageSizeD.value, sortByD.value],
+    queryKey: ['orderDetails', idOrder, currentPageD, pageSizeD, sortByD],
     queryFn: fetchOrderDetails,
     staleTime: 0,
   });
@@ -44,10 +43,6 @@ export const useOrderDetails = (idOrder: number) => {
       store.orderDetails = [...result.details];
     }
   }, { immediate: true });
-
-  onUnmounted(() => {
-    //store.setOrderDetails([]); // Limpiar los detalles al desmontar
-  });
 
   return {
 
