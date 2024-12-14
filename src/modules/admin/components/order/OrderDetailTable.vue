@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import { format } from "date-fns";
 
 import type { OrderDetail } from "@/interfaces/order-details.interface";
+import { es } from "date-fns/locale";
 
 const props = defineProps({
   items: {
@@ -25,24 +26,20 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  setPageD: {
+    type: Function,
+    required: true,
+  },
   isLoading: Boolean,
-});
 
-// watchEffect(() => {
-//   console.log("items", props.items);
-//   console.log("currentPage", props.currentPage);
-//   console.log("pageSize", props.pageSize);
-//   console.log("totalPages", props.totalPages);
-//   console.log("isLoading", props.isLoading);
-//   console.log("totalElements", props.totalElements);
-// });
+});
 
 const emit = defineEmits(["update:page"]);
 const currentPage = ref(props.currentPage);
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
-  emit("update:page", page);
+  props.setPageD(page - 1);
 };
 
 watch(() => props.currentPage, (newPage) => {
@@ -71,13 +68,24 @@ const getTemperatureClass = (temperature: number): string => {
 const formatDate = (timestamp: string) => {
   return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
 };
+
+// Función para formatear la fecha para el título
+const formatTitleDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd 'de' MMMM 'de' yyyy", { locale: es }); // Puedes usar el idioma deseado.
+};
+
 </script>
 
 <template>
+
   <v-card class="mb-4" outlined>
+    <v-card-title>
+      Detalles de Carga - {{ formatTitleDate(new Date().toISOString()) }}
+    </v-card-title>
     <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1" height="320"
       :items-per-page="pageSize" :loading="isLoading" :page="currentPage" :items-length="totalElements"
       hide-default-footer @update:page="handlePageChange">
+
       <!-- Formateo del timestamp -->
       <template #item.timestamp="{ item }">
         <span>{{ formatDate(item.timeStamp) }}</span>

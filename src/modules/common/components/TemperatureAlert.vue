@@ -13,6 +13,7 @@ const { remindersAlarms, clearRemindersAlarms } = useWsAlarmsReminders();
 
 const router = useRouter();
 
+// TODO cuando navegue poner un efecto de loading hasta que cargue la info
 const goToOrder = () => {
   console.log(`Navegando a la orden #${orderNumber.value}`);
   router.push(`/admin/orders/${orderNumber.value}`);
@@ -24,13 +25,12 @@ watchEffect(() => {
   if (alarmsArray.length > 0) {
     const newAlarm = alarmsArray[0];
 
-    console.log('Nuevas alarmas recibidas:', alarmsArray);
+    //console.log('Nuevas alarmas recibidas:', alarmsArray);
 
     const currentRoute = router.currentRoute.value;
-    // Verificar si el usuario ya está en cualquier ruta bajo /admin/orders/
+
     if (currentRoute.path.startsWith('/admin/orders/')) {
-      console.log('El usuario ya está en una ruta de órdenes:', currentRoute.path);
-      //clearRemindersAlarms(); // Limpiar el store si ya está en una ruta de órdenes
+      clearRemindersAlarms();
       return;
     }
 

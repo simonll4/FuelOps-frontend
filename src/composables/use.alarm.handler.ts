@@ -19,9 +19,12 @@ export const useAlarmHandler = () => {
   });
 
   return {
+
     updateAlarmStatus: alarmMutation.mutate,
+
     isUpdating: computed(() => alarmMutation.isPending.value),
     isError: computed(() => alarmMutation.isError.value),
     isSuccess: computed(() => alarmMutation.isSuccess.value),
+    
   };
 };

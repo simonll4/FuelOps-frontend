@@ -2,6 +2,8 @@
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { useRouter } from "vue-router";
 
+import TempAlert from "../../common/components/TemperatureAlert.vue";
+
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -39,6 +41,9 @@ const handleLogout = async () => {
       </router-link>
     </v-list>
   </v-navigation-drawer>
+
+  <TempAlert />
+
 </template>
 
 <style lang="scss" src="/src/styles/global.scss"></style>

@@ -50,6 +50,9 @@ export const useAlarmsStore = defineStore('AlarmsWs', () => {
   };
 
   const addNewAlarm = (alarm: Alarm) => {
+
+    if (currentPageA.value != 0) return;
+
     if (alarms.value.length === 5) {
       alarms.value = [alarm, ...alarms.value.slice(0, alarms.value.length - 1)];
     } else {
@@ -103,6 +106,7 @@ export const useAlarmsStore = defineStore('AlarmsWs', () => {
     setPageA,
     setPageSize,
     setSortBy,
+    
   };
 
 });

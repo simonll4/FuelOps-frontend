@@ -6,13 +6,13 @@ import TempAlert from "../../common/components/TemperatureAlert.vue";
 
 <template>
   <AdminLayout>
+
     <h6 class="ma-5 pages-title">Admin / Órdenes</h6>
     <h1 class="ma-5">Órdenes</h1>
 
     <!-- TODO conectar  -->
     <OrderTable class="tabla" />
 
-    <TempAlert />
   </AdminLayout>
 </template>
 
