@@ -2,7 +2,7 @@
 import { onMounted, ref, watch, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { useOrderDetails } from '@/composables/use.order.details';
+import { useOrderDetails } from "@/composables/use.order.details";
 import { useWsOrderDetail } from "@/composables/ws/use.ws.order.details";
 
 import AdminLayout from "../layouts/AdminLayout.vue";
@@ -30,7 +30,17 @@ const orderNumber = ref(Number(route.params.id));
 const { order } = useOrder(orderNumber.value);
 
 // TABLA DE DETALLES
-const { orderDetails, currentPageD, currentPageD1, totalPagesD, pageSizeD, totalElementsD, isLoadingD, setPageD, refetchD } = useOrderDetails(orderNumber.value);
+const {
+  orderDetails,
+  currentPageD,
+  currentPageD1,
+  totalPagesD,
+  pageSizeD,
+  totalElementsD,
+  isLoadingD,
+  setPageD,
+  refetchD,
+} = useOrderDetails(orderNumber.value);
 const { detail } = useWsOrderDetail(orderNumber.value); // se suscribe al websocket para recibir los detalles en tiempo real
 
 watch(detail, () => {
@@ -40,7 +50,16 @@ watch(detail, () => {
 });
 
 // TABLA DE ALARMAS
-const { alarms, currentPageA, totalPagesA, totalElementsA, pageSizeA, isLoadingA, setPageA, refetchA } = useAlarms(orderNumber.value);
+const {
+  alarms,
+  currentPageA,
+  totalPagesA,
+  totalElementsA,
+  pageSizeA,
+  isLoadingA,
+  setPageA,
+  refetchA,
+} = useAlarms(orderNumber.value);
 const { alarm } = useWsAlarms(orderNumber.value);
 
 watch(alarm, () => {
@@ -50,22 +69,37 @@ watch(alarm, () => {
 const { updateAlarmStatus, isUpdating, isError } = useAlarmHandler();
 
 // GRAFICOS
-const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(orderNumber.value); // Todos los detalles de la orden, para dibujar los graficos
+const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(
+  orderNumber.value
+); // Todos los detalles de la orden, para dibujar los graficos
 const { lastDetail } = useWsLatestOrderDetails(orderNumber.value); // Ultimo detalle de la orden, para actualizar los graficos en tiempo real
 
 // ROUTER
 const router = useRouter();
 function goBack() {
   router.push("/admin/orders");
+}
+
+// TODO: Implementar la descarga de la conciliación
+// Simula el estado de la orden
+const isOrderClosed = ref<boolean>(false); // Cambia a false para probar el otro caso
+
+const downloadReconciliation = () => {
+  // Lógica para descargar el PDF
+  console.log("Descargando conciliación...");
+  // Ejemplo de descarga:
+  const link = document.createElement('a');
+  link.href = '/path/to/reconciliation.pdf'; // Ajusta la URL al archivo real
+  link.download = 'conciliacion.pdf';
+  link.click();
 };
 
 </script>
 <template>
   <AdminLayout>
-
     <v-container>
       <h6 class="pages-title">Admin / Detalle de Orden</h6>
-      <h1>Detalle de Orden </h1>
+      <h1>Detalle de Orden</h1>
     </v-container>
 
     <v-container>
@@ -76,81 +110,116 @@ function goBack() {
 
         <!-- TODO: Mover el boton de lado y convertir en arrow -->
         <v-col class="text-right">
-          <v-btn @click="goBack" class="btn-color-4">Back</v-btn>
+          <v-btn
+            v-if="isOrderClosed"
+            @click="downloadReconciliation"
+            color="primary"
+            class="btn-color-5"
+          >
+            Descargar Conciliación
+          </v-btn>
+
+          <v-btn v-else class="btn-disabled-outline" disabled>
+            Conciliación no disponible
+          </v-btn>
         </v-col>
       </v-row>
 
       <!-- Datos de la orden y Notificacion de Alarmas -->
       <v-row>
-
-        <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
           <OrderData v-if="order" :order="order" class="full-card" />
         </v-col>
 
         <v-col cols="6">
-          <AlarmHandler class="full-card" :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating"
-            :isError="isError" :isLoading="isLoadingA" />
+          <AlarmHandler
+            class="full-card"
+            :alarm="alarm"
+            :updateAlarmStatus="updateAlarmStatus"
+            :isUpdating="isUpdating"
+            :isError="isError"
+            :isLoading="isLoadingA"
+          />
         </v-col>
       </v-row>
 
-      <v-row class="align-center d-flex">
-
-        <!-- Grafico circular y ETA -->
-        <v-col cols="6">
-          <v-row>
-            <!-- Circular graph -->
-            <v-col cols="7">
-              <!-- <RadialBar /> -->
-              <RadialBar class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
-            </v-col>
-            <!-- ETA -->
-            <ETA class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
-            <v-col cols="5">
-              <!-- <ETA /> -->
-            </v-col>
-          </v-row>
+      <v-row>
+        <!-- Columna para los gráficos -->
+        <v-col cols="3">
+          <!-- Gráfico circular -->
+          <RadialBar
+            class="full-size"
+            v-if="order"
+            :order="order"
+            :last-detail="lastDetail"
+          />
+        </v-col>
+        <!-- ETA -->
+        <v-col cols="3">
+          <ETA
+            class="full-size"
+            v-if="order"
+            :order="order"
+            :last-detail="lastDetail"
+          />
         </v-col>
 
-        <!-- Tabla de alarmas -->
+        <!-- Columna para la tabla de alarmas -->
         <v-col cols="6">
-          <AlarmTable :items="alarms" :totalElements="totalElementsA" :current-page="currentPageA"
-            :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" :set-page-a="setPageA"
-            class="tabla full-card" />
+          <AlarmTable
+            :items="alarms"
+            :totalElements="totalElementsA"
+            :current-page="currentPageA"
+            :page-size="pageSizeA"
+            :total-pages="totalPagesA"
+            :isLoading="isLoadingA"
+            :set-page-a="setPageA"
+            class="tabla full-card"
+          />
         </v-col>
-
       </v-row>
 
       <v-row>
         <!-- Tabla de detalles -->
         <v-col cols="6">
-          <OrderDetailTable :items="orderDetails" :totalElements="totalElementsD" :current-page="currentPageD"
-            :page-size="pageSizeD" :total-pages="totalPagesD" :isLoading="isLoadingD" :set-page-d="setPageD"
-            class="tabla" />
+          <OrderDetailTable
+            :items="orderDetails"
+            :totalElements="totalElementsD"
+            :current-page="currentPageD"
+            :page-size="pageSizeD"
+            :total-pages="totalPagesD"
+            :isLoading="isLoadingD"
+            :set-page-d="setPageD"
+          />
         </v-col>
 
         <!-- Graficos de Temperatura -->
         <v-col cols="6">
-          <TemperatureChart :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
+          <TemperatureChart
+            :allOrderDetails="allOrderDetails"
+            :lastDetail="lastDetail"
+          />
         </v-col>
       </v-row>
 
       <!-- Graficos de Flujo y Densidad -->
       <v-row>
-
         <v-col cols="6">
           <!-- TODO: Cambiar color -->
-          <FlowRateGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
+          <FlowRateGraph
+            :allOrderDetails="allOrderDetails"
+            :lastDetail="lastDetail"
+          />
         </v-col>
 
         <v-col cols="6">
-          <DensityGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
+          <DensityGraph
+            :allOrderDetails="allOrderDetails"
+            :lastDetail="lastDetail"
+          />
         </v-col>
-
       </v-row>
-
     </v-container>
-
   </AdminLayout>
 </template>
 

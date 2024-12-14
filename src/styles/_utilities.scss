@@ -1,0 +1,35 @@
+/**
+ * src/styles/utilities.scss
+ *
+ * 
+ * Clases de utilidad que no encajan en otras categorías
+ */
+
+@use "variables" as *;
+
+// Esto es para que las tarjetas ocupen el maximo height posible de las row
+.full-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+
+.rounded-card {
+  border-radius: 1rem;
+}
+
+.eta-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color);
+}

@@ -1,0 +1,76 @@
+/**
+ * src/styles/containers.scss
+ *
+ * 
+ * Estilos para contenedores. 
+ */
+
+@use "variables" as *;
+
+/* Contenedores generales */
+
+.data-container {
+  background-color: $container-color;
+  color: $text-color;
+  border-radius: 1rem;
+}
+
+/* Cards */
+
+
+// Alarmas
+.alarm-card {
+  border-radius: 1rem;
+  padding: 1rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column; // Organizar contenido verticalmente
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  &::before {
+    content: "";
+    width: 0.4rem;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  v-card-actions {
+    margin-top: 1rem; // Separar del contenido superior
+    justify-content: space-around; // Distribuir botones uniformemente
+  }
+
+  &.alarm-pending {
+    background-color: rgba(255, 145, 0, 0.1);
+    &::before {
+      background-color: #ff9100;
+    }
+  }
+
+  &.alarm-none {
+    background-color: rgba(25, 118, 210, 0.1);
+    &::before {
+      background-color: #1976d2;
+    }
+  }
+
+  &.alarm-invalid {
+    background-color: rgba(244, 67, 54, 0.1);
+    &::before {
+      background-color: #f44336;
+    }
+  }
+}
+
+// Gráficos
+.tempchart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #111c44;
+  border-radius: 12px;
+}
