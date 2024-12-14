@@ -1,10 +1,25 @@
 export interface TableItem {
     id: number;
-    truck: string;
-    client: string;
-    startingDate: string;
-    endingDate: string;
-    alarms: string;
-    state: string;
-    progress: number;
-  }
+    status: string;
+    truck: {
+        licensePlate: string;
+    };
+    customer: {
+        businessName: string;
+    };
+    alarmStatus: {
+        state: string;
+    };
+    receptionDate: string;
+    estimatedDate: string;
+}
+
+
+export interface ItemResponse {
+    items: TableItem[];
+    pagination: {
+        totalElements: number;
+        currentPage: number;
+        totalPages: number;
+    };
+}

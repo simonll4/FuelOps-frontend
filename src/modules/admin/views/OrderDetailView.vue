@@ -20,7 +20,7 @@ import { useAllOrderDetails } from "@/composables/use.all.order.details";
 import { useWsLatestOrderDetails } from "@/composables/ws/use.ws.latest.order.details";
 import { useOrder } from "@/composables/use.order";
 import { useAlarms } from "@/composables/use.alarms";
-import { useWsAlarms } from "@/composables/ws/use.ws.new.alarms";
+import { useWsAlarms } from "@/composables/ws/use.ws.alarms";
 import { useAlarmHandler } from "@/composables/use.alarm.handler";
 
 const route = useRoute();
@@ -30,27 +30,22 @@ const orderNumber = ref(Number(route.params.id));
 const { order } = useOrder(orderNumber.value);
 
 // TABLA DE DETALLES
-const { orderDetails, currentPage, totalPages, pageSize, totalElements, isLoading, setPage } = useOrderDetails(orderNumber.value);
-useWsOrderDetail(orderNumber.value); // se suscribe al websocket para recibir los detalles en tiempo real
+const { orderDetails, currentPageD, currentPageD1, totalPagesD, pageSizeD, totalElementsD, isLoadingD, setPageD, refetchD } = useOrderDetails(orderNumber.value);
+const { detail } = useWsOrderDetail(orderNumber.value); // se suscribe al websocket para recibir los detalles en tiempo real
 
-const handlePageChange = (page: number) => {
-  // console.log("cambio de pagina", page);
-  setPage(page - 1);
-};
+watch(detail, () => {
+  if (currentPageD1.value != 0) {
+    refetchD();
+  }
+});
 
 // TABLA DE ALARMAS
 const { alarms, currentPageA, totalPagesA, totalElementsA, pageSizeA, isLoadingA, setPageA, refetchA } = useAlarms(orderNumber.value);
 const { alarm } = useWsAlarms(orderNumber.value);
 
-const handlePageChangeA = (page: number) => {
-  // console.log("cambio de pagina", page);
-  setPageA(page - 1);
-};
-
 watch(alarm, () => {
   refetchA();
 });
-
 
 const { updateAlarmStatus, isUpdating, isError } = useAlarmHandler();
 
@@ -64,19 +59,6 @@ function goBack() {
   router.push("/admin/orders");
 };
 
-
-//prueba para ver llegada de alarma
-watchEffect(() => {
-  // console.log("reminders: ", remindersAlarms.value);
-  // console.log("alarmas por orden: ", alarmForOrder.value);
-  //console.log("detalle de orden ws: ", detail.value);
-  //console.log("orderDetails: ", orderDetails.value);
-  //console.log("aca allOrderDetails: ", allOrderDetails.value);
-  //console.log("aca lastDetail: ", lastDetail.value);
-  //console.log("order: ", order.value);
-  //console.log("alarms: ", alarms.value);
-});
-
 </script>
 <template>
   <AdminLayout>
@@ -86,7 +68,6 @@ watchEffect(() => {
     </v-container>
 
     <v-container>
-
       <v-row align="center" class="mb-2" justify="space-between">
         <v-col>
           <h1 class="text-h4">Orden N° #{{ orderNumber }}</h1>
@@ -100,14 +81,15 @@ watchEffect(() => {
 
       <!-- Datos de la orden y Notificacion de Alarmas -->
       <v-row>
+
         <!-- TODO: Hacer que estos dos coincidan en height -->
         <v-col cols="6">
-          <OrderData v-if="order" :order="order" />
+          <OrderData v-if="order" :order="order" class="full-card"/>
         </v-col>
 
-        <!-- TODO conectar -->
         <v-col cols="6">
-          <AlarmHandler :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating" :isError="isError" />
+          <AlarmHandler class="full-card" :alarm="alarm" :updateAlarmStatus="updateAlarmStatus" :isUpdating="isUpdating"
+            :isError="isError" :isLoading="isLoadingA" />
         </v-col>
       </v-row>
 
@@ -119,10 +101,10 @@ watchEffect(() => {
             <!-- Circular graph -->
             <v-col cols="7">
               <!-- <RadialBar /> -->
-              <RadialBar v-if="order" :order="order" :last-detail="lastDetail" />
+              <RadialBar class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
             </v-col>
             <!-- ETA -->
-            <ETA v-if="order" :order="order" :last-detail="lastDetail" />
+            <ETA class="full-card" v-if="order" :order="order" :last-detail="lastDetail" />
             <v-col cols="5">
               <!-- <ETA /> -->
             </v-col>
@@ -132,18 +114,17 @@ watchEffect(() => {
         <!-- Tabla de alarmas -->
         <v-col cols="6">
           <AlarmTable :items="alarms" :totalElements="totalElementsA" :current-page="currentPageA"
-            :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" @update:page="handlePageChangeA"
-            class="tabla" />
+            :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" :set-page-a="setPageA"
+            class="tabla full-card" />
         </v-col>
 
       </v-row>
 
-      <h2>Detalles de carga</h2>
       <v-row>
         <!-- Tabla de detalles -->
         <v-col cols="6">
-          <OrderDetailTable :items="orderDetails" :totalElements="totalElements" :current-page="currentPage"
-            :page-size="pageSize" :total-pages="totalPages" :isLoading="isLoading" @update:page="handlePageChange"
+          <OrderDetailTable :items="orderDetails" :totalElements="totalElementsD" :current-page="currentPageD"
+            :page-size="pageSizeD" :total-pages="totalPagesD" :isLoading="isLoadingD" :set-page-d="setPageD"
             class="tabla" />
         </v-col>
 

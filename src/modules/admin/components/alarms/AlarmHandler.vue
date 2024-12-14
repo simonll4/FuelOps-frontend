@@ -8,6 +8,7 @@ const props = defineProps<{
   updateAlarmStatus: (payload: { id: number; observation: string; newStatus: string }) => void;
   isUpdating: boolean;
   isError: boolean;
+  isLoading: boolean;
 }>();
 
 const handleDialogConfirm = (data: { alarmId: number; observation: string; action: string }) => {
@@ -44,9 +45,13 @@ const formatDate = (timestamp: string): string => {
 <template>
   <v-card color="#FF9100" variant="tonal" class="mx-auto">
 
-    <!-- TODO poner un efecto loading hasta que carga la info -->
+    <!-- TODO poner un efecto loading hasta que carga la info(skeleton si se puede)
+    -->
+
+    <!-- TODO hacer tarjeta que no estdao en estado carga -->
 
     <v-card-item>
+
       <div v-if="alarm">
         <div class="text-overline mb-1">¡ATENCIÓN!</div>
         <div class="text-h6 mb-1"><strong>Alarma Sin Confirmar</strong></div>

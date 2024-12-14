@@ -25,7 +25,7 @@ export const useAlarms = (idOrder: number) => {
   const { isLoading, data, error, refetch } = useQuery({
     queryKey: ['alarms', idOrder, currentPageA, pageSizeA, sortByA],
     queryFn: fetchAlarms,
-    staleTime: 0
+    staleTime: 0, // TODO ver como manejar cache en ordenes que nunca se van actualizar (de estado 3 en adelante)
   });
 
   watch(data, (result) => {
@@ -50,6 +50,7 @@ export const useAlarms = (idOrder: number) => {
   });
 
   return {
+    
     alarms,
     currentPageA: currentPageA.value + 1,
     pageSizeA,
@@ -63,5 +64,6 @@ export const useAlarms = (idOrder: number) => {
     setPageA: store.setPageA,
     setPageSize: store.setPageSize,
     setSortBy: store.setSortBy
+
   };
 };

@@ -5,6 +5,7 @@ import { webSocketService } from '@/services/ws.service';
 import { useOrderDetailsStore } from '@/stores/order.details.store';
 
 import type { OrderDetail } from '@/interfaces/order-details.interface';
+import { storeToRefs } from 'pinia';
 
 export const useWsOrderDetail = (orderId: number) => {
 
@@ -18,18 +19,19 @@ export const useWsOrderDetail = (orderId: number) => {
   const topic = `/topic/details/order/${orderId}`;
 
   // Variable reactiva para almacenar el mensaje recibido
-  const detail = ref<OrderDetail | null>(null);
+  //const detail = ref<OrderDetail | null>(null);
 
   // Store de detalles de la orden
   const store = useOrderDetailsStore();
+  const { newDetailByOrden } = storeToRefs(store);
 
   // Manejo de la llegada de nuevos mensajes
   const handleMessage = (message: OrderDetail) => {
     //console.log('Nuevo mensaje recibido:', message);
-    detail.value = message;
-    queryClient.setQueryData(['OrderDetail'], message); // Actualiza cache de Vue Query
 
+    queryClient.setQueryData(['OrderDetail'], message); // Actualiza cache de Vue Query
     store.addNewOrderDetail(message);
+    store.setNewDetailByOrden(message);
   };
 
   // Suscripción y conexión WebSocket
@@ -39,7 +41,6 @@ export const useWsOrderDetail = (orderId: number) => {
 
   // Desconexión del WebSocket al desmontar el componente
   onUnmounted(() => {
-    //disconnect();
     unsubscribe(topic);
   });
 
@@ -47,8 +48,8 @@ export const useWsOrderDetail = (orderId: number) => {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['lastDetail'] });
 
   return {
-    detail,
+    detail: newDetailByOrden,
     invalidate,
   };
-  
+
 };

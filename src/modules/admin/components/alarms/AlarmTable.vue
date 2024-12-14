@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import { format } from "date-fns";
-
 import type { Alarm } from "@/interfaces/alarm.interface";
+import { es } from "date-fns/locale";
 
 // Props
 const props = defineProps({
@@ -26,17 +26,12 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  setPageA: {
+    type: Function,
+    required: true,
+  },
   isLoading: Boolean,
 });
-
-// watchEffect(() => {
-//   console.log("items", props.items);
-//   console.log("currentPage", props.currentPage);
-//   console.log("pageSize", props.pageSize);
-//   console.log("totalPages", props.totalPages);
-//   console.log("isLoading", props.isLoading);
-//   console.log("totalElements", props.totalElements);
-// });
 
 // Emit
 const emit = defineEmits(["update:page"]);
@@ -44,7 +39,7 @@ const currentPage = ref(props.currentPage);
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
-  emit("update:page", page);
+  props.setPageA(page - 1);
 };
 
 watch(() => props.currentPage, (newPage) => {
@@ -61,11 +56,6 @@ const headers = ref<
   { title: "Temperatura (°C)", value: "temperature", align: "center" },
 ]);
 
-// Función para formatear fechas
-const formatDate = (timestamp: string) => {
-  return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
-};
-
 // Clases para estilos condicionales
 const getStateClass = (state: string): string => {
   if (state === "Pendiente") return "text-warning";
@@ -77,41 +67,61 @@ const getTemperatureClass = (temperature: number): string => {
   if (temperature > 50) return "text-danger";
   return "";
 };
+
+// Función para formatear la fecha para el título
+const formatTitleDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd 'de' MMMM 'de' yyyy", { locale: es }); // Puedes usar el idioma deseado.
+};
+
+const formatDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
+};
+
+
 </script>
 
 <template>
-
-  <!-- TODO pasar fecha a titulo dejar solo hora para esta tabla y la de detalles -->
-
   <v-card class="mb-4" outline>
-    <v-card-title>Alarmas de Temperatura</v-card-title>
+
+    <v-card-title>
+      Alarmas de Temperatura - {{ formatTitleDate(new Date().toISOString()) }}
+    </v-card-title>
+
     <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla" height="320"
       show-expand single-expand :items-per-page="pageSize" :loading="isLoading" :page="currentPage"
       :items-length="totalElements" hide-default-footer @update:page="handlePageChange">
+
       <!-- Columna ID -->
       <template #item.id="{ item }">
-        <span>{{ item.id }}</span>
+        <transition-group name="fade" tag="span">
+          <span :key="`id-${item.id}`">{{ item.id }}</span>
+        </transition-group>
       </template>
 
       <!-- Columna Estado -->
       <template #item.state="{ item }">
-        <span :class="getStateClass(item.state)">
-          {{ item.state }}
-        </span>
+        <transition-group name="fade" tag="span">
+          <span :key="`state-${item.id}`" :class="getStateClass(item.state)">
+            {{ item.state }}
+          </span>
+        </transition-group>
       </template>
 
       <!-- Columna Timestamp -->
       <template #item.timestamp="{ item }">
-        <span>{{ formatDate(item.timeStamp) }}</span>
+        <transition-group name="fade" tag="span">
+          <span :key="`timestamp-${item.id}`">{{ formatDate(item.timeStamp) }}</span>
+        </transition-group>
       </template>
 
       <!-- Columna Temperatura -->
       <template #item.temperature="{ item }">
-        <span :class="getTemperatureClass(item.temperature)">
-          {{ item.temperature }} °C
-        </span>
+        <transition-group name="fade" tag="span">
+          <span :key="`temperature-${item.id}`" :class="getTemperatureClass(item.temperature)">
+            {{ item.temperature }} °C
+          </span>
+        </transition-group>
       </template>
-
 
       <!-- Contenido Expandido-->
       <template v-slot:expanded-row="{ columns, item }">
@@ -133,15 +143,26 @@ const getTemperatureClass = (temperature: number): string => {
       <template #bottom>
         <v-container class="d-flex justify-center">
           <v-pagination :model-value="currentPage" :length="totalPages" :total-visible="5"
-            @update:modelValue="handlePageChange"></v-pagination>
+            @update:modelValue="handlePageChange" />
         </v-container>
       </template>
-
     </v-data-table-server>
   </v-card>
 </template>
 
-<style lang="scss" src="/src/styles/global.scss"></style>
+<style lang="scss" src="/src/styles/global.scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
+
 
 <!-- <script setup lang="ts">
 import { ref } from "vue";
@@ -206,7 +227,7 @@ const getStateClass = (state: string): string => {
   <v-card class="mb-4" outlined>
     <v-card-title>Alarmas de Temperatura</v-card-title>
     <v-data-table-server :headers="headers" :items="alarms" :items-length="alarms.length" item-value="id"
-      class="elevation-1 tabla" show-expand single-expand height="260">
+      class="elevation-1 tabla" show-expand single-expand>
 
       <!-- Columna Estado con color 
       <template #item.state="{ item }">
