@@ -13,11 +13,11 @@ const emit = defineEmits(["close", "submit"]);
 
 // Datos del formulario
 const formData = ref<Omit<Product, "id">>({
-  descripcion: "",
-  producto: "",
+  description: "",
+  product: "",
   stock: 0,
-  temperaturaUmbral: 0,
-  densidad: 0,
+  thresholdTemperature: 0,
+  density: 0,
 });
 
 // Sincronizar datos en modo edición
@@ -55,29 +55,29 @@ const submitForm = () => {
 
       <v-card-text>
         <v-text-field
-          v-model="formData.descripcion"
+          v-model="formData.description"
           label="Descripción"
           required
         ></v-text-field>
         <v-text-field
-          v-model="formData.producto"
+          v-model="formData.product"
           label="Producto"
           required
         ></v-text-field>
         <v-text-field
           v-model="formData.stock"
           label="Stock"
-          type="number"
+          type="boolean"
           required
         ></v-text-field>
         <v-text-field
-          v-model="formData.temperaturaUmbral"
+          v-model="formData.thresholdTemperature"
           label="Temperatura Umbral (°C)"
           type="number"
           required
         ></v-text-field>
         <v-text-field
-          v-model="formData.densidad"
+          v-model="formData.density"
           label="Densidad (kg/m³)"
           type="number"
           required

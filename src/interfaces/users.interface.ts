@@ -1,7 +1,7 @@
 export interface UserResponse {
+  id: number;
   email: string;
   username: string;
-  rol: string;
-  status: "Activa" | "Desactivada";
-  password?: string;
+  roles: string;
+  enabled: boolean;
 }
