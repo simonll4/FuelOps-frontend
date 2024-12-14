@@ -88,3 +88,9 @@ html {
   flex-direction: column;
   height: 100%;
 }
+
+// Esto es para el boton del menú de acciones de los usuarios
+.btn-menu, .menu-list {
+  background-color: $container-color;
+  color: $text-color;
+}
