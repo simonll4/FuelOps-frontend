@@ -52,7 +52,6 @@ const handleAction = (action: "edit" | "deactivate" | "delete", item: UserRespon
     :items-length="Math.max(totalElements, items.length)"
     item-value="id"
     class="elevation-1 data-container"
-    height="320"
     :items-per-page="itemsPerPage"
     :items-per-page-options="[]"
     :loading="isLoading"
