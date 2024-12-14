@@ -7,6 +7,7 @@ import { useWsOrderDetail } from "@/composables/ws/use.ws.order.details";
 
 import AdminLayout from "../layouts/AdminLayout.vue";
 import OrderDetailTable from "../components/order/OrderDetailTable.vue";
+import OrderProductData from "../components/order/OrderProductData.vue";
 import ETA from "../components/graphs/ETAGraph.vue";
 import OrderData from "../components/order/OrderData.vue";
 import AlarmTable from "../components/alarms/AlarmTable.vue";
@@ -88,12 +89,11 @@ const downloadReconciliation = () => {
   // Lógica para descargar el PDF
   console.log("Descargando conciliación...");
   // Ejemplo de descarga:
-  const link = document.createElement('a');
-  link.href = '/path/to/reconciliation.pdf'; // Ajusta la URL al archivo real
-  link.download = 'conciliacion.pdf';
+  const link = document.createElement("a");
+  link.href = "/path/to/reconciliation.pdf"; // Ajusta la URL al archivo real
+  link.download = "conciliacion.pdf";
   link.click();
 };
-
 </script>
 <template>
   <AdminLayout>
@@ -108,18 +108,24 @@ const downloadReconciliation = () => {
           <h1 class="text-h4">Orden N° #{{ orderNumber }}</h1>
         </v-col>
 
-        <!-- TODO: Mover el boton de lado y convertir en arrow -->
         <v-col class="text-right">
           <v-btn
             v-if="isOrderClosed"
             @click="downloadReconciliation"
             color="primary"
-            class="btn-color-5"
+            class="btn-color-5 align-center"
           >
-            Descargar Conciliación
+              <v-icon>mdi-download</v-icon>
+              <p>Descargar conciliación</p>
           </v-btn>
 
-          <v-btn v-else class="btn-disabled-outline" disabled>
+          <v-btn
+            v-else
+            class="btn-disabled-outline"
+            color="#1976d2"
+            disabled
+            variant="tonal"
+          >
             Conciliación no disponible
           </v-btn>
         </v-col>
@@ -127,8 +133,17 @@ const downloadReconciliation = () => {
 
       <!-- Datos de la orden y Notificacion de Alarmas -->
       <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
           <OrderData v-if="order" :order="order" class="full-card" />
+        </v-col>
+
+        <!-- TODO: Poner datos reales de la orden -->
+        <v-col cols="2">
+          <OrderProductData
+            v-if="order"
+            :productName="order.product.product"
+            :thresholdTemperature="12"
+          />
         </v-col>
 
         <v-col cols="6">

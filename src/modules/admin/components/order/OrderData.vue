@@ -43,7 +43,6 @@ const formatDuration = (seconds: number): string => {
   return `${formattedDays}${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-
 // Ref para el tiempo transcurrido
 const elapsedTime = ref<string | null>(null);
 
@@ -83,7 +82,6 @@ const completionTime = computed(() => {
   console.log(seconds);
   return formatDuration(seconds);
 });
-
 </script>
 
 <template>
@@ -130,31 +128,32 @@ const completionTime = computed(() => {
       <!-- Tiempo transcurrido o tiempo de finalización -->
       <v-row>
         <v-col cols="6">
+          <v-chip color="red" class="mt-2" v-if="order.status">
+            {{ order.status }}
+          </v-chip>
+        </v-col>
+        <v-col cols="6">
+          <v-chip
+            color="info"
+            class="mt-2"
+            v-if="
+              order.status == 'REGISTERED_INITIAL_WEIGHING' &&
+              order.fuelingStartDate
+            "
+          >
+            Tiempo Transcurrido: {{ elapsedTime }}
+          </v-chip>
 
-          <v-row>
-
-            <!-- TODO ajustar tamanios me ganarons estas wascas, calculos de tiempos estan bien -->
-            <v-col cols="6">
-              <v-chip color="red" class="mt-2" v-if="order.status">
-                {{ order.status }}
-              </v-chip>
-            </v-col>
-
-            <v-col cols="6">
-
-              <v-chip color="info" class="mt-2"
-                v-if="order.status == 'REGISTERED_INITIAL_WEIGHING' && order.fuelingStartDate">
-                Tiempo Transcurrido: {{ elapsedTime }}
-              </v-chip>
-
-              <v-chip color="success" class="mt-2"
-                v-else-if="order.status == 'ORDER_CLOSED' || order.status == 'REGISTERED_FINAL_WEIGHING'">
-                Tiempo de Carga: {{ completionTime }}
-              </v-chip>
-
-            </v-col>
-          </v-row>
-
+          <v-chip
+            color="success"
+            class="mt-2"
+            v-else-if="
+              order.status == 'ORDER_CLOSED' ||
+              order.status == 'REGISTERED_FINAL_WEIGHING'
+            "
+          >
+            Tiempo de Carga: {{ completionTime }}
+          </v-chip>
         </v-col>
       </v-row>
     </v-card-text>

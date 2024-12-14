@@ -40,6 +40,9 @@ const chartOptions = ref({
     type: "datetime",
     labels: {
       format: "HH:mm:ss",
+      style: {
+        colors: "#FFFFFF",
+      },
     },
     title: {
       text: "Tiempo",
@@ -62,6 +65,9 @@ const chartOptions = ref({
     },
     labels: {
       formatter: (value: number) => `${value.toFixed(2)} kg/m³`,
+      style: {
+        colors: "#FFFFFF",
+      },
     },
     axisBorder: {
       color: "#FFFFFF",
