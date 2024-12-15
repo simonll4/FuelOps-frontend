@@ -23,6 +23,7 @@ import { useOrder } from "@/composables/use.order";
 import { useAlarms } from "@/composables/use.alarms";
 import { useWsAlarms } from "@/composables/ws/use.ws.alarms";
 import { useAlarmHandler } from "@/composables/use.alarm.handler";
+import { useOrderConciliation } from "@/composables/use.order.conciliation";
 
 const route = useRoute();
 
@@ -81,18 +82,10 @@ function goBack() {
   router.push("/admin/orders");
 }
 
-// TODO: Implementar la descarga de la conciliación
-// Simula el estado de la orden
-const isOrderClosed = ref<boolean>(false); // Cambia a false para probar el otro caso
+const { downloadConciliation, isDownloading } = useOrderConciliation();
 
 const downloadReconciliation = () => {
-  // Lógica para descargar el PDF
-  console.log("Descargando conciliación...");
-  // Ejemplo de descarga:
-  const link = document.createElement("a");
-  link.href = "/path/to/reconciliation.pdf"; // Ajusta la URL al archivo real
-  link.download = "conciliacion.pdf";
-  link.click();
+  downloadConciliation(orderNumber.value);
 };
 </script>
 <template>
@@ -109,23 +102,15 @@ const downloadReconciliation = () => {
         </v-col>
 
         <v-col class="text-right">
-          <v-btn
-            v-if="isOrderClosed"
-            @click="downloadReconciliation"
-            color="primary"
-            class="btn-color-5 align-center"
-          >
-              <v-icon>mdi-download</v-icon>
-              <p>Descargar conciliación</p>
+          <!-- <v-btn v-if="order?.status == 'REGISTERED_FINAL_WEIGHING'" @click="downloadReconciliation" color="primary"
+            class="btn-color-5 align-center"> -->
+          <v-btn v-if="order?.status == 'REGISTERED_FINAL_WEIGHING'" @click="downloadReconciliation"
+            :loading="isDownloading" color="primary" class="btn-color-5 align-center">
+            <v-icon>mdi-download</v-icon>
+            <p>Descargar conciliación</p>
           </v-btn>
 
-          <v-btn
-            v-else
-            class="btn-disabled-outline"
-            color="#1976d2"
-            disabled
-            variant="tonal"
-          >
+          <v-btn v-else class="btn-disabled-outline" color="#1976d2" disabled variant="tonal">
             Conciliación no disponible
           </v-btn>
         </v-col>
@@ -139,22 +124,13 @@ const downloadReconciliation = () => {
 
         <!-- TODO: Poner datos reales de la orden -->
         <v-col cols="2">
-          <OrderProductData
-            v-if="order"
-            :productName="order.product.product"
-            :thresholdTemperature="12"
-          />
+          <OrderProductData v-if="order" :productName="order.product.product"
+            :thresholdTemperature="order.product.thresholdTemperature" />
         </v-col>
 
         <v-col cols="6">
-          <AlarmHandler
-            class="full-card"
-            :alarm="alarm"
-            :updateAlarmStatus="updateAlarmStatus"
-            :isUpdating="isUpdating"
-            :isError="isError"
-            :isLoading="isLoadingA"
-          />
+          <AlarmHandler class="full-card" :alarm="alarm" :order="order" :updateAlarmStatus="updateAlarmStatus"
+            :isUpdating="isUpdating" :isError="isError" :isLoading="isLoadingA" />
         </v-col>
       </v-row>
 
@@ -162,58 +138,31 @@ const downloadReconciliation = () => {
         <!-- Columna para los gráficos -->
         <v-col cols="3">
           <!-- Gráfico circular -->
-          <RadialBar
-            class="full-size"
-            v-if="order"
-            :order="order"
-            :last-detail="lastDetail"
-          />
+          <RadialBar class="full-size" v-if="order" :order="order" :last-detail="lastDetail" />
         </v-col>
         <!-- ETA -->
         <v-col cols="3">
-          <ETA
-            class="full-size"
-            v-if="order"
-            :order="order"
-            :last-detail="lastDetail"
-          />
+          <ETA class="full-size" v-if="order" :order="order" :last-detail="lastDetail" />
         </v-col>
 
         <!-- Columna para la tabla de alarmas -->
         <v-col cols="6">
-          <AlarmTable
-            :items="alarms"
-            :totalElements="totalElementsA"
-            :current-page="currentPageA"
-            :page-size="pageSizeA"
-            :total-pages="totalPagesA"
-            :isLoading="isLoadingA"
-            :set-page-a="setPageA"
-            class="tabla full-card"
-          />
+          <AlarmTable :items="alarms" :totalElements="totalElementsA" :current-page="currentPageA"
+            :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" :set-page-a="setPageA"
+            class="tabla full-card" />
         </v-col>
       </v-row>
 
       <v-row>
         <!-- Tabla de detalles -->
         <v-col cols="6">
-          <OrderDetailTable
-            :items="orderDetails"
-            :totalElements="totalElementsD"
-            :current-page="currentPageD"
-            :page-size="pageSizeD"
-            :total-pages="totalPagesD"
-            :isLoading="isLoadingD"
-            :set-page-d="setPageD"
-          />
+          <OrderDetailTable :items="orderDetails" :totalElements="totalElementsD" :current-page="currentPageD"
+            :page-size="pageSizeD" :total-pages="totalPagesD" :isLoading="isLoadingD" :set-page-d="setPageD" />
         </v-col>
 
         <!-- Graficos de Temperatura -->
         <v-col cols="6">
-          <TemperatureChart
-            :allOrderDetails="allOrderDetails"
-            :lastDetail="lastDetail"
-          />
+          <TemperatureChart :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
       </v-row>
 
@@ -221,17 +170,11 @@ const downloadReconciliation = () => {
       <v-row>
         <v-col cols="6">
           <!-- TODO: Cambiar color -->
-          <FlowRateGraph
-            :allOrderDetails="allOrderDetails"
-            :lastDetail="lastDetail"
-          />
+          <FlowRateGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
 
         <v-col cols="6">
-          <DensityGraph
-            :allOrderDetails="allOrderDetails"
-            :lastDetail="lastDetail"
-          />
+          <DensityGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
       </v-row>
     </v-container>

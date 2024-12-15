@@ -23,7 +23,7 @@ const cardClass = computed(() => {
         <strong>{{ title }}</strong>
       </div>
       <div class="text-caption">
-        {{ message }}
+        {{ message }} 
       </div>
     </v-card-item>
     <v-card-actions>

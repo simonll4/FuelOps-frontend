@@ -1,5 +1,6 @@
 interface Product {
   product: string;
+  thresholdTemperature: number;
   density: string;
 }
 interface Driver {
