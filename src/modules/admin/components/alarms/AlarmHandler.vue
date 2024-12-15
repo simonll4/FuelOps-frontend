@@ -1,18 +1,30 @@
 <script setup lang="ts">
 import ConfirmAlarmDialog from "./AlarmDialog.vue";
+import AlarmCard from "./AlarmCard.vue";
 
 import type { Alarm } from "@/interfaces/alarm.interface";
+import type { Order } from "@/interfaces/order.interface";
 
 const props = defineProps<{
   alarm: Alarm | undefined;
-  updateAlarmStatus: (payload: { id: number; observation: string; newStatus: string }) => void;
+  updateAlarmStatus: (payload: {
+    id: number;
+    observation: string;
+    newStatus: string;
+  }) => void;
+  order: Order | null;
   isUpdating: boolean;
   isError: boolean;
   isLoading: boolean;
 }>();
 
-const handleDialogConfirm = (data: { alarmId: number; observation: string; action: string }) => {
-  const newStatus = data.action === 'Confirmar' ? 'ACKNOWLEDGED' : 'CONFIRMED_ISSUE';
+const handleDialogConfirm = (data: {
+  alarmId: number;
+  observation: string;
+  action: string;
+}) => {
+  const newStatus =
+    data.action === "Confirmar" ? "ACKNOWLEDGED" : "CONFIRMED_ISSUE";
   props.updateAlarmStatus({
     id: data.alarmId,
     observation: data.observation,
@@ -21,19 +33,15 @@ const handleDialogConfirm = (data: { alarmId: number; observation: string; actio
 };
 
 const formatDate = (timestamp: string): string => {
-  const date = new Date(timestamp); // Convertir a objeto Date
-
-  // Formatear la fecha (sin incluir hora)
-  const formattedDate = date.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const date = new Date(timestamp);
+  const formattedDate = date.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
-
-  // Formatear la hora
-  const formattedTime = date.toLocaleTimeString('es-ES', {
-    hour: '2-digit',
-    minute: '2-digit',
+  const formattedTime = date.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: true,
   });
 
@@ -42,78 +50,35 @@ const formatDate = (timestamp: string): string => {
 
 </script>
 
+
 <template>
-  <v-card color="#FF9100" variant="tonal" class="mx-auto">
+  <!-- TODO: Ver que el skeleton quede mejor -->
 
-    <!-- TODO poner un efecto loading hasta que carga la info(skeleton si se puede)
-    -->
+  <v-container v-if="isLoading" class="pa-0 full-card">
+    <v-skeleton-loader type="card" color="#111C44" class="rounded-card full-height" />
+  </v-container>
 
-    <!-- TODO hacer tarjeta que no estdao en estado carga -->
+  <v-container v-else class="pa-0">
 
-    <v-card-item>
+    <AlarmCard v-if="alarm" title="¡ATENCIÓN!" :message="`Revisa los detalles de la alarma con ID ${alarm.id
+      } producida el ${formatDate(alarm.timeStamp)}.`" variant="pending">
+      <template #actions>
+        <ConfirmAlarmDialog :alarm-id="alarm.id" :alarm-timestamp="alarm.timeStamp" button-text="Confirmar"
+          button-color="primary" dialog-title="Confirmar Alarma" checkbox-label="He revisado la alarma y la confirmo."
+          @confirmed="handleDialogConfirm" />
+        <ConfirmAlarmDialog :alarm-id="alarm.id" :alarm-timestamp="alarm.timeStamp" button-text="Reportar Problema"
+          button-color="red" dialog-title="Reportar Problema"
+          checkbox-label="He revisado la alarma y considero que hay un problema." @confirmed="handleDialogConfirm" />
+      </template>
+    </AlarmCard>
 
-      <div v-if="alarm">
-        <div class="text-overline mb-1">¡ATENCIÓN!</div>
-        <div class="text-h6 mb-1"><strong>Alarma Sin Confirmar</strong></div>
-        <div class="text-caption">
-          Revisa los detalles de la alarma con ID
-          <strong>{{ alarm.id }}</strong> producida el
-          <strong>{{ formatDate(alarm.timeStamp) }}</strong>.
-        </div>
-      </div>
+    <AlarmCard v-else-if="order?.status != 'REGISTERED_INITIAL_WEIGHING'" title="La orden no está en estado de carga."
+      message="Durante la carga de combustible, podrás gestionar las alarmas de precaución." variant="invalid" />
 
-      <div v-else>
-        <div class="text-overline mb-1">Sin Alarmas</div>
-        <div class="text-h6 mb-1"><strong>No hay alarmas pendientes</strong></div>
-        <div class="text-caption">
-          Por el momento, no hay ninguna alarma pendiente de revisión.
-        </div>
-      </div>
-
-    </v-card-item>
-
-    <v-card-actions v-if="alarm" class="d-flex justify-space-around">
-      <!-- Botón Confirmar Alarma -->
-      <ConfirmAlarmDialog :alarm-id="alarm.id" :alarm-timestamp="alarm.timeStamp" button-text="Confirmar"
-        button-color="primary" dialog-title="Confirmar Alarma" checkbox-label="He revisado la alarma y la confirmo."
-        @confirmed="handleDialogConfirm" />
-
-      <!-- Botón Reportar Problema -->
-      <ConfirmAlarmDialog :alarm-id="alarm.id" :alarm-timestamp="alarm.timeStamp" button-text="Reportar Problema"
-        button-color="red" dialog-title="Reportar Problema"
-        checkbox-label="He revisado la alarma y considero que hay un problema." @confirmed="handleDialogConfirm" />
-
-    </v-card-actions>
-  </v-card>
+    <AlarmCard v-else title="¡Buenas noticias!" message="Por el momento, no hay ninguna alarma pendiente de revisión."
+      variant="none" />
+  </v-container>
+  
 </template>
 
-<!-- 
-<template>
-  <v-card color="#FF9100" variant="tonal" class="mx-auto">
-    <v-card-item>
-      <div>
-        <div class="text-overline mb-1">¡ATENCIÓN!</div>
-        <div class="text-h6 mb-1"><strong>Alarma Sin Confirmar</strong></div>
-        <div class="text-caption">
-          Revisa los detalles de la alarma con ID
-          <strong>{{ alarm?.id }}</strong> producida el
-          <strong>{{ formatDate(alarm?.timeStamp || '') }}</strong>.
-        </div>
-      </div>
-    </v-card-item>
-
-    <v-card-actions class="d-flex justify-space-around">
-      <!-- Botón Confirmar Alarma
-      <ConfirmAlarmDialog :dialog-title="'Confirmar Alarma'"
-        :checkbox-label="'Confirmo que he tomado conocimiento de la alarma.'" :button-text="'Confirmar'"
-        button-color="primary" :alarm-id="alarm?.id?.toString() || ''"
-        :alarm-timestamp="formatDate(alarm?.timeStamp || '')" @confirmed="handleConfirmed" />
-
-      <!-- Botón Reportar Problema
-      <ConfirmAlarmDialog :dialog-title="'Reportar Problema'"
-        :checkbox-label="'Confirmo que quiero reportar un problema.'" :button-text="'Reportar Problema'"
-        button-color="red" :alarm-id="alarm?.id?.toString() || ''" :alarm-timestamp="formatDate(alarm?.timeStamp || '')"
-        @confirmed="handleReported" />
-    </v-card-actions>
-  </v-card>
-</template> -->
+<style lang="scss" src="/src/styles/global.scss"></style>

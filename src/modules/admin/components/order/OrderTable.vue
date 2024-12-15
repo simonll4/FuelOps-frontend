@@ -57,7 +57,6 @@ const headers = ref<
 
 // Función para aplicar estilos condicionales a las advertencias
 const getWarningClass = (warning: string): string => {
-  console.log(warning);
   if (warning === "Sin alarmas") return "text-success";
   if (warning === "Problema") return "text-danger";
   if (warning === "Pendiente") return "text-warning";

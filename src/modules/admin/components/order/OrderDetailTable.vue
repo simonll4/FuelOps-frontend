@@ -34,7 +34,7 @@ const props = defineProps({
 
 });
 
-const emit = defineEmits(["update:page"]);
+//const emit = defineEmits(["update:page"]);
 const currentPage = ref(props.currentPage);
 
 const handlePageChange = (page: number) => {
@@ -78,11 +78,11 @@ const formatTitleDate = (timestamp: string) => {
 
 <template>
 
-  <v-card class="mb-4" outlined>
-    <v-card-title>
-      Detalles de Carga - {{ formatTitleDate(new Date().toISOString()) }}
+  <v-card class="data-container full-card mb-4" outlined>
+    <v-card-title class="mt-2 mb-2">
+     <strong>Detalles de Carga - {{ formatTitleDate(new Date().toISOString()) }}</strong>
     </v-card-title>
-    <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1" height="320"
+    <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla"
       :items-per-page="pageSize" :loading="isLoading" :page="currentPage" :items-length="totalElements"
       hide-default-footer @update:page="handlePageChange">
 
@@ -126,21 +126,4 @@ const formatTitleDate = (timestamp: string) => {
 
 </template>
 
-<style scoped>
-/*TODO llevar esto el scss global  
-Estilos para valores condicionales de temperatura */
-.text-cool {
-  color: #00aaff;
-  font-weight: bold;
-}
-
-.text-normal {
-  color: #00ffaa;
-  font-weight: bold;
-}
-
-.text-warm {
-  color: #ff5500;
-  font-weight: bold;
-}
-</style>
+<style lang="scss" src="/src/styles/global.scss"></style>

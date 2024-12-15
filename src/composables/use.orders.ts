@@ -28,7 +28,6 @@ export const useOrders = () => {
     });
 
     watch(data, (result) => {
-        console.log('Resultado del query:', result);
         if (result) {
             store.setOrders(result.items);
             store.setPaginationData(

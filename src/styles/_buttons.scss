@@ -1,0 +1,40 @@
+/**
+ * src/styles/buttons.scss
+ *
+ * 
+ * Estilos específicos para los botones.
+ */
+
+ @use "variables" as *;
+
+.btn-color-4 {
+  background-color: $accent-color-4;
+  color: $text-color;
+
+  &:hover {
+    background-color: $accent-color-3;
+    color: $text-color;
+  }
+}
+
+.btn-menu {
+  background-color: $container-color;
+  color: $text-color;
+}
+
+.menu-list {
+  background-color: $container-color;
+  color: $text-color;
+}
+
+.btn-color-5 {
+  color: white;
+  background-color: #1976d2; // Color primario de Vuetify por defecto
+}
+
+.btn-disabled-outline {
+  color: #1976d2;
+  border: 1px solid #1976d2;
+  background-color: transparent;
+  pointer-events: none; 
+}

@@ -1,114 +1,76 @@
-<!-- src/views/UsersView.vue -->
 <script setup lang="ts">
 import { ref } from "vue";
-
 import type { UserResponse } from "@/interfaces/users.interface";
-
+import { useUsers } from "@/composables/use.user";
 import AdminLayout from "../layouts/AdminLayout.vue";
 import UserTable from "@/modules/admin/components/users/UsersTable.vue";
 import UserFormDialog from "@/modules/admin/components/users/UsersFormDialog.vue";
 
-// Datos mock para usuarios internos
-const internalUsers = ref<UserResponse[]>([
-  {
-    id: 1,
-    email: "admin@example.com",
-    username: "admin1",
-    rol: "admin",
-    status: "Activa",
-  },
-  {
-    id: 2,
-    email: "operator@example.com",
-    username: "operator1",
-    rol: "operator",
-    status: "Desactivada",
-  },
-]);
+// Usa el composable de usuarios
+const {
+  internalUsers,
+  externalUsers,
+  isLoading,
+  createUser,
+  updateUser,
+  deleteUser,
+} = useUsers();
 
-// Datos mock para clientes externos
-const externalUsers = ref<UserResponse[]>([
-  {
-    id: 101,
-    email: "client1@example.com",
-    username: "client1",
-    rol: "cli1",
-    status: "Activa",
-  },
-  {
-    id: 102,
-    email: "client2@example.com",
-    username: "client2",
-    rol: "cli2",
-    status: "Activa",
-  },
-]);
-
-const isLoading = ref(false);
 const isDialogOpen = ref(false);
 const isEditMode = ref(false);
+const selectedUser = ref<UserResponse>({
+  id: 0,
+  email: "",
+  username: "",
+  roles: "",
+  enabled: true,
+});
 
-// Función para cerrar el diálogo
+// Funciones para manejar el diálogo
 const closeDialog = () => {
   isDialogOpen.value = false;
 };
 
-// Usuario seleccionado para editar o agregar
-const selectedUser = ref<UserResponse | null>(null);
-
-// TODO: Implementar las funciones de agregar, editar, desactivar y eliminar usuarios con el back
-// Función para agregar un nuevo usuario
-const addUser = () => {
+const addUserDialog = () => {
   isEditMode.value = false;
-  selectedUser.value = { email: "", username: "", rol: "", status: "Activa" };
+  selectedUser.value = {
+    id: 0,
+    email: "",
+    username: "",
+    roles: "",
+    enabled: true,
+  };
   isDialogOpen.value = true;
 };
 
-// Función para editar un usuario existente
 const handleEdit = (user: UserResponse) => {
   isEditMode.value = true;
   selectedUser.value = { ...user };
   isDialogOpen.value = true;
 };
 
-// Función para manejar el envío del formulario
 const handleSubmit = (userData: UserResponse) => {
-  if (isEditMode.value && selectedUser.value?.id) {
-    // Editar usuario existente
-    const updatedUser = { ...userData };
-    delete updatedUser.password; // No enviar la contraseña al editar
-
-    // Actualizar el usuario correspondiente
-    if (userData.id < 100) {
-      const index = internalUsers.value.findIndex((u) => u.id === userData.id);
-      if (index !== -1) internalUsers.value[index] = updatedUser;
+  try {
+    if (isEditMode.value && selectedUser.value?.id) {
+      // Editar usuario existente
+      updateUser({ ...userData, id: selectedUser.value.id });
     } else {
-      const index = externalUsers.value.findIndex((u) => u.id === userData.id);
-      if (index !== -1) externalUsers.value[index] = updatedUser;
+      // Agregar nuevo usuario
+      createUser(userData);
     }
-  } else {
-    // Agregar nuevo usuario (incluyendo la contraseña)
-    userData.id = Date.now(); // Asignar un ID único
-    if (userData.rol === "admin" || userData.rol === "operador") {
-      internalUsers.value.push(userData);
-    } else {
-      externalUsers.value.push(userData);
-    }
+  } catch (error) {
+    console.error("Error al guardar usuario:", error);
+  } finally {
+    closeDialog();
   }
-  closeDialog();
 };
 
-// Funciones para manejar las acciones de desactivar y eliminar
 const handleDeactivate = (user: UserResponse) => {
-  console.log("Desactivar usuario:", user);
+  updateUser({ ...user, enabled: !user.enabled });
 };
 
 const handleDelete = (user: UserResponse) => {
-  if (user.id < 100) {
-    internalUsers.value = internalUsers.value.filter((u) => u.id !== user.id);
-  } else {
-    externalUsers.value = externalUsers.value.filter((u) => u.id !== user.id);
-  }
+  deleteUser(user.id);
 };
 </script>
 
@@ -117,19 +79,14 @@ const handleDelete = (user: UserResponse) => {
     <h6 class="ma-5 pages-title">Admin / Usuarios</h6>
     <h1 class="ma-5">Usuarios</h1>
 
-    <!-- Botón Agregar Usuario -->
     <v-container>
+      <!-- Botón Agregar Usuario -->
       <v-row class="mb-4">
         <v-col>
-          <v-btn color="primary" @click="addUser">Agregar Usuario</v-btn>
+          <v-btn color="primary" @click="addUserDialog">Agregar Usuario</v-btn>
 
-          <UserFormDialog
-            v-model="isDialogOpen"
-            :isEditMode="isEditMode"
-            :userData="selectedUser"
-            @close="closeDialog"
-            @submit="handleSubmit"
-          />
+          <UserFormDialog v-model="isDialogOpen" :isEditMode="isEditMode" :userData="selectedUser" @close="closeDialog"
+            @submit="handleSubmit" />
         </v-col>
       </v-row>
 
@@ -137,14 +94,8 @@ const handleDelete = (user: UserResponse) => {
       <v-row>
         <v-col cols="12">
           <h2 class="mb-2">Usuarios Internos</h2>
-          <UserTable
-            :items="internalUsers"
-            :total-elements="internalUsers.length"
-            :is-loading="isLoading"
-            @edit="handleEdit"
-            @deactivate="handleDeactivate"
-            @delete="handleDelete"
-          />
+          <UserTable :items="internalUsers" :is-loading="isLoading" @edit="handleEdit" @deactivate="handleDeactivate"
+            @delete="handleDelete" />
         </v-col>
       </v-row>
 
@@ -152,14 +103,8 @@ const handleDelete = (user: UserResponse) => {
       <v-row class="mt-8">
         <v-col cols="12">
           <h2 class="mb-2">Usuarios Externos</h2>
-          <UserTable
-            :items="externalUsers"
-            :total-elements="externalUsers.length"
-            :is-loading="isLoading"
-            @edit="handleEdit"
-            @deactivate="handleDeactivate"
-            @delete="handleDelete"
-          />
+          <UserTable :items="externalUsers" :is-loading="isLoading" @edit="handleEdit" @deactivate="handleDeactivate"
+            @delete="handleDelete" />
         </v-col>
       </v-row>
     </v-container>

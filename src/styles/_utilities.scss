@@ -1,0 +1,55 @@
+/**
+ * src/styles/utilities.scss
+ *
+ * 
+ * Clases de utilidad que no encajan en otras categorías
+ */
+
+@use "variables" as *;
+
+// Esto es para que las tarjetas ocupen el maximo height posible de las row
+.full-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+
+.rounded-card {
+  border-radius: 1rem;
+}
+
+.eta-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color);
+}
+
+
+// Configuración del apexcharts para que se vea el texto del menú de descarga
+
+.apexcharts-menu {
+  background-color: #111c44 !important; /* Fondo del menú */
+  color: #FFFFFF !important;             /* Color del texto */
+}
+
+/* Selector para el texto del menú de descarga */
+.apexcharts-menu-item {
+  color: #FFFFFF !important;           /* Color del texto */
+  background-color: #111c44 !important; /* Fondo del menú */
+}
+
+/* Efecto hover opcional para el menú */
+.apexcharts-menu-item:hover {
+  background-color: #39B8FF !important; /* Fondo al pasar el cursor */
+  color: #111c44 !important;            /* Color del texto al pasar el cursor */
+}
