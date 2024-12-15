@@ -12,7 +12,6 @@ const { products, isLoading, createProduct, updateProduct, deleteProduct, setSel
 const isDialogOpen = ref(false);
 const isEditMode = ref(false);
 const selectedProduct = ref<Product | null>(null);
-
 // Función para abrir el diálogo de agregar producto
 const addProduct = () => {
   isEditMode.value = false;
@@ -56,7 +55,13 @@ const closeDialog = () => {
     <h1 class="ma-5">Productos</h1>
 
     <v-container>
-      <v-btn color="primary" class="mb-4" @click="addProduct">Agregar Producto</v-btn>
+      <v-row>
+        <v-col cols="12" class="text-right">
+          <v-btn color="primary" class="mb-4" @click="addProduct"
+            >Agregar Producto</v-btn
+          >
+        </v-col>
+      </v-row>
 
       <ProductsTable :products="products" :is-loading="isLoading" hide-default-footer @edit="editProduct"
         @delete="handleDeleteProduct" />

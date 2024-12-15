@@ -118,17 +118,16 @@ const downloadReconciliation = () => {
 
       <!-- Datos de la orden y Notificacion de Alarmas -->
       <v-row>
-        <v-col cols="4">
+        <v-col cols="4" lg="4" md="12" sm="12" xs="12">
           <OrderData v-if="order" :order="order" class="full-card" />
         </v-col>
 
-        <!-- TODO: Poner datos reales de la orden -->
-        <v-col cols="2">
+        <v-col cols="2" lg="2" md="12" sm="12" xs="12">
           <OrderProductData v-if="order" :productName="order.product.product"
             :thresholdTemperature="order.product.thresholdTemperature" />
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <AlarmHandler class="full-card" :alarm="alarm" :order="order" :updateAlarmStatus="updateAlarmStatus"
             :isUpdating="isUpdating" :isError="isError" :isLoading="isLoadingA" />
         </v-col>
@@ -136,17 +135,17 @@ const downloadReconciliation = () => {
 
       <v-row>
         <!-- Columna para los gráficos -->
-        <v-col cols="3">
+        <v-col cols="3" lg="3" md="12" sm="12" xs="12">
           <!-- Gráfico circular -->
           <RadialBar class="full-size" v-if="order" :order="order" :last-detail="lastDetail" />
         </v-col>
         <!-- ETA -->
-        <v-col cols="3">
+        <v-col cols="3" lg="3" md="12" sm="12" xs="12">
           <ETA class="full-size" v-if="order" :order="order" :last-detail="lastDetail" />
         </v-col>
 
         <!-- Columna para la tabla de alarmas -->
-        <v-col cols="6">
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <AlarmTable :items="alarms" :totalElements="totalElementsA" :current-page="currentPageA"
             :page-size="pageSizeA" :total-pages="totalPagesA" :isLoading="isLoadingA" :set-page-a="setPageA"
             class="tabla full-card" />
@@ -155,25 +154,24 @@ const downloadReconciliation = () => {
 
       <v-row>
         <!-- Tabla de detalles -->
-        <v-col cols="6">
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <OrderDetailTable :items="orderDetails" :totalElements="totalElementsD" :current-page="currentPageD"
             :page-size="pageSizeD" :total-pages="totalPagesD" :isLoading="isLoadingD" :set-page-d="setPageD" />
         </v-col>
 
         <!-- Graficos de Temperatura -->
-        <v-col cols="6">
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <TemperatureChart :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
       </v-row>
 
       <!-- Graficos de Flujo y Densidad -->
       <v-row>
-        <v-col cols="6">
-          <!-- TODO: Cambiar color -->
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <FlowRateGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="6" lg="6" md="12" sm="12" xs="12">
           <DensityGraph :allOrderDetails="allOrderDetails" :lastDetail="lastDetail" />
         </v-col>
       </v-row>

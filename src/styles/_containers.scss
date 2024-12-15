@@ -74,3 +74,34 @@
   background-color: #111c44;
   border-radius: 12px;
 }
+
+
+//Landing
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ocupa toda la altura disponible */
+  text-align: center;
+}
+
+.landing-content {
+  max-width: 56.25rem;
+  padding: 2rem;
+}
+
+.landing-icon {
+  width: 47rem;
+  margin-bottom: 1.5rem;
+}
+
+.landing-title {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.landing-description {
+  font-size: 1.25rem;
+  color: #aaa;
+}
