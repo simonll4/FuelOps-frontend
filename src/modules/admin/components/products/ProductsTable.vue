@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, defineEmits } from "vue";
-import type { Product } from "@/interfaces/products.interface";
+import type { ProductRequest } from "@/interfaces/products.interface";
 
 const props = defineProps({
   products: {
-    type: Array as () => Product[],
+    type: Array as () => ProductRequest[],
     required: true,
   },
   isLoading: Boolean,
@@ -24,7 +24,7 @@ const headers = ref([
 ]);
 
 // Función para manejar acciones del menú
-const handleAction = (action: string, product: Product) => {
+const handleAction = (action: string, product: ProductRequest) => {
   if (action === "edit") {
     emit("edit", product);
   } else if (action === "delete") {

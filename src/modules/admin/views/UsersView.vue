@@ -87,7 +87,7 @@ const handleDelete = (user: UserResponse) => {
 
           <UserFormDialog v-model="isDialogOpen" :isEditMode="isEditMode" :userData="selectedUser" @close="closeDialog"
             @submit="handleSubmit" />
-        </v-col> 
+        </v-col>
       </v-row>
 
       <!-- Tabla de Usuarios Internos -->

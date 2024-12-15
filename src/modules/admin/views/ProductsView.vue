@@ -58,20 +58,11 @@ const closeDialog = () => {
     <v-container>
       <v-btn color="primary" class="mb-4" @click="addProduct">Agregar Producto</v-btn>
 
-      <ProductsTable
-        :products="products"
-        :is-loading="isLoading"
-        @edit="editProduct"
-        @delete="handleDeleteProduct"
-      />
+      <ProductsTable :products="products" :is-loading="isLoading" hide-default-footer @edit="editProduct"
+        @delete="handleDeleteProduct" />
 
-      <ProductFormDialog
-        :is-open="isDialogOpen"
-        :is-edit-mode="isEditMode"
-        :product-data="selectedProduct"
-        @close="closeDialog"
-        @submit="submitProduct"
-      />
+      <ProductFormDialog :is-open="isDialogOpen" :is-edit-mode="isEditMode" :product-data="selectedProduct"
+        @close="closeDialog" @submit="submitProduct" />
     </v-container>
   </AdminLayout>
 </template>

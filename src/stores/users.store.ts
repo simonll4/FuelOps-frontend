@@ -12,16 +12,16 @@ export const useUsersStore = defineStore('users', () => {
   // Acciones
   const setUsers = (newUsers: UserResponse[]) => {
     console.log('setUsers llamado con:', newUsers);
-    
+
     users.value = newUsers;
-    
+
     // Log de filtrado
     internalUsers.value = newUsers.filter(user => {
       const isInternal = user.roles.includes('ADMIN') || user.roles.includes('OPERATOR');
       console.log(`Usuario ${user.username} es interno: ${isInternal}`);
       return isInternal;
     });
-    
+
     externalUsers.value = newUsers.filter(user => {
       const isExternal = user.roles.includes('CLI');
       console.log(`Usuario ${user.username} es externo: ${isExternal}`);

@@ -1,23 +1,23 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { Product } from '@/interfaces/products.interface';
+import type { ProductRequest } from '@/interfaces/products.interface';
 
 export const useProductsStore = defineStore('products', () => {
   // Estado
-  const products = ref<Product[]>([]);
-  const selectedProduct = ref<Product | null>(null);
+  const products = ref<ProductRequest[]>([]);
+  const selectedProduct = ref<ProductRequest | null>(null);
 
   // Acciones
-  const setProducts = (newProducts: Product[]) => {
+  const setProducts = (newProducts: ProductRequest[]) => {
     products.value = newProducts;
   };
 
-  const addProduct = (product: Omit<Product, 'id'>) => {
-    const newProduct: Product = { ...product, id: products.value.length + 1 }; // Generar ID único
+  const addProduct = (product: Omit<ProductRequest, 'id'>) => {
+    const newProduct: ProductRequest = { ...product, id: products.value.length + 1 }; // Generar ID único
     products.value.push(newProduct);
   };
 
-  const updateProduct = (updatedProduct: Product) => {
+  const updateProduct = (updatedProduct: ProductRequest) => {
     const index = products.value.findIndex((p) => p.id === updatedProduct.id);
     if (index !== -1) {
       products.value[index] = updatedProduct;
@@ -28,7 +28,7 @@ export const useProductsStore = defineStore('products', () => {
     products.value = products.value.filter((p) => p.id !== productId);
   };
 
-  const setSelectedProduct = (product: Product | null) => {
+  const setSelectedProduct = (product: ProductRequest | null) => {
     selectedProduct.value = product;
   };
 
