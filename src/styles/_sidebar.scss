@@ -1,0 +1,13 @@
+/**
+ * src/styles/sidebar.scss
+ *
+ * 
+ * Estilos específicos para el sidebar.
+ */
+
+ @use "variables" as *;
+
+.sidebar {
+  background-color: $container-color;
+  color: $text-color;
+}

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { format, intervalToDuration, differenceInSeconds } from "date-fns";
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import type { Order } from "@/interfaces/order.interface";
 
@@ -18,38 +18,70 @@ const formatDate = (date: string | null): string | null => {
   return format(new Date(date), "dd/MM/yyyy HH:mm");
 };
 
-
-// TODO: Eliminar las constantes y descomentar los computed para ver si andan. Ver si el format hace su trabajo.
-
 // Función para formatear duración en hh:mm:ss
+// const formatDuration = (seconds: number): string => {
+//   const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+//   const hours = String(duration.hours || 0).padStart(2, "0");
+//   const minutes = String(duration.minutes || 0).padStart(2, "0");
+//   const secs = String(duration.seconds || 0).padStart(2, "0");
+//   return `${hours}:${minutes}:${secs}`;
+// };
+
 const formatDuration = (seconds: number): string => {
-  const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
-  const hours = String(duration.hours || 0).padStart(2, "0");
-  const minutes = String(duration.minutes || 0).padStart(2, "0");
-  const secs = String(duration.seconds || 0).padStart(2, "0");
-  return `${hours}:${minutes}:${secs}`;
+  const days = Math.floor(seconds / 86400); // Un día tiene 86400 segundos
+  const remainingSecondsAfterDays = seconds % 86400;
+  const hours = Math.floor(remainingSecondsAfterDays / 3600);
+  const remainingSecondsAfterHours = remainingSecondsAfterDays % 3600;
+  const minutes = Math.floor(remainingSecondsAfterHours / 60);
+  const secs = remainingSecondsAfterHours % 60;
+
+  const formattedDays = days > 0 ? `${days}d ` : ""; // Agregar días solo si existen
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedSeconds = String(secs).padStart(2, "0");
+
+  return `${formattedDays}${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-const elapsedTime = "00:00:00";
-const completionTime = "00:00:00";
+// Ref para el tiempo transcurrido
+const elapsedTime = ref<string | null>(null);
 
-// Computed para calcular el tiempo transcurrido
-// const elapsedTime = computed(() => {
-//   if (!props.order.fuelingStartDate || props.order.fuelingEndDate) return null;
-//   const start = new Date(props.order.fuelingStartDate);
-//   const now = new Date();
-//   const seconds = differenceInSeconds(now, start);
-//   return formatDuration(seconds);
-// });
+// Temporizador para actualizar el tiempo transcurrido
+let timer: ReturnType<typeof setInterval> | null = null;
+
+const updateElapsedTime = () => {
+  if (!props.order.fuelingStartDate) {
+    elapsedTime.value = null;
+    return;
+  }
+  const start = new Date(props.order.fuelingStartDate);
+  const now = new Date();
+  const seconds = differenceInSeconds(now, start);
+  elapsedTime.value = formatDuration(seconds);
+};
+
+// Configurar el temporizador cuando se monta el componente
+onMounted(() => {
+  updateElapsedTime();
+  timer = setInterval(updateElapsedTime, 1000); // Actualizar cada segundo
+});
+
+// Limpiar el temporizador cuando se desmonta el componente
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer);
+  }
+});
 
 // Computed para calcular el tiempo de finalización
-// const completionTime = computed(() => {
-//   if (!props.order.fuelingStartDate || !props.order.fuelingEndDate) return null;
-//   const start = new Date(props.order.fuelingStartDate);
-//   const end = new Date(props.order.fuelingEndDate);
-//   const seconds = differenceInSeconds(end, start);
-//   return formatDuration(seconds);
-// });
+const completionTime = computed(() => {
+  if (!props.order.fuelingStartDate || !props.order.fuelingEndDate) return null;
+  const start = new Date(props.order.fuelingStartDate);
+  const end = new Date(props.order.fuelingEndDate);
+  const seconds = differenceInSeconds(end, start);
+  console.log(seconds);
+  return formatDuration(seconds);
+});
 </script>
 
 <template>
@@ -59,7 +91,6 @@ const completionTime = "00:00:00";
         <!-- Columna 1 -->
         <v-col cols="12" md="6">
           <p><strong>Número de Orden:</strong> {{ order.id }}</p>
-          <p><strong>Estado:</strong> {{ order.status }}</p>
           <p><strong>Camión:</strong> {{ order.truck.licensePlate }}</p>
           <p>
             <strong>Fecha de Recepción:</strong>
@@ -97,11 +128,31 @@ const completionTime = "00:00:00";
       <!-- Tiempo transcurrido o tiempo de finalización -->
       <v-row>
         <v-col cols="6">
-          <v-chip color="info" class="mt-2" v-if="elapsedTime">
-            Tiempo transcurrido: {{ elapsedTime }}
+          <v-chip color="red" class="mt-2" v-if="order.status">
+            {{ order.status }}
           </v-chip>
-          <v-chip color="success" class="mt-2" v-else-if="completionTime">
-            Tiempo de finalización: {{ completionTime }}
+        </v-col>
+        <v-col cols="6">
+          <v-chip
+            color="info"
+            class="mt-2"
+            v-if="
+              order.status == 'REGISTERED_INITIAL_WEIGHING' &&
+              order.fuelingStartDate
+            "
+          >
+            Tiempo Transcurrido: {{ elapsedTime }}
+          </v-chip>
+
+          <v-chip
+            color="success"
+            class="mt-2"
+            v-else-if="
+              order.status == 'ORDER_CLOSED' ||
+              order.status == 'REGISTERED_FINAL_WEIGHING'
+            "
+          >
+            Tiempo de Carga: {{ completionTime }}
           </v-chip>
         </v-col>
       </v-row>

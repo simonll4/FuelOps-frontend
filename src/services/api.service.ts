@@ -24,7 +24,7 @@ export default () => {
         async function (error) {
             const originalRequest = error.config;
             if (error.response.status === 401) {
-                window.location.href = '/login';
+                window.location.href = '/';
                 return;
             }
             return {

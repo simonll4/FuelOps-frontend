@@ -28,6 +28,7 @@ export const useWsAlarms = (idOrder: number) => {
 
   onUnmounted(() => {
     unsubscribe(topic);
+    
   });
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['alarms'] });

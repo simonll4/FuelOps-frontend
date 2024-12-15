@@ -3,7 +3,7 @@ export default {
   name: 'auth',
   children: [
     {
-      path: '/login',
+      path: '/',
       name: 'Login',
       component: () => import('@/modules/auth/views/LoginView.vue'),
     }

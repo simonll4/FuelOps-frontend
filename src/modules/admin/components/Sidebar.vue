@@ -36,9 +36,7 @@ const handleLogout = async () => {
         <v-list-item prepend-icon="mdi-barrel" title="Productos"></v-list-item>
       </router-link>
       <!-- TODO: Implementar el logout -->
-      <router-link to="/admin" class="router-link">
-        <v-list-item prepend-icon="mdi-logout" title="Cerrar sesión" @click="handleLogout"></v-list-item>
-      </router-link>
+      <v-list-item prepend-icon="mdi-logout" title="Cerrar sesión" @click="handleLogout"></v-list-item>
     </v-list>
   </v-navigation-drawer>
 

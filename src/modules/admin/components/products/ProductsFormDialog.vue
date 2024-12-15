@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, watch } from "vue";
+import { ref, defineProps, defineEmits, watch, onUnmounted } from "vue";
 import type { Product } from "@/interfaces/products.interface";
 
 // Props
@@ -13,11 +13,11 @@ const emit = defineEmits(["close", "submit"]);
 
 // Datos del formulario
 const formData = ref<Omit<Product, "id">>({
-  descripcion: "",
-  producto: "",
+  description: "",
+  product: "",
   stock: 0,
-  temperaturaUmbral: 0,
-  densidad: 0,
+  thresholdTemperature: 0,
+  density: 0,
 });
 
 // Sincronizar datos en modo edición
@@ -40,48 +40,41 @@ const closeDialog = () => {
 const submitForm = () => {
   emit("submit", formData.value);
 };
+
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    if (newVal && !props.isEditMode) {
+      // Resetear el formulario al abrir en modo "Agregar"
+      formData.value = {
+        description: "",
+        product: "",
+        stock: 0,
+        thresholdTemperature: 0,
+        density: 0,
+      };
+    }
+  }
+);
+
+
 </script>
 
 <template>
-  <v-dialog
-    :model-value="isOpen"
-    @update:model-value="closeDialog"
-    max-width="500px"
-  >
+  <v-dialog :model-value="isOpen" @update:model-value="closeDialog" max-width="500px">
     <v-card class="data-container">
       <v-card-title class="headline">
         {{ isEditMode ? "Editar Producto" : "Agregar Producto" }}
       </v-card-title>
 
       <v-card-text>
-        <v-text-field
-          v-model="formData.descripcion"
-          label="Descripción"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.producto"
-          label="Producto"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.stock"
-          label="Stock"
-          type="number"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.temperaturaUmbral"
-          label="Temperatura Umbral (°C)"
-          type="number"
-          required
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.densidad"
-          label="Densidad (kg/m³)"
-          type="number"
-          required
-        ></v-text-field>
+        <v-text-field v-model="formData.description" label="Descripción" required></v-text-field>
+        <v-text-field v-model="formData.product" label="Producto" required></v-text-field>
+        <!-- <v-text-field v-model="formData.stock" label="Stock" type="boolean" required></v-text-field> -->
+        <v-text-field v-model="formData.thresholdTemperature" label="Temperatura Umbral (°C)" type="number"
+          required></v-text-field>
+        <v-text-field v-model="formData.density" label="Densidad (kg/m³)" type="number" required></v-text-field>
+        <v-checkbox v-model="formData.stock" label="Stock disponible" required></v-checkbox>
       </v-card-text>
 
       <v-card-actions>

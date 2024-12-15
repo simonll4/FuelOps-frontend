@@ -16,7 +16,7 @@ const props = defineProps({
   isLoading: Boolean,
 });
 
-const emit = defineEmits(["update:page", "edit", "deactivate", "delete"]);
+const emit = defineEmits(["edit", "deactivate", "delete"]);
 
 // Definición de los encabezados de la tabla
 const headers = ref<{ title: string; value: string; align?: "center" | "end" | "start" }[]>([
@@ -25,19 +25,8 @@ const headers = ref<{ title: string; value: string; align?: "center" | "end" | "
   { title: "Username", value: "username" },
   { title: "Roles", value: "roles" },
   { title: "Estado", value: "status" },
-  { title: "Acciones", value: "actions", align: "center"},
+  { title: "Acciones", value: "actions", align: "center" },
 ]);
-
-// Paginación
-const currentPage = ref(1);
-const itemsPerPage = 5;
-const totalPages = ref(Math.ceil(props.totalElements / itemsPerPage));
-
-// Maneja el cambio de página
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-  emit("update:page", page);
-};
 
 // Función para emitir eventos de acciones
 const handleAction = (action: "edit" | "deactivate" | "delete", item: UserResponse) => {
@@ -46,28 +35,17 @@ const handleAction = (action: "edit" | "deactivate" | "delete", item: UserRespon
 </script>
 
 <template>
-  <v-data-table-server
-    :headers="headers"
-    :items="items"
-    :items-length="Math.max(totalElements, items.length)"
-    item-value="id"
-    class="elevation-1 data-container"
-    :items-per-page="itemsPerPage"
-    :items-per-page-options="[]"
-    :loading="isLoading"
-    :page="currentPage"
-    hide-default-footer
-    @update:page="handlePageChange"
-  >
+  <v-data-table-server :headers="headers" :items="items" :items-length="Math.max(totalElements, items.length)"
+    item-value="id" class="elevation-1 data-container" :loading="isLoading" hide-default-footer>
     <!-- Columna de Roles -->
     <template #item.roles="{ item }">
-      <span>{{ item.rol }}</span>
+      <span>{{ item.roles }}</span>
     </template>
 
     <!-- Columna de Estado -->
     <template #item.status="{ item }">
-      <v-chip :color="item.status === 'Activa' ? 'green' : 'red'">
-        {{ item.status }}
+      <v-chip :color="item.enabled === true ? 'green' : 'red'">
+        {{ item.enabled === true ? "Habilitada" : "Deshabilitada" }}
       </v-chip>
     </template>
 
@@ -91,18 +69,6 @@ const handleAction = (action: "edit" | "deactivate" | "delete", item: UserRespon
           </v-list-item>
         </v-list>
       </v-menu>
-    </template>
-
-    <!-- Footer personalizado -->
-    <template #bottom>
-      <v-container class="d-flex justify-center">
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          :total-visible="5"
-          @update:modelValue="handlePageChange"
-        ></v-pagination>
-      </v-container>
     </template>
   </v-data-table-server>
 </template>

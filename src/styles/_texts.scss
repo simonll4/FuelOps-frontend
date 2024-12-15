@@ -1,0 +1,58 @@
+/**
+ * src/styles/texts.scss
+ *
+ * 
+ * Clases de texto, tamaños y colores.
+ */
+
+@use "variables" as *;
+
+/* Tamaños */
+
+.text-xs {
+  font-size: $text-xs;
+}
+.text-sm {
+  font-size: $text-sm;
+}
+.text-md {
+  font-size: $text-md;
+}
+.text-lg {
+  font-size: $text-lg;
+}
+.text-xl {
+  font-size: $text-xl;
+}
+.text-xxl {
+  font-size: $text-xxl;
+}
+
+/* Colores */
+
+.text-success {
+  color: #4caf50;
+  font-weight: bold;
+}
+.text-warning {
+  color: #ffc107;
+  font-weight: bold;
+}
+.text-danger {
+  color: #f44336;
+  font-weight: bold;
+}
+.text-cool {
+  color: #00aaff;
+  font-weight: bold;
+}
+
+.text-normal {
+  color: #00ffaa;
+  font-weight: bold;
+}
+
+.text-warm {
+  color: #ff5500;
+  font-weight: bold;
+}

@@ -1,13 +1,14 @@
 <!-- src/modules/admin/components/users/UserFormDialog.vue -->
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, watch } from "vue";
+import type { UserResponse } from "@/interfaces/users.interface";
 
 // Props para modo de edición
 const props = defineProps({
   isOpen: Boolean,
   isEditMode: Boolean,
   userData: {
-    type: Object as () => { email: string; username: string; rol: string },
+    type: Object as () => UserResponse,
     default: () => ({ email: "", username: "", rol: "" }),
   },
 });
@@ -22,7 +23,7 @@ const internalRoles = ["admin", "operador"];
 const externalRoles = ["cli1", "cli2", "cli3"];
 
 // Form data inicializado con valores vacíos o con datos del usuario a editar
-const formData = ref({ email: "", username: "", rol: "", password: "" });
+const formData = ref({ ...props.userData, password: "" });
 
 // Sincronizar los datos cuando se recibe `userData` en modo edición
 watch(
@@ -88,7 +89,7 @@ const submitForm = () => {
 
         <!-- Toggle para roles según tipo de usuario -->
         <v-select
-          v-model="formData.rol"
+          v-model="formData.roles"
           :items="isInternal ? internalRoles : externalRoles"
           label="Rol"
           required

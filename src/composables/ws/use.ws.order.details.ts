@@ -42,6 +42,7 @@ export const useWsOrderDetail = (orderId: number) => {
   // Desconexión del WebSocket al desmontar el componente
   onUnmounted(() => {
     unsubscribe(topic);
+    //store.setNewDetailByOrden(null);
   });
 
   // Método para invalidar la cache
