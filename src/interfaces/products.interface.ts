@@ -1,8 +1,8 @@
 export interface Product {
   id: number;
-  descripcion: string;
-  producto: string;
+  description: string;
+  product: string;
   stock: number;
-  temperaturaUmbral: number;
-  densidad: number;
+  thresholdTemperature: number;
+  density: number;
 }
