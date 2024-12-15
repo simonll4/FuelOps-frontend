@@ -81,13 +81,13 @@ const formatDate = (timestamp: string) => {
 </script>
 
 <template>
-  <v-card class="mb-4" outline>
+  <v-card>
 
     <v-card-title>
       Alarmas de Temperatura - {{ formatTitleDate(new Date().toISOString()) }}
     </v-card-title>
 
-    <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla" height="320"
+    <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla"
       show-expand single-expand :items-per-page="pageSize" :loading="isLoading" :page="currentPage"
       :items-length="totalElements" hide-default-footer @update:page="handlePageChange">
 
@@ -150,18 +150,7 @@ const formatDate = (timestamp: string) => {
   </v-card>
 </template>
 
-<style lang="scss" src="/src/styles/global.scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>
+<style lang="scss" src="/src/styles/global.scss"></style>
 
 
 <!-- <script setup lang="ts">

@@ -1,4 +1,12 @@
-@use "settings.scss" as *;
+@use "variables" as *;
+@use "buttons" as *;
+@use "containers" as *;
+@use "mixins" as *;
+@use "sidebar" as *;
+@use "table" as *;
+@use "texts" as *;
+@use "utilities" as *;
+@use "settings" as *;
 
 // TODO: Acomodar esto también que es un desastre
 
@@ -6,91 +14,9 @@ html {
   background-color: $background-color;
   color: $text-color;
 }
-
-.sidebar {
-  background-color: $container-color;
-  color: $text-color;
-}
 .router-link {
   text-decoration: none;
   color: inherit;
 }
-.data-container {
-  background-color: $container-color;
-  color: $text-color;
-  border-radius: 1rem;
-}
-.btn-color-4 {
-  background-color: $accent-color-4;
-  color: $text-color;
-}
-.btn-color-4:hover {
-  background-color: $accent-color-3;
-  color: $text-color;
-}
-.tabla {
-  margin: 0 auto;
-  border-radius: 1rem;
-  background-color: #111c44;
-  color: #fff;
-}
 
-// Utility classes for text sizes and colors
-// TODO: La verdad que nunca use ninguno de estos, ver si los borro o si quedan
-.text-success {
-  color: #4caf50;
-  font-weight: bold;
-}
-.text-warning {
-  color: #ffc107;
-  font-weight: bold;
-}
-.text-danger {
-  color: #f44336;
-  font-weight: bold;
-}
-.text-xs {
-  font-size: $text-xs;
-}
-.text-sm {
-  font-size: $text-sm;
-}
-.text-md {
-  font-size: $text-md;
-}
-.text-lg {
-  font-size: $text-lg;
-}
-.text-xl {
-  font-size: $text-xl;
-}
-.text-xxl {
-  font-size: $text-xxl;
-}
-.text-cool {
-  color: #00aaff;
-  font-weight: bold;
-}
 
-.text-normal {
-  color: #00ffaa;
-  font-weight: bold;
-}
-
-.text-warm {
-  color: #ff5500;
-  font-weight: bold;
-}
-
-// Esto es para que las tarjetas ocupen el maximo height posible de las row
-.full-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-// Esto es para el boton del menú de acciones de los usuarios
-.btn-menu, .menu-list {
-  background-color: $container-color;
-  color: $text-color;
-}
