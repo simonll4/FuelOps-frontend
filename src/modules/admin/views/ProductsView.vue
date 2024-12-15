@@ -36,7 +36,6 @@ const isDialogOpen = ref(false);
 const isEditMode = ref(false);
 const selectedProduct = ref<Product | null>(null);
 
-
 // TODO: Implementar las funciones de agregar, editar y eliminar productos con el back. Sobre todo el implementar que no està
 // Función para abrir el diálogo de agregar producto
 const addProduct = () => {
@@ -83,7 +82,6 @@ const closeDialog = () => {
 const handlePageChange = (page: number) => {
   currentPage.value = page;
 };
-
 </script>
 
 <template>
@@ -92,9 +90,13 @@ const handlePageChange = (page: number) => {
     <h1 class="ma-5">Productos</h1>
 
     <v-container>
-      <v-btn color="primary" class="mb-4" @click="addProduct"
-        >Agregar Producto</v-btn
-      >
+      <v-row>
+        <v-col cols="12" class="text-right">
+          <v-btn color="primary" class="mb-4" @click="addProduct"
+            >Agregar Producto</v-btn
+          >
+        </v-col>
+      </v-row>
 
       <ProductsTable
         :products="products"

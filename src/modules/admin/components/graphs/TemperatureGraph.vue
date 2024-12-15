@@ -19,6 +19,17 @@ const chartOptions = ref({
       easing: "linear",
       speed: 800,
     },
+    toolbar: {
+      show: true,
+      tools: {
+        download: {
+          style: {
+            background: "#39B8FF",
+            color: "#FFFFFF",
+          },
+        },
+      },
+    },
   },
   xaxis: {
     type: "datetime",
@@ -53,9 +64,9 @@ const chartOptions = ref({
     colors: ["#39B8FF"],
   },
   fill: {
-  type: "solid",
-  opacity: 0,
-},
+    type: "solid",
+    opacity: 0,
+  },
   // fill: {
   //   type: "gradient",
   //   gradient: {
@@ -138,7 +149,6 @@ const currentDate = computed(() => {
   }
   return new Date().toLocaleDateString();
 });
-
 </script>
 
 <template>

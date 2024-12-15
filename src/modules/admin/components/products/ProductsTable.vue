@@ -8,10 +8,6 @@ const props = defineProps({
     type: Array as () => Product[],
     required: true,
   },
-  headers: {
-    type: Array,
-    required: true,
-  },
   isLoading: Boolean,
   totalElements: {
     type: Number,
