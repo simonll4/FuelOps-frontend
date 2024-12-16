@@ -82,6 +82,21 @@ const completionTime = computed(() => {
   console.log(seconds);
   return formatDuration(seconds);
 });
+
+// Equivalencia de nombres para los OrderStates
+const orderStates = [
+  { key: "ORDER_RECEIVED", label: "RECIBIDA"},
+  { key: "REGISTERED_INITIAL_WEIGHING", label: "PESAJE INICIAL" },
+  { key: "ORDER_CLOSED", label: "CERRADA"},
+  { key: "REGISTERED_FINAL_WEIGHING", label: "PESAJE FINAL" },
+  { key: "ORDER_CANCELLED", label: "CANCELADA" },
+];
+
+const getOrderState = (status: string) => {
+  return orderStates.find((state) => state.key === status) || { label: status}; // Color gris por defecto
+};
+
+
 </script>
 
 <template>
@@ -129,7 +144,7 @@ const completionTime = computed(() => {
       <v-row>
         <v-col cols="6">
           <v-chip color="red" class="mt-2" v-if="order.status">
-            {{ order.status }}
+            {{ getOrderState(order.status).label }}
           </v-chip>
         </v-col>
         <v-col cols="6">
@@ -161,39 +176,3 @@ const completionTime = computed(() => {
 </template>
 
 <style lang="scss" src="/src/styles/global.scss"></style>
-
-<!-- <script setup lang="ts">
-import { ref } from "vue";
-const orderNumber = ref("12345");
-const status = ref("In Progress");
-const truck = ref("ABC-123");
-const driver = ref("John Doe");
-const client = ref("Acme Corp.");
-const product = ref("Liquid Gas");
-const preset = ref(5000);
-const initialWeight = ref(12000);
-const finalWeight = ref(17000);
-
-
-</script>
-
-<template>
-  <v-card class="mb-4 data-container" color="container-color">
-    <v-card-text>
-      <v-row>
-        <v-col cols="12" md="6">
-          <p><strong>Order Number:</strong> {{ orderNumber }}</p>
-          <p><strong>Status:</strong> {{ status }}</p>
-          <p><strong>Truck:</strong> {{ truck }}</p>
-          <p><strong>Driver:</strong> {{ driver }}</p>
-        </v-col>
-        <v-col cols="12" md="6">
-          <p><strong>Client:</strong> {{ client }}</p>
-          <p><strong>Product:</strong> {{ product }}</p>
-          <p><strong>Preset:</strong> {{ preset }} kg</p>
-          <p><strong>Initial Weight:</strong> {{ initialWeight }} kg</p>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
-</template> -->

@@ -5,8 +5,8 @@ import { ref, defineEmits } from "vue";
 const orderStates = ref([
   { key: "ORDER_RECEIVED", label: "Recibida", color: "#2196F3" }, // Azul
   { key: "REGISTERED_INITIAL_WEIGHING", label: "Pesaje Inicial", color: "#FFC107" }, // Amarillo
-  { key: "REGISTERED_FINAL_WEIGHING", label: "Pesaje Final", color: "#9C27B0" }, // Púrpura
   { key: "ORDER_CLOSED", label: "Cerrada", color: "#4CAF50" }, // Verde
+  { key: "REGISTERED_FINAL_WEIGHING", label: "Pesaje Final", color: "#9C27B0" }, // Púrpura
   { key: "ORDER_CANCELLED", label: "Cancelada", color: "#FF5252" }, // Rojo
 ]);
 
