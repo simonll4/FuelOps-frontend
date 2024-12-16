@@ -6,7 +6,7 @@ defineProps({
     required: true,
   },
   thresholdTemperature: {
-    type: Number,
+    type: String,
     required: true,
   },
 });

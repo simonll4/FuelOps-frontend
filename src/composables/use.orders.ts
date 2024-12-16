@@ -24,7 +24,7 @@ export const useOrders = () => {
     const { isLoading, data, error } = useQuery({
         queryKey: ['items', currentPage, pageSize, sortBy, filter],
         queryFn: fetchOrders,
-        staleTime: Infinity,
+        staleTime: 0,
     });
 
     watch(data, (result) => {

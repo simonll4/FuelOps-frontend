@@ -102,8 +102,6 @@ const downloadReconciliation = () => {
         </v-col>
 
         <v-col class="text-right">
-          <!-- <v-btn v-if="order?.status == 'REGISTERED_FINAL_WEIGHING'" @click="downloadReconciliation" color="primary"
-            class="btn-color-5 align-center"> -->
           <v-btn v-if="order?.status == 'REGISTERED_FINAL_WEIGHING'" @click="downloadReconciliation"
             :loading="isDownloading" color="primary" class="btn-color-5 align-center">
             <v-icon>mdi-download</v-icon>
@@ -119,12 +117,12 @@ const downloadReconciliation = () => {
       <!-- Datos de la orden y Notificacion de Alarmas -->
       <v-row>
         <v-col cols="4" lg="4" md="12" sm="12" xs="12">
-          <OrderData v-if="order" :order="order" class="full-card" />
+          <OrderData v-if="order" :order="order" :detail="lastDetail" class="full-card" />
         </v-col>
 
         <v-col cols="2" lg="2" md="12" sm="12" xs="12">
           <OrderProductData v-if="order" :productName="order.product.product"
-            :thresholdTemperature="order.product.thresholdTemperature" />
+            :thresholdTemperature="order.product.thresholdTemperature.toString()" />
         </v-col>
 
         <v-col cols="6" lg="6" md="12" sm="12" xs="12">

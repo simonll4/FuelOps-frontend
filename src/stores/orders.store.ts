@@ -6,7 +6,7 @@ import type { TableItem } from '@/interfaces/table-item.interface';
 export const useOrdersStore = defineStore('orders', () => {
 
   // Manage pagination data
-  const pageSize = ref<number>(5);
+  const pageSize = ref<number>(10);
   const sortBy = ref<string>('externalReceptionDate');
   const filter = ref<Array<string>>([]);
   const currentPage = ref<number>(0);

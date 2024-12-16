@@ -59,9 +59,9 @@ const headers = ref<Array<{ title: string; value: string; align?: "start" | "cen
 //TODO: la temperatura es de acuerdo a la del producto 
 // Función para aplicar estilos condicionales a la temperatura
 const getTemperatureClass = (temperature: number): string => {
-  if (temperature <= -5) return "text-cool";
-  if (temperature > -1 && temperature <= 0.5) return "text-normal";
-  if (temperature > 0.5) return "text-warm";
+  //if (temperature <= -5) return "text-cool";
+  if (temperature < -0.5 && temperature <= 0.5) return "text-normal";
+  if (temperature > -0.5) return "text-warm";
   return "";
 };
 

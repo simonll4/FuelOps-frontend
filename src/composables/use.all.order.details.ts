@@ -34,7 +34,7 @@ export const useAllOrderDetails = (idOrder: number) => {
       if (Array.isArray(details)) {
         store.setAllOrderDetails(details); // Actualiza el store si es un array
       } else {
-        console.warn('Data is not an array, skipping store update:', details);
+        //console.warn('Data is not an array, skipping store update:', details);
       }
     },
     { immediate: true }
