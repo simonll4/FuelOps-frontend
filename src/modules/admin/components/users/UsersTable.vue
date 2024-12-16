@@ -1,9 +1,8 @@
 <!-- src/components/UserTable.vue -->
 <script setup lang="ts">
 import { ref } from "vue";
-import type { UserResponse } from "@/interfaces/users.interface";
+import type { Role, UserResponse } from "@/interfaces/users.interface";
 
-// Props para recibir datos y control de paginación
 const props = defineProps({
   items: {
     type: Array as () => UserResponse[],
@@ -18,7 +17,6 @@ const props = defineProps({
 
 const emit = defineEmits(["edit", "deactivate", "delete"]);
 
-// Definición de los encabezados de la tabla
 const headers = ref<{ title: string; value: string; align?: "center" | "end" | "start" }[]>([
   { title: "ID", value: "id" },
   { title: "Email", value: "email" },
@@ -28,18 +26,30 @@ const headers = ref<{ title: string; value: string; align?: "center" | "end" | "
   { title: "Acciones", value: "actions", align: "center" },
 ]);
 
-// Función para emitir eventos de acciones
+const roleDescriptions: Record<string, string> = {
+  ROLE_ADMIN: "admin",
+  ROLE_OPERATOR: "operador",
+  ROLE_CLI1: "cli1",
+  ROLE_CLI2: "cli2",
+  ROLE_CLI3: "cli3",
+};
+
+const mapRoles = (roles: Role[]): string => {
+  return roles.map((role) => roleDescriptions[role.name] || role).join(", ");
+};
+
 const handleAction = (action: "edit" | "deactivate" | "delete", item: UserResponse) => {
   emit(action, item);
 };
 </script>
+
 
 <template>
   <v-data-table-server :headers="headers" :items="items" :items-length="Math.max(totalElements, items.length)"
     item-value="id" class="elevation-1 data-container" :loading="isLoading" hide-default-footer>
     <!-- Columna de Roles -->
     <template #item.roles="{ item }">
-      <span>{{ item.roles }}</span>
+      <span>{{ mapRoles(item.roles) }}</span>
     </template>
 
     <!-- Columna de Estado -->
@@ -62,7 +72,7 @@ const handleAction = (action: "edit" | "deactivate" | "delete", item: UserRespon
             <v-list-item-title>Editar</v-list-item-title>
           </v-list-item>
           <v-list-item @click="handleAction('deactivate', item)">
-            <v-list-item-title>Desactivar</v-list-item-title>
+            <v-list-item-title>{{ item.enabled ? 'Desactivar' : 'Activar' }}</v-list-item-title>
           </v-list-item>
           <v-list-item @click="handleAction('delete', item)">
             <v-list-item-title class="text-red">Borrar</v-list-item-title>

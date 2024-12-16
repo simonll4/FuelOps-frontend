@@ -20,15 +20,15 @@ export const useUsers = () => {
   });
 
   watch(data, (result) => {
-    console.log('Watch activado - Resultado:', result);
-    if (result) {
-      console.log('Intentando actualizar store con:', result);
-      store.setUsers([...result.internal, ...result.external]);
-      console.log('Store actualizado - Usuarios:', store.users);
+    console.log('Datos recibidos en el watch:', result);
+    if (Array.isArray(result)) {
+      store.setUsers(result); // Pasar la lista completa al store
+      console.log('Usuarios en el store después de setUsers:', store.users);
     } else {
-      console.warn('Resultado inválido, skip de actualización');
+      console.warn('Resultado inválido, datos no son un array:', result);
     }
   });
+  
 
   // Create user mutation
   const createMutation = useMutation({

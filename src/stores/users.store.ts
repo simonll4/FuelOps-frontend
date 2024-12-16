@@ -12,25 +12,26 @@ export const useUsersStore = defineStore('users', () => {
   // Acciones
   const setUsers = (newUsers: UserResponse[]) => {
     console.log('setUsers llamado con:', newUsers);
-
+  
     users.value = newUsers;
-
-    // Log de filtrado
+  
+    // Filtrar usuarios internos
     internalUsers.value = newUsers.filter(user => {
-      const isInternal = user.roles.includes('ADMIN') || user.roles.includes('OPERATOR');
+      const isInternal = user.roles.some(role => role.name === 'ROLE_ADMIN' || role.name === 'ROLE_OPERATOR');
       console.log(`Usuario ${user.username} es interno: ${isInternal}`);
       return isInternal;
     });
-
+  
+    // Filtrar usuarios externos
     externalUsers.value = newUsers.filter(user => {
-      const isExternal = user.roles.includes('CLI');
+      const isExternal = user.roles.some(role => role.name.includes('CLI'));
       console.log(`Usuario ${user.username} es externo: ${isExternal}`);
       return isExternal;
     });
-
+  
     console.log('Usuarios internos:', internalUsers.value);
     console.log('Usuarios externos:', externalUsers.value);
-  };
+  };   
 
   const addUser = (user: UserResponse) => {
     users.value.push(user);
