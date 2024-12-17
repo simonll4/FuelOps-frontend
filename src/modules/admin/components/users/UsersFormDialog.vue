@@ -41,10 +41,19 @@ const formData = ref({
 watch(
   () => props.userData,
   (newData) => {
-    formData.value = { ...newData, password: "", roles: newData.roles.map((role: Role) => role.name) || [] };
+    formData.value = {
+      ...newData,
+      password: "",
+      roles: newData.roles.map((role: Role) => role.name) || [],
+    };
   },
   { immediate: true }
 );
+
+// Limpiar los roles cuando se cambia el tipo de usuario
+watch(isInternal, () => {
+  formData.value.roles = [];
+});
 
 // Función para cerrar el diálogo
 const closeDialog = () => {
@@ -75,6 +84,7 @@ const submitForm = () => {
 
 //   emit("submit", payload);
 // };
+
 </script>
 
 <template>
@@ -99,11 +109,9 @@ const submitForm = () => {
           required></v-text-field>
 
         <!-- Toggle para roles según tipo de usuario -->
-        <!-- <v-select v-model="formData.roles" :items="isInternal ? internalRoles : externalRoles" item-value="id"
-          item-title="description" label="Roles" multiple required></v-select> -->
         <v-select v-model="formData.roles" :items="isInternal ? internalRoles : externalRoles" item-value="name"
-          item-title="description" label="Roles" multiple required></v-select>
-
+          item-title="description" label="Roles" item-color="#111C44" multiple required clearable>
+        </v-select>
       </v-card-text>
 
       <v-card-actions>

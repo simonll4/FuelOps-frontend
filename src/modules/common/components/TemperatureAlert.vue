@@ -82,7 +82,7 @@ watchEffect(() => {
           {{ alertDate }}
         </v-card-subtitle>
 
-        <v-card-text class="mt-2">
+        <v-card-text class="mt-2 rounded">
           <p class="text-body-1">
             <strong>Orden #{{ orderNumber }}:</strong> La temperatura actual es
             de <strong>{{ currentTemperature }}°</strong>, que se encuentra por
