@@ -63,11 +63,6 @@ const getStateClass = (state: string): string => {
   return "";
 };
 
-const getTemperatureClass = (temperature: number): string => {
-  if (temperature > 50) return "text-danger";
-  return "";
-};
-
 // Función para formatear la fecha para el título
 const formatTitleDate = (timestamp: string) => {
   return format(new Date(timestamp), "dd 'de' MMMM 'de' yyyy", { locale: es }); // Puedes usar el idioma deseado.
@@ -78,11 +73,31 @@ const formatDate = (timestamp: string) => {
 };
 
 
+// Mapeo de estados a nombres y clases de estilo
+const getStatusInfo = (status: string) => {
+  const statusMap: Record<string, { name: string; class: string }> = {
+    ACKNOWLEDGED: { name: "RECONOCIDA", class: "text-success" },
+    PENDING_REVIEW: { name: "PENDIENTE", class: "text-warning" },
+    CONFIRMED_ISSUE: { name: "PROBLEMA", class: "text-danger" },
+  };
+
+  return statusMap[status] || { name: "DESCONOCIDO", class: "" };
+};
+
+// Función para asignar clases de temperatura
+const getTemperatureClass = (temperature: number): string => {
+  if (temperature > 50) return "text-danger";
+  return "";
+};
 
 </script>
 
 <template>
   <v-card>
+    <!-- <v-card-title>
+      Alarmas de Temperatura -
+      {{ format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: es }) }}
+    </v-card-title> -->
 
     <v-card-title>
       Alarmas de Temperatura - {{ formatTitleDate(new Date().toISOString()) }}
@@ -91,7 +106,7 @@ const formatDate = (timestamp: string) => {
     <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla" show-expand
       single-expand :items-per-page="pageSize" :loading="isLoading" :page="currentPage" :items-length="totalElements"
       hide-default-footer @update:page="handlePageChange">
-
+      
       <!-- Columna ID -->
       <template #item.id="{ item }">
         <transition-group name="fade" tag="span">
@@ -100,18 +115,20 @@ const formatDate = (timestamp: string) => {
       </template>
 
       <!-- Columna Estado -->
-      <template #item.state="{ item }">
+      <template #item.status="{ item }">
         <transition-group name="fade" tag="span">
-          <span :key="`state-${item.id}`" :class="getStateClass(item.state)">
-            {{ item.state }}
+          <span :key="`status-${item.id}`" :class="getStatusInfo(item.status).class">
+            {{ getStatusInfo(item.status).name }}
           </span>
         </transition-group>
       </template>
 
       <!-- Columna Timestamp -->
-      <template #item.timestamp="{ item }">
+      <template #item.timeStamp="{ item }">
         <transition-group name="fade" tag="span">
-          <span :key="`timestamp-${item.id}`">{{ formatDate(item.timeStamp) }}</span>
+          <span :key="`timestamp-${item.id}`">{{
+            formatDate(item.timeStamp)
+            }}</span>
         </transition-group>
       </template>
 
@@ -124,8 +141,7 @@ const formatDate = (timestamp: string) => {
         </transition-group>
       </template>
 
-      <!-- Contenido Expandido-->
-
+      <!-- Contenido Expandido -->
       <template v-slot:expanded-row="{ columns, item }">
         <tr class="pa-4">
           <td :colspan="columns.length">

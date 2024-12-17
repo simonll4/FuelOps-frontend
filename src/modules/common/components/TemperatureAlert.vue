@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watchEffect } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import { useWsAlarmsReminders } from '@/composables/ws/use.ws.reminders.alarms';
 import { useRouter } from 'vue-router';
 import { useToast, POSITION } from "vue-toastification";
@@ -40,6 +40,13 @@ watchEffect(() => {
     const newAlarm = alarmsArray[0];
     orderNumber.value = newAlarm.orderId;
 
+    // Mostrar notificación y vincular con el evento
+    toast.success(`Alerta de Temperatura para orden Nro: ${newAlarm.orderId}`, {
+      timeout: 5000,
+      position: POSITION.TOP_RIGHT,
+      onClick: goToOrder, // Acción al hacer clic en la notificación
+    });
+
     // Si estamos en el detalle de la orden, no mostrar notificaciones ni modal
     if (isInOrderDetail.value) {
       clearRemindersAlarms();
@@ -49,13 +56,6 @@ watchEffect(() => {
     // Configurar valores para mostrar el modal
     currentTemperature.value = newAlarm.temperature;
     alertDate.value = new Date(newAlarm.timeStamp).toLocaleString();
-
-    // Mostrar notificación y vincular con el evento
-    toast.success(`Alerta de Temperatura para orden Nro: ${newAlarm.orderId}`, {
-      timeout: 5000,
-      position: POSITION.TOP_RIGHT,
-      onClick: goToOrder, // Acción al hacer clic en la notificación
-    });
 
     // Mostrar modal
     dialog.value = true;
@@ -128,67 +128,3 @@ watchEffect(() => {
   border-radius: 12px;
 }
 </style>
-
-
-
-<!-- <script setup lang="ts">
-import { onMounted, ref, watchEffect } from 'vue';
-import { useWsAlarmsReminders } from '@/composables/ws/use.ws.reminders.alarms';
-import { useRouter } from 'vue-router';
-import { useToast, POSITION } from "vue-toastification";
-
-const toast = useToast();
-
-const dialog = ref(false);
-const orderNumber = ref();
-const currentTemperature = ref(0);
-const thresholdTemperature = ref(0);
-const alertDate = ref("");
-
-const { remindersAlarms, clearRemindersAlarms } = useWsAlarmsReminders();
-
-const router = useRouter();
-
-// TODO cuando navegue poner un efecto de loading hasta que cargue la info
-const goToOrder = () => {
-  router.push(`/admin/orders/${orderNumber.value}`);
-  dialog.value = false;
-};
-
-watchEffect(() => {
-  const alarmsArray = Array.isArray(remindersAlarms.value) ? remindersAlarms.value : [remindersAlarms.value];
-  if (alarmsArray.length > 0) {
-    const newAlarm = alarmsArray[0];
-    orderNumber.value = newAlarm.orderId.toString();
-
-    //console.log('Nuevas alarmas recibidas:', alarmsArray);
-
-    const currentRoute = router.currentRoute.value;
-
-    if (currentRoute.path.startsWith('/admin/orders/') || currentRoute.path.startsWith('/opertor/orders/') ) {
-      clearRemindersAlarms();
-      // Mostrar notificación
-      toast.success(`Alerta de Temperatura para orden Nro: ${newAlarm.orderId}`, {
-        timeout: 5000,
-        position: POSITION.TOP_RIGHT,
-        onClick: goToOrder
-      });
-
-      return;
-    }
-
-    // Actualizar valores para el modal
-    orderNumber.value = newAlarm.orderId.toString();
-    currentTemperature.value = newAlarm.temperature;
-    thresholdTemperature.value = -0.5; // TODO: Reemplazar con el umbral real
-    alertDate.value = new Date(newAlarm.timeStamp).toLocaleString();
-
-    // Mostrar el modal
-    dialog.value = true;
-
-    // Limpiar el store después de atender la alarma
-    clearRemindersAlarms();
-  }
-});
-
-</script> -->

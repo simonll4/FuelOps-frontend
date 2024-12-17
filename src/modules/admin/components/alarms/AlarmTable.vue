@@ -62,6 +62,10 @@ const formatDate = (timestamp: string) => {
   return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
 };
 
+const formatTitleDate = (timestamp: string) => {
+  return format(new Date(timestamp), "dd 'de' MMMM 'de' yyyy", { locale: es }); // Puedes usar el idioma deseado.
+};
+
 // Mapeo de estados a nombres y clases de estilo
 const getStatusInfo = (status: string) => {
   const statusMap: Record<string, { name: string; class: string }> = {
@@ -78,18 +82,20 @@ const getTemperatureClass = (temperature: number): string => {
   if (temperature > 50) return "text-danger";
   return "";
 };
+
 </script>
 
 <template>
   <v-card>
+
     <v-card-title>
-      Alarmas de Temperatura -
-      {{ format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: es }) }}
+      Alarmas de Temperatura - {{ formatTitleDate(new Date().toISOString()) }}
     </v-card-title>
 
     <v-data-table-server :headers="headers" :items="items" item-value="id" class="elevation-1 tabla" show-expand
       single-expand :items-per-page="pageSize" :loading="isLoading" :page="currentPage" :items-length="totalElements"
       hide-default-footer @update:page="handlePageChange">
+      
       <!-- Columna ID -->
       <template #item.id="{ item }">
         <transition-group name="fade" tag="span">
@@ -111,7 +117,7 @@ const getTemperatureClass = (temperature: number): string => {
         <transition-group name="fade" tag="span">
           <span :key="`timestamp-${item.id}`">{{
             formatDate(item.timeStamp)
-          }}</span>
+            }}</span>
         </transition-group>
       </template>
 
