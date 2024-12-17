@@ -2,7 +2,7 @@ export interface UserResponse {
   id: number;
   email: string;
   username: string;
-  roles: string;
+  roles: Role[];
   enabled: boolean;
 }
 

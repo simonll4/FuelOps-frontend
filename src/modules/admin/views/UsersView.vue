@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { UserResponse } from "@/interfaces/users.interface";
+import type { UserRequest, UserResponse } from "@/interfaces/users.interface";
 import { useUsers } from "@/composables/use.user";
 import AdminLayout from "../layouts/AdminLayout.vue";
 import UserTable from "@/modules/admin/components/users/UsersTable.vue";
@@ -22,7 +22,7 @@ const selectedUser = ref<UserResponse>({
   id: 0,
   email: "",
   username: "",
-  roles: "",
+  roles: [],
   enabled: true,
 });
 
@@ -37,7 +37,7 @@ const addUserDialog = () => {
     id: 0,
     email: "",
     username: "",
-    roles: "",
+    roles: [],
     enabled: true,
   };
   isDialogOpen.value = true;
@@ -49,11 +49,20 @@ const handleEdit = (user: UserResponse) => {
   isDialogOpen.value = true;
 };
 
-const handleSubmit = (userData: UserResponse) => {
+
+const roleMapping = {
+  admin: { description: "Admin", id: 1, name: "ROLE_ADMIN" },
+  operador: { description: "Operador", id: 2, name: "ROLE_OPERADOR" },
+  cli1: { description: "CLI1", id: 3, name: "ROLE_CLI1" },
+  cli2: { description: "CLI2", id: 4, name: "ROLE_CLI2" },
+  cli3: { description: "CLI3", id: 5, name: "ROLE_CLI3" },
+};
+
+const handleSubmit = (userData: UserRequest) => {
   try {
     if (isEditMode.value && selectedUser.value?.id) {
       // Editar usuario existente
-      updateUser({ ...userData, id: selectedUser.value.id });
+      updateUser(userData);
     } else {
       // Agregar nuevo usuario
       createUser(userData);
@@ -65,13 +74,14 @@ const handleSubmit = (userData: UserResponse) => {
   }
 };
 
-const handleDeactivate = (user: UserResponse) => {
+const handleDeactivate = (user: UserRequest) => {
   updateUser({ ...user, enabled: !user.enabled });
 };
 
 const handleDelete = (user: UserResponse) => {
   deleteUser(user.id);
 };
+
 </script>
 
 <template>

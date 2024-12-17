@@ -11,38 +11,47 @@ export const useUsersStore = defineStore('users', () => {
 
   // Acciones
   const setUsers = (newUsers: UserResponse[]) => {
-    console.log('setUsers llamado con:', newUsers);
 
     users.value = newUsers;
 
-    // Log de filtrado
+    // Filtrar usuarios internos
     internalUsers.value = newUsers.filter(user => {
-      const isInternal = user.roles.includes('ADMIN') || user.roles.includes('OPERATOR');
-      console.log(`Usuario ${user.username} es interno: ${isInternal}`);
+      const isInternal = user.roles.some(role => role.name === 'ROLE_ADMIN' || role.name === 'ROLE_OPERATOR');
       return isInternal;
     });
 
+    // Filtrar usuarios externos
     externalUsers.value = newUsers.filter(user => {
-      const isExternal = user.roles.includes('CLI');
-      console.log(`Usuario ${user.username} es externo: ${isExternal}`);
+      const isExternal = user.roles.some(role => role.name.includes('CLI'));
       return isExternal;
     });
-
-    console.log('Usuarios internos:', internalUsers.value);
-    console.log('Usuarios externos:', externalUsers.value);
   };
+
+  // const addUser = (user: UserResponse) => {
+  //   users.value.push(user);
+  //   setUsers(users.value); // Recalcular internos/externos
+  // };
 
   const addUser = (user: UserResponse) => {
-    users.value.push(user);
-    setUsers(users.value); // Recalcular internos/externos
+    // Crea una copia y agrega el nuevo usuario
+    const updatedUsers = [...users.value, user];
+    // Asigna el nuevo array
+    setUsers(updatedUsers);
   };
 
+  // const updateUser = (updatedUser: UserResponse) => {
+  //   const index = users.value.findIndex((u) => u.id === updatedUser.id);
+  //   if (index !== -1) {
+  //     users.value[index] = updatedUser;
+  //     setUsers(users.value); // Recalcular internos/externos
+  //   }
+  // };
+
   const updateUser = (updatedUser: UserResponse) => {
-    const index = users.value.findIndex((u) => u.id === updatedUser.id);
-    if (index !== -1) {
-      users.value[index] = updatedUser;
-      setUsers(users.value); // Recalcular internos/externos
-    }
+    const updatedUsers = users.value.map((u) =>
+      u.id === updatedUser.id ? updatedUser : u
+    );
+    setUsers(updatedUsers); // Reasigna con un nuevo array
   };
 
   const deleteUser = (userId: number) => {

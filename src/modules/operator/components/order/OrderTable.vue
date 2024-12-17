@@ -99,7 +99,7 @@ const getOrderState = (status: string) => {
     <!-- Columna de ubicación con ícono -->
     <template #item.truck="{ item }">
       <router-link
-        :to="`/admin/orders/${item.id}`"
+        :to="`/operator/orders/${item.id}`"
         class="d-flex align-center truck-link"
       >
         <v-icon class="mr-2">mdi-tanker-truck</v-icon>
@@ -146,7 +146,6 @@ const getOrderState = (status: string) => {
 </template>
 
 <style>
-/* TODO: Acomodar esto que está asqueroso */
 .tabla {
   border-radius: 1rem;
   background-color: #111c44;

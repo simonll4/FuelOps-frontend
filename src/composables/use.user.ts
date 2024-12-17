@@ -10,25 +10,21 @@ export const useUsers = () => {
   const { users, internalUsers, externalUsers, selectedUser } = storeToRefs(store);
   const queryClient = useQueryClient();
 
-  console.log('Composable useUsers inicializado');
-
   // Fetch users
   const { isLoading, data, error } = useQuery({
     queryKey: ['users'],
     queryFn: UserService.fetchAll,
-    staleTime: Infinity,
+    staleTime: 0, // No cache
   });
 
   watch(data, (result) => {
-    console.log('Watch activado - Resultado:', result);
-    if (result) {
-      console.log('Intentando actualizar store con:', result);
-      store.setUsers([...result.internal, ...result.external]);
-      console.log('Store actualizado - Usuarios:', store.users);
+    if (Array.isArray(result)) {
+      store.setUsers(result); // Pasar la lista completa al store
     } else {
-      console.warn('Resultado inválido, skip de actualización');
+      //console.warn('Resultado inválido, datos no son un array:', result);
     }
   });
+  
 
   // Create user mutation
   const createMutation = useMutation({
