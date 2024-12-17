@@ -1,4 +1,3 @@
-<!-- src/modules/admin/components/users/UserFormDialog.vue -->
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, watch } from "vue";
 import type { UserResponse } from "@/interfaces/users.interface";
@@ -59,12 +58,23 @@ const submitForm = () => {
       internalRoles.find((role) => role.name === roleName) ||
       externalRoles.find((role) => role.name === roleName)
     );
-  }).filter(Boolean) as Role[];
+  });
 
   const payload = { ...formData.value, roles: transformedRoles };
-
   emit("submit", payload);
 };
+// const submitForm = () => {
+//   const transformedRoles = formData.value.roles.map((roleName: string) => {
+//     return (
+//       internalRoles.find((role) => role.name === roleName) ||
+//       externalRoles.find((role) => role.name === roleName)
+//     );
+//   }).filter(Boolean) as Role[];
+
+//   const payload = { ...formData.value, roles: transformedRoles };
+
+//   emit("submit", payload);
+// };
 </script>
 
 <template>
@@ -89,9 +99,10 @@ const submitForm = () => {
           required></v-text-field>
 
         <!-- Toggle para roles según tipo de usuario -->
-        <v-select v-model="formData.roles" :items="isInternal ? internalRoles : externalRoles" item-value="id"
+        <!-- <v-select v-model="formData.roles" :items="isInternal ? internalRoles : externalRoles" item-value="id"
+          item-title="description" label="Roles" multiple required></v-select> -->
+        <v-select v-model="formData.roles" :items="isInternal ? internalRoles : externalRoles" item-value="name"
           item-title="description" label="Roles" multiple required></v-select>
-
 
       </v-card-text>
 

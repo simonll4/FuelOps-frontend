@@ -50,7 +50,6 @@ const handleEdit = (user: UserResponse) => {
 };
 
 
-
 const roleMapping = {
   admin: { description: "Admin", id: 1, name: "ROLE_ADMIN" },
   operador: { description: "Operador", id: 2, name: "ROLE_OPERADOR" },
@@ -61,7 +60,6 @@ const roleMapping = {
 
 const handleSubmit = (userData: UserRequest) => {
   try {
-
     if (isEditMode.value && selectedUser.value?.id) {
       // Editar usuario existente
       updateUser(userData);
@@ -83,6 +81,7 @@ const handleDeactivate = (user: UserRequest) => {
 const handleDelete = (user: UserResponse) => {
   deleteUser(user.id);
 };
+
 </script>
 
 <template>

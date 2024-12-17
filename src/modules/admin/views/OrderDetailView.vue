@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { onMounted, ref, watch, watchEffect } from "vue";
+import { ref, watch} from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useOrderDetails } from "@/composables/use.order.details";
