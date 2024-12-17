@@ -1,5 +1,5 @@
 <script lang="ts" setup="">
-import { ref, watch} from "vue";
+import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useOrderDetails } from "@/composables/use.order.details";
@@ -76,22 +76,30 @@ const { allOrderDetails, isLoadingAD, error } = useAllOrderDetails(
 ); // Todos los detalles de la orden, para dibujar los graficos
 const { lastDetail } = useWsLatestOrderDetails(orderNumber.value); // Ultimo detalle de la orden, para actualizar los graficos en tiempo real
 
-// ROUTER
-const router = useRouter();
-function goBack() {
-  router.push("/admin/orders");
-}
-
 const { downloadConciliation, isDownloading } = useOrderConciliation();
 
 const downloadReconciliation = () => {
   downloadConciliation(orderNumber.value);
 };
+
+// ROUTER
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+};
 </script>
 <template>
   <AdminLayout>
+    <v-container class="d-flex align-center pa-0">
+      <!-- Botón para volver atrás -->
+      <v-btn icon @click="goBack" class="mr-2" color="transparent" flat>
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <h6>Admin / Detalle de Orden</h6>
+    </v-container>
+
     <v-container>
-      <h6 class="pages-title">Admin / Detalle de Orden</h6>
       <h1>Detalle de Orden</h1>
     </v-container>
 
@@ -121,8 +129,8 @@ const downloadReconciliation = () => {
         </v-col>
 
         <v-col cols="2" lg="2" md="12" sm="12" xs="12">
-          <OrderProductData v-if="order" :productName="order.product.product"
-            :thresholdTemperature="order.product.thresholdTemperature.toString()" />
+          <OrderProductData v-if="order" :productName="order.product.product" :thresholdTemperature="order.product.thresholdTemperature.toString()
+            " />
         </v-col>
 
         <v-col cols="6" lg="6" md="12" sm="12" xs="12">

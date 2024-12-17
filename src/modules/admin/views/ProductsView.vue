@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import AdminLayout from "../layouts/AdminLayout.vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import ProductsTable from "@/modules/admin/components/products/ProductsTable.vue";
 import ProductFormDialog from "@/modules/admin/components/products/ProductsFormDialog.vue";
 import { useProducts } from "@/composables/use.product";
 import type { Product } from "@/interfaces/products.interface";
 
-const { products, isLoading, createProduct, updateProduct, deleteProduct, setSelectedProduct } = useProducts();
+const {
+  products,
+  isLoading,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  setSelectedProduct,
+} = useProducts();
 
 // Estado del diálogo
 const isDialogOpen = ref(false);
@@ -47,19 +55,33 @@ const handleDeleteProduct = (product: Product) => {
 const closeDialog = () => {
   isDialogOpen.value = false;
 };
+
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+};
 </script>
 
 <template>
   <AdminLayout>
-    <h6 class="ma-5 pages-title">Admin / Productos</h6>
-    <h1 class="ma-5">Productos</h1>
+    <v-container class="d-flex align-center pa-0">
+      <!-- Botón para volver atrás -->
+      <v-btn icon @click="goBack" class="mr-2" color="transparent" flat>
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <h6>Admin / Productos</h6>
+    </v-container>
 
     <v-container>
-      <v-row>
-        <v-col cols="12" class="text-right">
-          <v-btn color="primary" class="mb-4" @click="addProduct"
-            >Agregar Producto</v-btn
-          >
+      <v-row class="mb-4 d-flex align-center">
+        <!-- Titulo -->
+        <v-col cols="6">
+          <h1>Productos</h1>
+        </v-col>
+        <v-col cols="6" class="text-right">
+          <!-- Botón Agregar Producto -->
+          <v-btn color="primary" @click="addProduct">Agregar Producto</v-btn>
         </v-col>
       </v-row>
 

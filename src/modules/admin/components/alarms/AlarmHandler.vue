@@ -78,7 +78,7 @@ const formatDate = (timestamp: string): string => {
     <AlarmCard v-else title="¡Buenas noticias!" message="Por el momento, no hay ninguna alarma pendiente de revisión."
       variant="none" />
   </v-container>
-  
+
 </template>
 
 <style lang="scss" src="/src/styles/global.scss"></style>
