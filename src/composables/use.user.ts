@@ -10,22 +10,18 @@ export const useUsers = () => {
   const { users, internalUsers, externalUsers, selectedUser } = storeToRefs(store);
   const queryClient = useQueryClient();
 
-  console.log('Composable useUsers inicializado');
-
   // Fetch users
   const { isLoading, data, error } = useQuery({
     queryKey: ['users'],
     queryFn: UserService.fetchAll,
-    staleTime: Infinity,
+    staleTime: 0, // No cache
   });
 
   watch(data, (result) => {
-    console.log('Datos recibidos en el watch:', result);
     if (Array.isArray(result)) {
       store.setUsers(result); // Pasar la lista completa al store
-      console.log('Usuarios en el store después de setUsers:', store.users);
     } else {
-      console.warn('Resultado inválido, datos no son un array:', result);
+      //console.warn('Resultado inválido, datos no son un array:', result);
     }
   });
   

@@ -5,7 +5,6 @@ import type { UserRequest, UserResponse } from "@/interfaces/users.interface";
 export const UserService = {
   async fetchAll(): Promise<UserResponse[]> {
     const { data } = await api().get('/users');
-    console.log('Lista completa de usuarios desde el backend:', data);
     return data;
   },  
   

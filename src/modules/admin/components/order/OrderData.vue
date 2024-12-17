@@ -81,6 +81,21 @@ const completionTime = computed(() => {
   const seconds = differenceInSeconds(end, start);
   return formatDuration(seconds);
 });
+
+// Equivalencia de nombres para los OrderStates
+const orderStates = [
+  { key: "ORDER_RECEIVED", label: "RECIBIDA"},
+  { key: "REGISTERED_INITIAL_WEIGHING", label: "PESAJE INICIAL" },
+  { key: "ORDER_CLOSED", label: "CERRADA"},
+  { key: "REGISTERED_FINAL_WEIGHING", label: "PESAJE FINAL" },
+  { key: "ORDER_CANCELLED", label: "CANCELADA" },
+];
+
+const getOrderState = (status: string) => {
+  return orderStates.find((state) => state.key === status) || { label: status}; // Color gris por defecto
+};
+
+
 </script>
 
 <template>
@@ -128,7 +143,7 @@ const completionTime = computed(() => {
       <v-row>
         <v-col cols="6">
           <v-chip color="red" class="mt-2" v-if="order.status">
-            {{ order.status }}
+            {{ getOrderState(order.status).label }}
           </v-chip>
         </v-col>
         <v-col cols="6">

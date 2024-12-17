@@ -38,31 +38,32 @@ const handleLogin = async () => {
       <!-- Columna del Formulario -->
       <v-col cols="4" class="form-column d-flex justify-center">
         <v-container class="pa-10">
-          <h4 class="login-title my-1 text-h4">¡Bienvenido de vuelta! 👋🏻</h4>
-          <span>Inicia sesión en tu cuenta para continuar</span>
-          <v-form @submit.prevent="handleLogin" class="login-form">
+          <h4 class="login-title text-h4 mt-5 mb-8">¡Bienvenido de vuelta! 👋🏻</h4>
+          <span class="text-h5 mt-4">Inicia sesión en tu cuenta para continuar</span>
+          <v-form @submit.prevent="handleLogin" class="login-form mt-9">
             <!-- Campo de usuario -->
-            <span>Usuario</span>
+            <v-container class="pa-0 mt-3 mb-5">
+              <span class="mt-3">Usuario</span>
             <v-text-field v-model="loginForm.username" placeholder="Ingresa tu usuario" required
-              :disabled="isLoading.value" hide-details bg-color="white" density="compact" autofocus class="form-input"
+              :disabled="isLoading.value" hide-details bg-color="transparent" density="compact" autofocus class="form-input"
               variant="outlined"></v-text-field>
+            </v-container>
             <!-- Campo de contraseña -->
-            <span>Contraseña</span>
-            <v-text-field v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
-              placeholder="Ingresa tu contraseña" required :disabled="isLoading.value" hide-details bg-color="white"
+            <v-container class="pa-0 mt-3 mb-5">
+              <span>Contraseña</span>
+              <v-text-field v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
+              placeholder="Ingresa tu contraseña" required :disabled="isLoading.value" hide-details bg-color="transparent"
               density="compact" class="form-input" variant="outlined"
               :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               @click:append-inner="togglePasswordVisibility"></v-text-field>
+            </v-container>  
             <!-- Botón de login -->
-            <v-btn class="login-button mt-8" :loading="isLoading.value" :disabled="isLoading.value" color="#00B0FF"
+            <v-container>
+              <v-btn class="login-button mt-8" :loading="isLoading.value" :disabled="isLoading.value" color="#00B0FF"
               type="submit" block>
               <span v-if="!isLoading.value">Ingresar</span>
             </v-btn>
-            <!-- Mensaje de éxito -->
-            <v-alert v-if="isSuccess.value" type="success" class="mt-4" transition="scale-transition" border="start"
-              prominent>
-              ¡Inicio de sesión exitoso!
-            </v-alert>
+            </v-container>
             <!-- Mensaje de error -->
             <v-alert v-if="isError.value" type="error" class="mt-4" transition="scale-transition" border="start"
               prominent>
@@ -85,11 +86,11 @@ const handleLogin = async () => {
 }
 
 .form-column {
-  background-color: #ffffff;
+  background-color: #111C44;
 }
 
 .login-title {
-  color: #333333;
+  color: #fff;
 }
 
 .form-input {

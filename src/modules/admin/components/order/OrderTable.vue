@@ -1,6 +1,7 @@
-<script setup lang="ts">import { ref, watch } from "vue";
-import type { TableItem } from '@/interfaces/table-item.interface';
-
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import type { TableItem } from "@/interfaces/table-item.interface";
+import { format } from "date-fns";
 
 const props = defineProps({
   items: {
@@ -63,22 +64,44 @@ const getWarningClass = (warning: string): string => {
   return "";
 };
 
-import { format } from "date-fns";
-
 const formatDate = (timestamp: string) => {
   return format(new Date(timestamp), "dd/MM/yyyy HH:mm:ss");
+};
+
+// Equivalencia de nombres para los OrderStates
+const orderStates = [
+  { key: "ORDER_RECEIVED", label: "RECIBIDA" },
+  { key: "REGISTERED_INITIAL_WEIGHING", label: "PESAJE INICIAL" },
+  { key: "ORDER_CLOSED", label: "CERRADA" },
+  { key: "REGISTERED_FINAL_WEIGHING", label: "PESAJE FINAL" },
+  { key: "ORDER_CANCELLED", label: "CANCELADA" },
+];
+
+const getOrderState = (status: string) => {
+  return orderStates.find((state) => state.key === status) || { label: status }; // Color gris por defecto
 };
 </script>
 
 <template>
-
   <!-- Tabla -->
-  <v-data-table-server :headers="headers" :items="items" :items-length="totalElements" item-value="id"
-    class="elevation-1 tabla" :items-per-page="pageSize" :items-per-page-options="[]" :loading="isLoading"
-    hide-default-footer @update:page="handlePageChange">
+  <v-data-table-server
+    :headers="headers"
+    :items="items"
+    :items-length="totalElements"
+    item-value="id"
+    class="elevation-1 tabla"
+    :items-per-page="pageSize"
+    :items-per-page-options="[]"
+    :loading="isLoading"
+    hide-default-footer
+    @update:page="handlePageChange"
+  >
     <!-- Columna de ubicación con ícono -->
     <template #item.truck="{ item }">
-      <router-link :to="`/admin/orders/${item.id}`" class="d-flex align-center truck-link">
+      <router-link
+        :to="`/admin/orders/${item.id}`"
+        class="d-flex align-center truck-link"
+      >
         <v-icon class="mr-2">mdi-tanker-truck</v-icon>
         <span>{{ item.truck.licensePlate }}</span>
       </router-link>
@@ -96,6 +119,11 @@ const formatDate = (timestamp: string) => {
       <span>{{ formatDate(item.estimatedDate) }}</span>
     </template>
 
+    <!-- Columna de estado  -->
+    <template #item.status="{ item }">
+      <span> {{ getOrderState(item.status).label }} </span>
+    </template>
+
     <!-- Columna de advertencias con estilos -->
     <template #item.alarmStatus="{ item }">
       <span :class="getWarningClass(item.alarmStatus.state)">
@@ -106,12 +134,15 @@ const formatDate = (timestamp: string) => {
     <!-- Footer personalizado -->
     <template #bottom>
       <v-container class="d-flex justify-center">
-        <v-pagination :model-value="currentPage" :length="totalPages" :total-visible="pageSize"
-          @update:modelValue="handlePageChange"></v-pagination>
+        <v-pagination
+          :model-value="currentPage"
+          :length="totalPages"
+          :total-visible="pageSize"
+          @update:modelValue="handlePageChange"
+        ></v-pagination>
       </v-container>
     </template>
   </v-data-table-server>
-
 </template>
 
 <style>
