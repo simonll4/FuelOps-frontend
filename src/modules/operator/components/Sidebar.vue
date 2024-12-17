@@ -13,8 +13,6 @@ const handleLogout = async () => {
 };
 </script>
 
-
-
 <template>
   <v-navigation-drawer class="sidebar">
     <div class="d-flex align-center mr-5 pa-7">
@@ -30,10 +28,7 @@ const handleLogout = async () => {
       <router-link to="/operator/orders" class="router-link">
         <v-list-item prepend-icon="mdi-tanker-truck" title="Órdenes"></v-list-item>
       </router-link>
-      <!-- TODO: Implementar el logout para el operator -->
-      <router-link to="/operator" class="router-link">
-        <v-list-item prepend-icon="mdi-logout" title="Cerrar sesión" @click="handleLogout"></v-list-item>
-      </router-link>
+      <v-list-item prepend-icon="mdi-logout" title="Cerrar sesión" @click="handleLogout"></v-list-item>
     </v-list>
   </v-navigation-drawer>
   <TempAlert />

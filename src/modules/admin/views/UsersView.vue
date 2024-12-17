@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import type { UserRequest, UserResponse } from "@/interfaces/users.interface";
 import { useUsers } from "@/composables/use.user";
 import AdminLayout from "../layouts/AdminLayout.vue";
@@ -82,19 +83,33 @@ const handleDelete = (user: UserResponse) => {
   deleteUser(user.id);
 };
 
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+};
+
 </script>
 
 <template>
   <AdminLayout>
-    <h6 class="ma-5 pages-title">Admin / Usuarios</h6>
-    <h1 class="ma-5">Usuarios</h1>
+
+    <v-container class="d-flex align-center pa-0">
+      <!-- Botón para volver atrás -->
+      <v-btn icon @click="goBack" class="mr-2" color="transparent" flat>
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <h6>Admin / Usuarios</h6>
+    </v-container>
 
     <v-container>
       <!-- Botón Agregar Usuario -->
-      <v-row class="mb-4">
-        <v-col>
+      <v-row class="mb-4 d-flex align-center">
+        <v-col cols="6">
+          <h1>Usuarios</h1>
+        </v-col>
+        <v-col cols="6" class="text-right">
           <v-btn color="primary" @click="addUserDialog">Agregar Usuario</v-btn>
-
           <UserFormDialog v-model="isDialogOpen" :isEditMode="isEditMode" :userData="selectedUser" @close="closeDialog"
             @submit="handleSubmit" />
         </v-col>
