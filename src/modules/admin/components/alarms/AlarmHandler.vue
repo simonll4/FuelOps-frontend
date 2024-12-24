@@ -60,7 +60,7 @@ const formatDate = (timestamp: string): string => {
 
   <v-container v-else class="pa-0">
 
-    <AlarmCard v-if="alarm" title="¡ATENCIÓN!" :message="`Revisa los detalles de la alarma con ID ${alarm.id
+    <AlarmCard v-if="alarm && order?.status == 'REGISTERED_INITIAL_WEIGHING'" title="¡ATENCIÓN!" :message="`Revisa los detalles de la alarma con ID ${alarm.id
       } producida el ${formatDate(alarm.timeStamp)}.`" variant="pending">
       <template #actions>
         <ConfirmAlarmDialog :alarm-id="alarm.id" :alarm-timestamp="alarm.timeStamp" button-text="Confirmar"

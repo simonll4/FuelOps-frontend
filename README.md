@@ -1,33 +1,50 @@
-# FuelOps-frontend
+## Frontend - FuelOps
 
-This template should help get you started developing with Vue 3 in Vite.
+### Descripción General
+Esta aplicación cliente, desarrollada en Vue.js, está diseñada para interactuar con el sistema backend [FuelOps](https://github.com/simonll4/FuelOps-backend). FuelOps administra y monitorea órdenes de carga de gas líquido en plantas de combustible, integrando datos en tiempo real y sincronizándose con sistemas externos. La aplicación cliente permite a los usuarios realizar diferentes tareas dependiendo de su rol.
 
-## Recommended IDE Setup
+### Roles y Funcionalidades
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+La aplicación cuenta con dos tipos de usuarios: **Administrador** y **Operador**. A continuación, se describen las funcionalidades disponibles para cada rol:
 
-## Type Support for `.vue` Imports in TS
+#### Rol Administrador
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- **Ver Listado de Órdenes:** Acceso a un listado completo de todas las órdenes.
+  [Vista de Listado de Órdenes](./doc-assets/listado-ordenes.png)
 
-## Customize configuration
+- **Ver Detalle de Órdenes:** Visualizar información detallada de una orden específica. Durante el proceso de carga de combustible, el detalle de la orden se actualiza en tiempo real utilizando la tecnología WebSockets.
+  
+  [Vista de Detalle de Orden (parte 1)](./doc-assets/detalle-orden-1.png)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+  [Vista de Detalle de Orden (parte 2)](./doc-assets/detalle-orden-2.png)
 
-## Project Setup
+- **Gestionar Usuarios:** Crear, editar y eliminar usuarios del sistema.
+  [Vista de Gestión de Usuarios](.Durante el proceso de carga de combustible, el detalle de la orden se actualiza en tiempo real utilizando la tecnología WebSockets./doc-assets/gestion-usuarios.png)
 
-```sh
-npm install
-```
+- **Gestionar Productos:** Crear, editar y eliminar productos.
+  [Vista de Gestión de Productos](./doc-assets/gestion-productos.png)
 
-### Compile and Hot-Reload for Development
+#### Rol Operador
 
-```sh
-npm run dev
-```
+- **Ver Listado de Órdenes:** Acceso al listado de órdenes asignadas.
+  [Vista de Listado de Órdenes](./doc-assets/listado-ordenes.png)
 
-### Type-Check, Compile and Minify for Production
+- **Ver Detalle de Órdenes:** Visualizar información detallada de una orden.
+  
+  [Vista de Detalle de Orden (parte 1)](./doc-assets/detalle-orden-1.png)
 
-```sh
-npm run build
-```
+  [Vista de Detalle de Orden (parte 2)](./doc-assets/detalle-orden-2.png)
+
+### Tecnologías Usadas
+- **Vue.js:** Framework principal para el desarrollo de la interfaz de usuario.
+- **TanStack Query:** Manejo de consultas y sincronización de datos con el backend.
+- **Pinia:** Administración del estado global de la aplicación.
+- **Vuetify:** Librería gráfica para diseños modernos y responsivos.
+- **Sass:** Preprocesador CSS para estilos más mantenibles y personalizados.
+- **WebSockets:** Sincronización en tiempo real de datos críticos como el detalle de órdenes durante la carga.
+- **HTTP (REST):** Comunicación entre cliente y backend para consultas y modificaciones de datos.
+
+## Contribuidores
+- [Simonll4](https://github.com/simonll4)
+- [MattGoode7](https://github.com/MattGoode7)
+- [Pandulc](https://github.com/Pandulc)
