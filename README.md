@@ -18,8 +18,8 @@ La aplicación cuenta con dos tipos de usuarios: **Administrador** y **Operador*
 
   [Vista de Detalle de Orden (parte 2)](./doc-assets/detalle-orden-2.png)
 
-- **Gestionar Usuarios:** Crear, editar y eliminar usuarios del sistema.
-  [Vista de Gestión de Usuarios](.Durante el proceso de carga de combustible, el detalle de la orden se actualiza en tiempo real utilizando la tecnología WebSockets./doc-assets/gestion-usuarios.png)
+- **Gestionar Usuarios:** Crear, editar y eliminar usuarios del sistema.Durante el proceso de carga de combustible, el detalle de la orden se actualiza en tiempo real utilizando la tecnología WebSockets.
+  [Vista de Gestion de Usuarios](./doc-assets/gestion-usuarios.png)
 
 - **Gestionar Productos:** Crear, editar y eliminar productos.
   [Vista de Gestión de Productos](./doc-assets/gestion-productos.png)
